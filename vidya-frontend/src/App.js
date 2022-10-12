@@ -1,13 +1,11 @@
-import './App.css';
+import React from 'react';
+import HelloWorld from './HelloWorld';
 
- import Main from './Main.js';
 
- function App() {
-   return (
-     <div className="App">
-       <Main />
-     </div>
-   );
- }
+function App() {
+  return (
+    <HelloWorld />
+  )
+}
 
- export default App;
+export default App;
