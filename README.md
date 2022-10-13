@@ -14,16 +14,19 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
 ## Tasks/Work
 
-- [ ] Build a basic website with a .NET backend (Minimal API) and React.js frontend
+- [x] Build a basic website with a .NET backend (Minimal API) and React.js frontend
     - Tutorial from Microsoft on how to do this [here](https://learn.microsoft.com/en-us/training/paths/aspnet-core-minimal-api/)
     - React.js tutorials:
         - [Getting Started with React.js](https://reactjs.org/docs/getting-started.html)
         - [React.js Tutorial](https://reactjs.org/docs/getting-started.html)
         - [React.js Building Blocks](https://reactjs.org/docs/hello-world.html)
-- [ ] Build the Vidya clone
+- [ ] Build the frontend
+    - [ ] Learn how to add CSS styling to React.js apps and components
     - [ ] Include the draggable controls element
         - A React.js tutorial on this is [here](https://www.youtube.com/watch?v=jfJ5ON05JKk)
-- [ ] Replace the basic website frontend with the Viday clone
+- [ ] Build the backend
+    - Serve audio files to the frontend
+    - Serve playlist files to the frontend
 - [ ] Once the player is fully functional,
     - Convert this project into the new AirdancerServer & AirdancerPlayer.
     - Make a personal website out of it.
@@ -36,7 +39,8 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
 # Other Information
 
-## Used Libraries
+## SOP
 
-*This project uses the following libraries:
-- `styled-components`
+- To run this project:
+    - Start backend: `cd vidya-backend` and then run `dotnet run`
+    - Start frontend: `cd vidya-frontend` and then run `npm start`
