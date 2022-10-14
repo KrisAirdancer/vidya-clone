@@ -21,8 +21,13 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
         - [React.js Tutorial](https://reactjs.org/docs/getting-started.html)
         - [React.js Building Blocks](https://reactjs.org/docs/hello-world.html)
 - [ ] Build the frontend
-    - [ ] Learn how to add CSS styling to React.js apps and components
-    - [ ] Include the draggable controls element
+    - [x] Learn how to add CSS styling to React.js apps and components
+    - [ ] Build the Nav Bar
+        - [This](https://www.youtube.com/watch?v=SLfhMt5OUPI) looks like a good tutorial.
+    - [ ] Build the files list
+        - Use dummy data to start.
+            - Use json-server? Or just put all of the audio files and hte playlist XML into the public folder?
+    - [ ] Build the draggable controls element
         - A React.js tutorial on this is [here](https://www.youtube.com/watch?v=jfJ5ON05JKk)
 - [ ] Build the backend
     - Serve audio files to the frontend

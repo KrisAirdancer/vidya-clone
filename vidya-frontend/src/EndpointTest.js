@@ -22,7 +22,7 @@ export default class EndpointTest extends Component {
 
   render() {
     return (
-        <div id="id_test-data">Test data here: {this.state.testData}</div>
+        <div>Test data here: {this.state.testData}</div>
       )
   }
 }
