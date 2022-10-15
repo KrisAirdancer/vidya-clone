@@ -1,10 +1,12 @@
+/* TODO: Border color & styling for track bars: `border 1px solid #102742` */
+
 :root {
-    --site-blue: #1F4B7F;
+    --site-blue: #122D4A;
     --site-orange: #FFA366;
     --nav-button-border: #636363;
     --navbar-border: #919191;;
-    --nav-button-light-fade: #295e9f;
-    --nav-button-dark-fade: #163152;
+    --fade-light: #1F4B7F;
+    --fade-dark: #0A1929;
 }
 
 /* Setting the reference size for "rem" values */
@@ -21,8 +23,8 @@ body {
 
 /* TODO: Find a way to add a gradient to the border like it is in the real thing - the bottom is slightly darker than the top. */
 nav {
-    height: 3.5rem;
-    background-image: linear-gradient(var(--nav-button-light-fade), var(--site-blue), var(--nav-button-dark-fade));
+    height: 4rem;
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: var(--site-orange);
     /* top right bottom left */
     padding: 0.15rem 0.1rem 0.15rem 0.1rem;
@@ -41,8 +43,13 @@ nav ul {
     text-align: center;
     color: var(--site-orange);
     border: 1px solid var(--nav-button-border);
-    background-image: linear-gradient(var(--nav-button-light-fade), var(--site-blue), var(--nav-button-dark-fade));
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     cursor: pointer;
+}
+
+#nav-playlist-selector {
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    color: var(--site-orange);
 }
 
 /**** Flexbox Containers *****/
