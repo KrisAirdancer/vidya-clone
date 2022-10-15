@@ -11,45 +11,54 @@ root-html-tag {
     font-size: 12px;
 }
 
-* {
-    box-sizing: border-box;
-}
-
 body {
     margin: 0;
     background: var(--site-blue);
 }
 
-/* Remove the default styling for ul list elements (padding, the bullet dots, etc.) */
-.navbar ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    display: flex;
-    gap: 1rem;
-}
+/***** Styling *****/
 
-.navbar {
-    background-color: var(--site-blue);
+/* TODO: Find a way to add a gradient to the border like it is in the real thing - the bottom is slightly darker than the top. */
+nav {
+    height: 3.5rem;
     background-image: linear-gradient(var(--nav-button-light-fade), var(--site-blue), var(--nav-button-dark-fade));
     color: var(--site-orange);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2em;
     /* top right bottom left */
-    padding: 0.25rem 0.1rem 0.25rem 0.1rem;
+    padding: 0.15rem 0.1rem 0.15rem 0.1rem;
     border: 1px solid var(--navbar-border);
 }
 
+/* Flexbox for nav buttons */
+nav ul {
+    margin: 0;
+    list-style: none;
+}
 
 .nav-button {
-    all: unset; /* Clear default styling on nav buttons */
+    /* all: unset; */ /* Clear default styling on nav buttons */
     height: 1.1rem;
     width: 1.8rem;
     font-size: 0.75rem;
     text-align: center;
+    color: var(--site-orange);
     border: 1px solid var(--nav-button-border);
     background-image: linear-gradient(var(--nav-button-light-fade), var(--site-blue), var(--nav-button-dark-fade));
     cursor: pointer;
 }
+
+/**** Flexbox Containers *****/
+
+.nav-flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#nav-playlist-selector {
+    align-self: flex-end;
+}
+
+/**** Flexbox Items *****/
+
+
+
