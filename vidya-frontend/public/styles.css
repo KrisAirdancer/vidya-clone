@@ -7,6 +7,7 @@
     --navbar-border: #919191;;
     --fade-light: #1F4B7F;
     --fade-dark: #0A1929;
+    --track-scrubber-height: 0.8rem;
 }
 
 /* Setting the reference size for "rem" values */
@@ -37,8 +38,8 @@ nav ul {
 }
 
 .nav-button {
-    height: 1.1rem;
-    width: 1.8rem;
+    height: 1.35rem;
+    width: 2rem;
     font-size: 0.75rem;
     text-align: center;
     color: var(--site-orange);
@@ -49,7 +50,50 @@ nav ul {
 
 #nav-playlist-selector {
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    color: 1px solid var(--site-orange);
+}
+
+/* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
+.track-scrubber-flex-container label {
     color: var(--site-orange);
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--nav-button-border);
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    font-size: .9rem;
+    text-align: center;
+    /* height: 0.9rem; */
+    height: var(--track-scrubber-height);
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    appearance: none;
+    background: var(--site-orange);
+    height: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    background: var(--site-orange);
+    height: 12px;
+    width: 6px;
+    margin: -4px 0 0 0;
+    border-radius: 2px;
+}
+
+/* TODO: The track scrubber doesn't have color to the left of the slider. This tutorial shows how to set that up: https://youtu.be/Ow0QjqmaRtQ?t=598 */
+/* TODO: The code example at the top of this page could be helpful in setting up the properties of the track-scrubber: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range */
+input[type="range"] {
+    appearance: none;
+    margin: 0;
+    padding: 0.3rem;
+    height: var(--track-scrubber-height) - 0.1rem;
+    border-width: 1px 1px 2px 1px;
+    border-style: solid;
+    border-color: var(--nav-button-border);
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    cursor: pointer;
 }
 
 /**** Flexbox Containers *****/
@@ -60,11 +104,17 @@ nav ul {
     align-items: flex-start;
 }
 
+.track-scrubber-flex-container {
+    display: flex;
+}
+
 /**** Flexbox Items *****/
 
 #nav-playlist-selector {
     align-self: flex-end;
 }
 
-
+#track-scrubber {
+    flex: 1;
+}
 
