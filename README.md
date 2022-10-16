@@ -1,6 +1,10 @@
 # vidya-clone
 A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
+# Current Progress
+
+![October 12, 2022 progress](documentation-images\progress-snapshot-oct-16-2022.png)
+
 # Development Stages
 
 ## Next
