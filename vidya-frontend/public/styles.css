@@ -11,6 +11,10 @@
    color: #BFE490;
 */
 /* Scrubber background color: #7F6157 */
+/* Track hover background-color: #94BAFF */
+/* Track hover text color: #122D4A */
+
+/* TODO: If it seems reasonable to do. Figure out how to keep the whole navbar and tracks list from pulling down when you try to scroll beyond the top of the page. The original vidya-player doesn't have this animation. The tracks list and navbar just stay put if you try to scroll past the top of the page. */
 
 :root {
     --site-blue: #122D4A;
@@ -29,12 +33,14 @@ root-html-tag {
     font-size: 12px;
 }
 
-/***** Styling *****/
+/**** General Site Styling *****/
 
 body {
     margin: 0;
     background: var(--site-blue);
 }
+
+/**** Navbar *****/
 
 /* TODO: Find a way to add a gradient to the border like it is in the real thing - the bottom is slightly darker than the top. */
 nav {
@@ -71,8 +77,15 @@ nav ul {
     font-family: var(--site-font-family);
 }
 
+.track-info:hover {
+    cursor: pointer;
+    color: #122D4A;
+    background-color: #94BAFF;
+}
+
 
 /* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
+/* TODO: The text should have two leading zeros (00:00) instead of just one (0:00) */
 #track-scrubber label {
     color: var(--site-orange);
     border-width: 2px;
@@ -80,7 +93,7 @@ nav ul {
     border-color: var(--nav-button-border);
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     padding: 0.2rem 0.4rem 0.2rem 0.4rem;
-    font-size: .9rem;
+    font-size: .8rem;
     text-align: center;
     font-family: var(--site-font-family);
     height: var(--track-scrubber-height);
@@ -117,6 +130,22 @@ input[type="range"]::-webkit-slider-thumb {
     width: 6px;
     margin: -4px 0 0 0;
     border-radius: 2px;
+}
+
+/**** TrackList *****/
+
+#track-list {
+    margin: 0;
+    padding: 0;
+}
+
+.track-info {
+    list-style: none;
+    padding: 5px 2px 5px 10px; /* top right bottom left */
+    color: var(--site-orange);
+    border: 1px solid #102742;
+    font-family: var(--site-font-family);
+    font-size: 0.75rem;
 }
 
 /**** Flexbox Containers *****/

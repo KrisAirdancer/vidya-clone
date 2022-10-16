@@ -30,17 +30,24 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
             - Use json-server? Or just put all of the audio files and hte playlist XML into the public folder?
     - [ ] Build the draggable controls element
         - A React.js tutorial on this is [here](https://www.youtube.com/watch?v=jfJ5ON05JKk)
+- [ ] Figure out how to set the React.js + .NET combination up correctly.
+    - As it is, it seems that we have two separate servers running that communicate with each other. What I need is for the frontend React.js application to be served to the browser by the backend. The React.js project will manage all of the routing, but the backend will store data that is then served to the frontend. The backend should be built in React.js.
+    - [This](https://www.youtube.com/watch?v=2Ayfi7OJhBI) video appears to show me how to do what I want to do. But as usual, they are overcomplicating it for what I need. Watch this, then try to remove everything from the tutorial code that I don't need. Keep only the necessary files.
+    - [This](https://medium.com/bb-tutorials-and-thoughts/how-to-develop-and-build-react-app-with-net-core-backend-59d4fc5e3041) may be closer to what I am trying to do.
+    - [This](https://stackoverflow.com/questions/56607931/merge-separate-reactjs-client-frontend-application-with-asp-net-core-backend-api) looks like a good starting place.
 - [ ] Build the backend
     - Serve audio files to the frontend
     - Serve playlist files to the frontend
 - [ ] Once the player is fully functional,
     - Convert this project into the new AirdancerServer & AirdancerPlayer.
     - Make a personal website out of it.
+        - This YouTube video looks helpful for doing this: https://www.youtube.com/watch?v=nBZxV4U0Bg0 
     - Put together a nice looking homepage with links to LinkedIn, GitHub, and the VidyaPlayer clone as well as some information about me.
     - Try to run the project on AirdancerPi (RPi).
         - Maybe use Docker?
     - Whether I'm able to get it running on RPi or not, try to deploy the project to AWS or Azure.
         - AWS might be better b/c it is more widely used.
+        - [This](https://www.kambu.pl/blog/how-to-deploy-a-react-app-together-with-net-backend-to-azure-with-azure-devops/) might be helpful for getting it deployed to Azure.
 
 
 # Other Information

@@ -2,7 +2,7 @@ import React from 'react'
 
 // TODO: For the <select> tag below, React.js requires that the values of the select dropdown be set using props. I will need to change my HTML to match the proper React.js formatting instead of vanilla HTML formatting. See this: https://stackoverflow.com/questions/52143691/react-warning-use-the-defaultvalue-or-value-props-on-select-instead-ofhttps://stackoverflow.com/questions/52143691/react-warning-use-the-defaultvalue-or-value-props-on-select-instead-of 
 
-export default function HelloWorld() {
+export default function Navbar() {
   return (
     <div>
       <nav className="nav-flex-container">
