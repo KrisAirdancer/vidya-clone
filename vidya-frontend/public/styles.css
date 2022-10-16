@@ -1,5 +1,16 @@
 /* TODO: Border color & styling for track bars: `border 1px solid #102742` */
 /* Border gradient colors for the gradiated border: (to bottom, #C0CCD9, #090C11) */
+/* Exiled Colors
+   border-color: #3B0E24;
+   background-color: #4A122D;
+   color: #E79DC0;
+*/
+/* Chosen Colors
+   border-color: #243B0E;
+   background-color: #2D4A12;
+   color: #BFE490;
+*/
+/* Scrubber background color: #7F6157 */
 
 :root {
     --site-blue: #122D4A;
@@ -9,6 +20,8 @@
     --fade-light: #1F4B7F;
     --fade-dark: #0A1929;
     --track-scrubber-height: 0.8rem;
+    --track-scrubber-light: #7F6157;
+    --site-font-family: Helvetica, Arial, sans-serif;
 }
 
 /* Setting the reference size for "rem" values */
@@ -52,7 +65,13 @@ nav ul {
 #nav-playlist-selector {
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: 1px solid var(--site-orange);
+    font-family: var(--site-font-family);
 }
+
+#track-info {
+    font-family: var(--site-font-family);
+}
+
 
 /* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
 .track-scrubber-flex-container label {
@@ -64,23 +83,8 @@ nav ul {
     padding: 0.2rem 0.4rem 0.2rem 0.4rem;
     font-size: .9rem;
     text-align: center;
-    /* height: 0.9rem; */
+    font-family: var(--site-font-family);
     height: var(--track-scrubber-height);
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-    appearance: none;
-    background: var(--site-orange);
-    height: 4px;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    background: var(--site-orange);
-    height: 12px;
-    width: 6px;
-    margin: -4px 0 0 0;
-    border-radius: 2px;
 }
 
 /* TODO: The track scrubber doesn't have color to the left of the slider. This tutorial shows how to set that up: https://youtu.be/Ow0QjqmaRtQ?t=598 */
@@ -96,6 +100,49 @@ input[type="range"] {
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     cursor: pointer;
 }
+
+input[type="range"]::-webkit-slider-runnable-track {
+    appearance: none;
+    background: var(--track-scrubber-light);
+    height: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    background: var(--site-orange);
+    height: 12px;
+    width: 6px;
+    margin: -4px 0 0 0;
+    border-radius: 2px;
+}
+
+/* Custom build track scrubber - don't want to use this. Getting the interactivity to work right will be very complicated. */
+/* #scrubber-bar {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    flex: 1;
+    border-style: solid;
+    border-width: 1px 1px 2px 1px;
+    border-color: var(--nav-button-border);;
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    padding: 0.4rem;
+}
+
+#scrubber-track {
+    background: var(--track-scrubber-light);
+    height: 0.3rem;
+    width: 100%;
+}
+
+#scrubber-progress-highlight {
+    
+}
+
+#scrubber-thumb {
+    height: 0.5rem;
+    width: 0.2rem;
+} */
 
 /**** Flexbox Containers *****/
 

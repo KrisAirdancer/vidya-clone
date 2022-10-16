@@ -12,7 +12,7 @@ export default function HelloWorld() {
           <option value="playlist_source" selected>Source</option>
         </select>
 
-        <div id="track-info head">Track Info</div>
+        <div id="track-info">Track Info</div>
 
         <ul>
           <li>
@@ -30,6 +30,13 @@ export default function HelloWorld() {
       <div className="track-scrubber-flex-container">
         <label id="time-played">0:00</label>
         <input type="range" id="track-scrubber"/>
+        {/* <div id='scrubber-bar'>
+          <div id='scrubber-track'>
+            <div id='scrubber-progress-highlight'>
+              <div id='scrubber-thumb'></div>
+            </div>
+          </div>
+        </div> */}
         <label id="time-left">3:42</label>
       </div>
     </div>
