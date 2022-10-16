@@ -3,8 +3,7 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
 # Current Progress
 
-<img src="documentation-images\progress-snapshot-oct-16-2022.png">
-![October 12, 2022 progress](documentation-images\progress-snapshot-oct-16-2022.png)
+<img src="documentation-images\progress-snapshot-oct-16-2022.png" width="75%">
 
 # Development Stages
 
