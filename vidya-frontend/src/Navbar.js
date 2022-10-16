@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function Navbar() {
   return (
-    <div>
+    <div id='navbar-group'>
       <nav className="nav-flex-container">
 
         <select id="nav-playlist-selector">

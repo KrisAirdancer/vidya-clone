@@ -24,7 +24,7 @@
     --fade-light: #1F4B7F;
     --fade-dark: #0A1929;
     --track-scrubber-height: 0.8rem;
-    --track-scrubber-light: #7F6157;
+    --site-brown-orange: #7F6157;
     --site-font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -42,8 +42,14 @@ body {
 
 /**** Navbar *****/
 
+#navbar-group {
+    position: sticky;
+    top: 0;
+}
+
 /* TODO: Find a way to add a gradient to the border like it is in the real thing - the bottom is slightly darker than the top. */
 nav {
+    top: 0;
     height: 4rem;
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: var(--site-orange);
@@ -73,16 +79,20 @@ nav ul {
     font-family: var(--site-font-family);
 }
 
+/**** Tracks List *****/
+
 #track-info {
     font-family: var(--site-font-family);
 }
 
+/* TODO: Move these colors into a variable in :root */
 .track-info:hover {
     cursor: pointer;
     color: #122D4A;
     background-color: #94BAFF;
 }
 
+/**** Track Scrubber *****/
 
 /* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
 /* TODO: The text should have two leading zeros (00:00) instead of just one (0:00) */
@@ -115,7 +125,7 @@ input[type="range"] {
 /* TODO: This article shows how to setup the slider bar coloration. Archive this article. https://nikitahl.com/style-range-input-css */
 input[type="range"]::-webkit-slider-runnable-track {
     appearance: none;
-    background: var(--track-scrubber-light);
+    background: var(--site-brown-orange);
     background-image: linear-gradient(var(--site-orange), var(--site-orange));
     background-size: 50% 100%; /* The first number is the widht, the second number is the height */
     background-repeat: no-repeat;
