@@ -27,16 +27,9 @@ export default function HelloWorld() {
         </ul>
       </nav>
 
-      <div className="track-scrubber-flex-container">
+      <div id='track-scrubber' className="track-scrubber-flex-container">
         <label id="time-played">0:00</label>
         <input type="range" id="track-scrubber"/>
-        {/* <div id='scrubber-bar'>
-          <div id='scrubber-track'>
-            <div id='scrubber-progress-highlight'>
-              <div id='scrubber-thumb'></div>
-            </div>
-          </div>
-        </div> */}
         <label id="time-left">3:42</label>
       </div>
     </div>

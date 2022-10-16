@@ -41,8 +41,7 @@ nav {
     height: 4rem;
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: var(--site-orange);
-    /* top right bottom left */
-    padding: 0.15rem 0.1rem 0.15rem 0.1rem;
+    padding: 0.15rem 0.1rem 0.15rem 0.1rem; /* top right bottom left */
     border: 1px solid var(--navbar-border);
 }
 
@@ -74,7 +73,7 @@ nav ul {
 
 
 /* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
-.track-scrubber-flex-container label {
+#track-scrubber label {
     color: var(--site-orange);
     border-width: 2px;
     border-style: solid;
@@ -87,7 +86,6 @@ nav ul {
     height: var(--track-scrubber-height);
 }
 
-/* TODO: The track scrubber doesn't have color to the left of the slider. This tutorial shows how to set that up: https://youtu.be/Ow0QjqmaRtQ?t=598 */
 /* TODO: The code example at the top of this page could be helpful in setting up the properties of the track-scrubber: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range */
 input[type="range"] {
     appearance: none;
@@ -101,12 +99,17 @@ input[type="range"] {
     cursor: pointer;
 }
 
+/* TODO: This article shows how to setup the slider bar coloration. Archive this article. https://nikitahl.com/style-range-input-css */
 input[type="range"]::-webkit-slider-runnable-track {
     appearance: none;
     background: var(--track-scrubber-light);
+    background-image: linear-gradient(var(--site-orange), var(--site-orange));
+    background-size: 50% 100%; /* The first number is the widht, the second number is the height */
+    background-repeat: no-repeat;
     height: 4px;
 }
 
+/* TODO: How do I set the position of the thumb? */
 input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     background: var(--site-orange);
@@ -115,34 +118,6 @@ input[type="range"]::-webkit-slider-thumb {
     margin: -4px 0 0 0;
     border-radius: 2px;
 }
-
-/* Custom build track scrubber - don't want to use this. Getting the interactivity to work right will be very complicated. */
-/* #scrubber-bar {
-    display: flex;
-    justify-items: center;
-    align-items: center;
-    flex: 1;
-    border-style: solid;
-    border-width: 1px 1px 2px 1px;
-    border-color: var(--nav-button-border);;
-    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
-    padding: 0.4rem;
-}
-
-#scrubber-track {
-    background: var(--track-scrubber-light);
-    height: 0.3rem;
-    width: 100%;
-}
-
-#scrubber-progress-highlight {
-    
-}
-
-#scrubber-thumb {
-    height: 0.5rem;
-    width: 0.2rem;
-} */
 
 /**** Flexbox Containers *****/
 
