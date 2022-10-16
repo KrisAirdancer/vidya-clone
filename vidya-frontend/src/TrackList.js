@@ -7,10 +7,12 @@ import tracks from './dummyData.json'
 export default function TrackList() {
     
   return (
-    <ul id='track-list'>
-      {
-       tracks.map(trackData => <li className='track-info'>{trackData.trackName}</li>)
-      }
-    </ul>
+    <div id='track-list-div'>
+      <ul id='track-list'>
+        {
+        tracks.map(trackData => <li className='track-info'>{trackData.trackName}</li>)
+        }
+      </ul>
+    </div>
   )
 }

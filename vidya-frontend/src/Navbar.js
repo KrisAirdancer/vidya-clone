@@ -30,7 +30,7 @@ export default function Navbar() {
       <div id='track-scrubber' className="track-scrubber-flex-container">
         <label id="time-played">0:00</label>
         <input type="range" id="track-scrubber"/>
-        <label id="time-left">3:42</label>
+        <label id="time-left">1:42</label>
       </div>
     </div>
   )

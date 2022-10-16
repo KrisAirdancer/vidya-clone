@@ -19,12 +19,13 @@
 :root {
     --site-blue: #122D4A;
     --site-orange: #FFA366;
+    --site-light-blue: #94BAFF;
+    --site-brown-orange: #7F6157;
     --nav-button-border: #636363;
     --navbar-border: #919191;;
     --fade-light: #1F4B7F;
     --fade-dark: #0A1929;
     --track-scrubber-height: 0.8rem;
-    --site-brown-orange: #7F6157;
     --site-font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -38,6 +39,8 @@ root-html-tag {
 body {
     margin: 0;
     background: var(--site-blue);
+    /* Hides the scrollbar that runs up next to the navbar */
+    overflow-y: hidden;
 }
 
 /**** Navbar *****/
@@ -90,6 +93,37 @@ nav ul {
     cursor: pointer;
     color: #122D4A;
     background-color: #94BAFF;
+}
+
+/**** Site Scrollbar *****/
+
+#track-list {
+    position: fixed;
+    top: 5.9rem;
+    bottom: 0; /* Sets the bottom bound of the container to the bottom of the screen. Otherwise, some of the screen is hidden off the bottom of the screen and cannot be scrolled to. */
+    width: 100%;
+    max-height: 100%;
+    overflow-y: scroll; /* Displays a scrollbar on the track-list ul element */
+}
+
+#track-list::-webkit-scrollbar {
+    width: auto;
+}
+
+#track-list::-webkit-scrollbar-track {
+    border: 0.2rem solid var(--site-blue);
+    background-color: var(--site-brown-orange);
+}
+
+#track-list::-webkit-scrollbar-thumb {
+    cursor: none;
+    height: 1rem;
+    border-radius: 3px;
+    background-color: var(--site-orange);
+}
+
+#track-list::-webkit-scrollbar-thumb:hover {
+    background: var(--site-light-blue);
 }
 
 /**** Track Scrubber *****/
