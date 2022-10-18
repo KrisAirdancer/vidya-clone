@@ -5,18 +5,7 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
 <img src="documentation-images\progress-snapshot-oct-16-2022.png" width="75%">
 
-# Development Stages
-
-## Next
-
-- The frontend and backend are working (vidya-backend & vidya-frontend). However, they aren't communicating yet. **The next step is to connect them:**
-    - What I need is for the data from the backend to be passed to the frontend. That is, the backend won't be defining any of the frontend HTML, JS, or CSS. Instead, the backend will pass data to the frontend, and the frontend will style that data into a nice webpage.
-    - In this case, I need the backend to pass audio files (.mp3) and playlist files (.xml) to the frontend where they can be used by the JS logic to generate the list of songs from the playlist and, ultimately, play the songs.
-        - It might be easier to just keep all of the audio and playlist files in the `public` directory, then just access them like I did with v1 of this project.
-        - Another way would be to have the backend send the frontend a list of songs and hte playlist files on startup, then have the frontend request the audio file from the backend when a certain song is played.
-    - **To start,** just pass text back and forth.
-
-## Tasks/Work
+# TODOs
 
 - [x] Build a basic website with a .NET backend (Minimal API) and React.js frontend
     - Tutorial from Microsoft on how to do this [here](https://learn.microsoft.com/en-us/training/paths/aspnet-core-minimal-api/)
@@ -26,10 +15,10 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
         - [React.js Building Blocks](https://reactjs.org/docs/hello-world.html)
 - [ ] Build the frontend
     - [x] Learn how to add CSS styling to React.js apps and components
-    - [ ] Build the Nav Bar
+    - [x] Build the Nav Bar
         - Use [This](https://www.youtube.com/watch?v=fYq5PXgSsbE) to add flexbox to the navbar and position the buttons and other elements in it properly.
         - [This](https://www.youtube.com/watch?v=SLfhMt5OUPI) looks like a good tutorial.
-    - [ ] Build the files list
+    - [x] Build the files list
         - Use dummy data to start.
             - Use json-server? Or just put all of the audio files and hte playlist XML into the public folder?
     - [ ] Build the draggable controls element
@@ -85,3 +74,15 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 - [CSS Positioning Tutorial, The Net Ninja](https://www.youtube.com/watch?v=k4taTzkhzHc)
     - This might be helpful for getting the navbar to sit on top of other elements.
 - [The Net Ninja, Full React Tutorial](https://www.youtube.com/watch?v=j942wKiXFu8&list=PL4cUxeGkcC9gZD-Tvwfod2gaISzfRiP9d)
+
+
+# Work Log
+
+- [10/18/2022]
+    - Broke the TrackList.js component out into two separate components: TrackList.js and TrackInfo.js.
+- [10/16/2022]
+    - The navigation bar is complete, the backend server is setup (The frontend also has its own server. Not sure how?), and dummy tracks data (dummyData.js) has been added to test the tracks list on the frontend.
+    - Need to:
+        - Setup the draggable controls box (play, pause, skip track, etc.)
+        - Figure out how to get the backend (.NET server) to serve the React.js frontend.
+        - Figure out how to serve audio files from the backend to the frontend. What does putting them into the "public" directory do? Do they automatically get an API or is the whole public directory served to, and downloaded by, the frontend when the page loads?
