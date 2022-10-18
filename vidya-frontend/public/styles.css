@@ -26,6 +26,8 @@
     --fade-light: #1F4B7F;
     --fade-dark: #0A1929;
     --track-scrubber-height: 0.8rem;
+    --control-box-height: 5.5rem;
+    --control-box-width: 9.3rem;
     --site-font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -202,6 +204,16 @@ input[type="range"]::-webkit-slider-thumb {
 
 .track-scrubber-flex-container {
     display: flex;
+}
+
+#control-box-flex-container {
+    position: absolute;
+    bottom: 5rem;
+    left: calc(50% - (var(--control-box-width) / 2));
+    height: var(--control-box-height);
+    width: var(--control-box-width);
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    border: 1px solid var(--navbar-border);
 }
 
 /**** Flexbox Items *****/

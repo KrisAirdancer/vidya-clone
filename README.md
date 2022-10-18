@@ -80,6 +80,10 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
 - [10/18/2022]
     - Broke the TrackList.js component out into two separate components: TrackList.js and TrackInfo.js.
+    - Added sorting logic to sort the tracks list so the tracks show up in alphabetical order on the frontend.
+    - Added control box and set it up to be positioned dynamically on the screen. It can't be drug around yet though.
+        - The next step is to add the individual boxes inside the control box.
+        - Then, the control box should be made to be repositionable. Note that the original Vidya Player allows you to move the box, but that the box can only be drug around by the top bar in the box.
 - [10/16/2022]
     - The navigation bar is complete, the backend server is setup (The frontend also has its own server. Not sure how?), and dummy tracks data (dummyData.js) has been added to test the tracks list on the frontend.
     - Need to:
