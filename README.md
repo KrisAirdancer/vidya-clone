@@ -23,6 +23,8 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
             - Use json-server? Or just put all of the audio files and hte playlist XML into the public folder?
     - [ ] Build the draggable controls element
         - A React.js tutorial on this is [here](https://www.youtube.com/watch?v=jfJ5ON05JKk)
+    - [ ] Build the popup menu in the bottom right of the screen in the original.
+        - Displays credits, logic to import/export chosen/exiled tracks (configurations), a link to the changelog, etc.
 - [ ] Figure out how to set the React.js + .NET combination up correctly.
     - As it is, it seems that we have two separate servers running that communicate with each other. What I need is for the frontend React.js application to be served to the browser by the backend. The React.js project will manage all of the routing, but the backend will store data that is then served to the frontend. The backend should be built in React.js.
     - [This](https://www.youtube.com/watch?v=2Ayfi7OJhBI) video appears to show me how to do what I want to do. But as usual, they are overcomplicating it for what I need. Watch this, then try to remove everything from the tutorial code that I don't need. Keep only the necessary files.
