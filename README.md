@@ -80,6 +80,13 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 
 # Work Log
 
+- [10/20/2022]
+    - Moved logic for sorting tracks into TrackList.js and out of TrackInfo.js.
+    - Added buttons to the control box.
+    - Added the baseline level of CSS styling to the control box.
+    - Need to:
+        - Get the control box's top row to display a different message depending on where in the control box the user is hovering. Will need to use JavaScript for this.
+        - Then, make the control box repositionable.
 - [10/18/2022]
     - Broke the TrackList.js component out into two separate components: TrackList.js and TrackInfo.js.
     - Added sorting logic to sort the tracks list so the tracks show up in alphabetical order on the frontend.
