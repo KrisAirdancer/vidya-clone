@@ -4,7 +4,7 @@ export default function ControlBox() {
   return (
     <div id='control-box-flex-container' className='control-box'>
       
-      <div className='control-box-row control-box-element'>Drag me!</div>
+      <div className='control-box-first-row control-box-element'></div>
 
       <div id='control-box-row-two-flex-container' className='control-box-second-row'>
         <button className='control-box-element'>&lt;&lt;</button>

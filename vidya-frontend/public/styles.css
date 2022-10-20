@@ -210,15 +210,22 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /* TODO: The border on the control box and its buttons will need to have the same fade effect as the original Vidya player (same as the navbar) */
-.control-box-row {
-    text-align: center;
+.control-box-first-row {
     flex-grow: 1;
     font-size: 14px;
+    min-height: 1.1rem;
 }
 
 .control-box-second-row {
     text-align: center;
     flex-grow: 10;
+    min-height: 2.1rem;
+}
+
+.control-box-third-row {
+    text-align: center;
+    flex-grow: 10;
+    min-height: 1.1rem;
 }
 
 .control-box-element {
@@ -227,6 +234,11 @@ input[type="range"]::-webkit-slider-thumb {
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     border: 0.5px solid var(--top-level-border);
     cursor: pointer;
+    text-align: center;
+}
+
+.control-box-element:hover {
+    color: var(--site-light-blue);
 }
 
 /**** Flexbox Containers *****/
