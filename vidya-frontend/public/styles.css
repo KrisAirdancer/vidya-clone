@@ -22,7 +22,7 @@
     --site-light-blue: #94BAFF;
     --site-brown-orange: #7F6157;
     --nav-button-border: #636363;
-    --navbar-border: #919191;;
+    --top-level-border: #919191;;
     --fade-light: #1F4B7F;
     --fade-dark: #0A1929;
     --track-scrubber-height: 0.8rem;
@@ -59,7 +59,7 @@ nav {
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: var(--site-orange);
     padding: 0.15rem 0.1rem 0.15rem 0.1rem; /* top right bottom left */
-    border: 1px solid var(--navbar-border);
+    border: 1px solid var(--top-level-border);
 }
 
 nav ul {
@@ -194,6 +194,37 @@ input[type="range"]::-webkit-slider-thumb {
     font-size: 0.75rem;
 }
 
+/***** Control Box *****/
+
+.control-box {
+    position: absolute;
+    bottom: 5rem;
+    left: calc(50% - (var(--control-box-width) / 2));
+    height: var(--control-box-height);
+    width: var(--control-box-width);
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+}
+
+/* TODO: The border on the control box and its buttons will need to have the same fade effect as the original Vidya player (same as the navbar) */
+.control-box-row {
+    text-align: center;
+    border: 1px solid var(--top-level-border);
+    flex-grow: 1;
+    
+    
+}
+
+.control-box-second-row {
+    text-align: center;
+    border: 1px solid var(--top-level-border);
+    flex-grow: 10;
+}
+
+.control-box-element {
+    color: var(--site-orange);
+    width: 100%;
+}
+
 /**** Flexbox Containers *****/
 
 .nav-flex-container {
@@ -207,13 +238,18 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 #control-box-flex-container {
-    position: absolute;
-    bottom: 5rem;
-    left: calc(50% - (var(--control-box-width) / 2));
-    height: var(--control-box-height);
-    width: var(--control-box-width);
-    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
-    border: 1px solid var(--navbar-border);
+    display: flex;
+    flex-direction: column;
+}
+
+#control-box-row-two-flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#control-box-row-three-flex-container {
+    display: flex;
+    flex-direction: row;
 }
 
 /**** Flexbox Items *****/
