@@ -9,10 +9,10 @@ function App() {
   return (
     <>
       {/* <HelloWorld /> */}
-      {/* <EndpointTest /> */}
-      <Navbar />
+      <EndpointTest />
+      {/* <Navbar />
       <TrackList />
-      <ControlBox />
+      <ControlBox /> */}
     </>
   )
 }

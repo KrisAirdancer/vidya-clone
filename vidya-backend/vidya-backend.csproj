@@ -7,4 +7,8 @@
     <RootNamespace>vidya_backend</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SinglePageApplication" Version="4.0.20221.15125" />
+  </ItemGroup>
+
 </Project>
