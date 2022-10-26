@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" id="root-html-tag">
+    <head>
+        <title>Vidya Clone</title>
+        <meta charset="utf-8">
+        <link rel="icon" href="./favicon.png" />
+        <link rel="stylesheet" type="text/css" href="./styles.css">
+        <script src="jquery.js"></script>
+        <script ></script>
+    </head>
+    <body>
+
+      <div id="navbar-group">
+
+        <nav class="nav-flex-container">
+
+          <select id="nav-playlist-selector">
+            <option value="playlist_vip">VIP</option>
+            <option value="playlist_source" selected>Source</option>
+          </select>
+  
+          <div id="track-info">Track Info</div>
+  
+          <ul>
+            <li>
+              <button id="btn_chosen" class="nav-button">C</button>
+            </li>
+            <li>
+              <button id="btn_exiled" class="nav-button">E</button>
+            </li>
+            <li>
+              <button id="btn_volume" class="nav-button">V</button>
+            </li>
+          </ul>
+
+        </nav>
+
+        <div id='track-scrubber' class="track-scrubber-flex-container">
+          <label id="time-played">0:00</label>
+          <input type="range" id="track-scrubber"/>
+          <label id="time-left">1:42</label>
+        </div>
+
+      </div>
+
+
+
+    </body>
+</html>
