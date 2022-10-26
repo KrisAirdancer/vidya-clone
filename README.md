@@ -1,5 +1,5 @@
 # vidya-clone
-A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
+A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777 over at [aersia.net](https://www.aersia.net/).
 
 # Current Progress
 
@@ -17,33 +17,9 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777.
 - [ ] Add symbols to control box and nav bar buttons (replace the placeholder text with symbols)
 
 
-# Other Information
-
-## Sources
+# Sources
 
 - Favicon from [Icons8](https://icons8.com/)
-
-## SOP
-
-- To run this project:
-    - Start backend: `cd vidya-backend` and then run `dotnet run`
-    - Start frontend: `cd vidya-frontend` and then run `npm start`
-
-# Resources
-
-## Used
-
-- [How To Create A Navbar In React With Routing](https://www.youtube.com/watch?v=SLfhMt5OUPI)
-    - Used to setup the nav bar.
-- [Learn React In 30 Minutes](https://www.youtube.com/watch?v=hQAHSlTtcmY&t=1078s)
-    - Used to get an overview of React.js and to setup the basic React.js part of the project.
-
-## Unused
-
-- [CSS Positioning Tutorial, The Net Ninja](https://www.youtube.com/watch?v=k4taTzkhzHc)
-    - This might be helpful for getting the navbar to sit on top of other elements.
-- [The Net Ninja, Full React Tutorial](https://www.youtube.com/watch?v=j942wKiXFu8&list=PL4cUxeGkcC9gZD-Tvwfod2gaISzfRiP9d)
-
 
 # Work Log
 
