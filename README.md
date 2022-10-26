@@ -14,6 +14,8 @@ A clone of the [Vidya Intarweb Playlist](https://www.vipvgm.net/) by Cats777 ove
     - A React.js tutorial on this is [here](https://www.youtube.com/watch?v=jfJ5ON05JKk)
 - [ ] Build the popup menu in the bottom right of the screen in the original.
     - Displays credits, logic to import/export chosen/exiled tracks (configurations), a link to the changelog, etc.
+- [ ] Style the playlists dropdown menu (the dropdown part)
+- [ ] Add a volume control slider that pops out from under the volume button
 - [ ] Add symbols to control box and nav bar buttons (replace the placeholder text with symbols)
 
 
