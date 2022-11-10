@@ -1,18 +1,31 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const path = require('path');
+
+/***** CONFIGURATIONS *****/
 
 const PORT = 11001;
 
+/***** ROUTING *****/
+
+/***** APPLICATION SETUP *****/
+
+const app = express();
+
+// Expose public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+/***** ROUTING *****/
+
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  // res.send('Hello World!')
+  res.sendFile('index.html')
 })
 
-app.listen(port, () => {
+/***** LAUNCH APPLICATION *****/
+
+app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
-
-
-
 
 
 // TODO: Build Node.js server here.
