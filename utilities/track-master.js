@@ -1,34 +1,59 @@
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 
+// Directories being accessed
+const TRACKS_DIR = '../vidya-frontend/public/tracks/';
+const TRACKS_MASTER_LIST_DIR = '../vidya-backend/data/tracks-master-list.json';
 
+/**
+ * Generates a JSON representation of all of the tracks located at tracksDir and stores
+ * that representation in a JSON file at targetDir.
+ * 
+ * Overrites the contents of the file specified at targetDir.
+ */
+async function generateTracksJSON(tracksDir, targetDir) {
 
-const TARGET_DIR = '../vidya-frontend/public/tracks/';
+    let metadata = [];
 
-function generateTracksJSON() {
-
-    let files = fs.readdirSync(TARGET_DIR);
+    let files = fs.readdirSync(tracksDir);
 
     files.forEach(file => {
-        console.log(file);
 
         // Tokenize track names
-        console.log(file.split(' - '));
+        let tokens = file.split(' - ');
+
+        let track = {
+            trackID: tokens[0],
+            trackGame: tokens[1],
+            trackName: tokens[2]
+        };
+        
+        metadata.push(track);
     });
+
+    await fsPromises.writeFile(targetDir, JSON.stringify(metadata));
 }
 
+/**
+ * Reads the entire contents of the tracks-master-list.js file and prints them to the console.
+ * 
+ * This method for testing purposes.
+ */
+async function printTracksMasterList(sourceDir, encoding) {
 
-generateTracksJSON();
+    let metadata = fs.readFileSync(sourceDir, encoding, (error) => {
+        if (error) {
+            console.log(error);
+        }
+    });
+    console.log(metadata);
+}
+
+/**************
+ * OPERATIONS *
+ **************/
+
+generateTracksJSON(TRACKS_DIR, TRACKS_MASTER_LIST_DIR);
+// printTracksMasterList(TRACKS_MASTER_LIST_DIR, 'utf-8');
 
 
-
-
-
-
-
-
-
-
-// Loop over vidya-frontend/public/tracks/
-    // Extract Track ID, Game Name, and Track Name from all filenames
-    // Alphabetize list by Game Name then Track Name
-    // Store list in .json file in /utilities/outputs/
