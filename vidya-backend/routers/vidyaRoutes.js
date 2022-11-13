@@ -69,6 +69,25 @@ const TRACK_LISTS_DIR = './data';
       res.send();
     }
   });
+
+  /**
+   * Returns a human-readable list of the available playlists.
+   * 
+   * Works only for playlist files with filnames of the format "playlistname-playlist.json".
+   * Returns "playlistname" from each filename.
+   */
+  router.get('/playlists', (req, res) => {
+
+    let playlists = fs.readdirSync('./data/playlists');
+    let formattedPlaylists = [];
+
+    playlists.forEach(playlist => {
+      formattedPlaylists.push(playlist.split('-')[0]);
+    });
+
+    res.status(200);
+    res.send(formattedPlaylists);
+  });
   
   /* PUT */
   
