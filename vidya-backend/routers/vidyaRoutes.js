@@ -69,6 +69,37 @@ const TRACK_LISTS_DIR = './data';
       res.send();
     }
   });
+
+  // TODO: Write doc.
+  /**
+   * 
+   * Works only for playlist files with filnames of the format "playlistname-playlist.json".
+   * Returns "playlistname" from each filename.
+   */
+  router.get('/playlists', (req, res) => {
+    console.log('AT: /playlists');
+    // Read contents of playlists directory
+    // Format playlist names into human-readable format
+    // Attach list to response body
+    // Send response
+
+    let playlists = fs.readdirSync('./data/playlists');
+    console.log(playlists);
+
+    let formattedPlaylists = [];
+
+    playlists.forEach(playlist => {
+      formattedPlaylists.push(playlist.split('-')[0]);
+    });
+    console.log(formattedPlaylists);
+
+
+    
+
+
+    res.status(200);
+    res.send(formattedPlaylists);
+  });
   
   /* PUT */
   

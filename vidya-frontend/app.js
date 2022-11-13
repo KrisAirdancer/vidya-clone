@@ -1,9 +1,12 @@
 const express = require('express');
 const path = require('path');
 
+const axios = require('axios');
+// const axios = require('axios').default;
+
 /***** CONFIGURATIONS *****/
 
-const PORT = 11001;
+const PORT = 11002;
 
 /***** APPLICATION SETUP *****/
 
@@ -41,7 +44,24 @@ app.get('/', (req, res) => {
       // Append the list of playlists as an object to the response body.
     // Makle an API call to the backend using Axios to get the trackID of the currently playing track.
     // Return index.html with res.sendFile()
-})
+});
+
+app.get('/pl', (req, res) => {
+  console.log('AT: /pl');
+
+  axios({
+    method: 'get',
+    // url: 'https://jsonplaceholder.typicode.com/users' // It works with this URL. That means the issue isn't with this code, but with the vidya-backend API code.
+    url: 'http://localhost:11001/playlists'
+  })
+  .then(response => console.log(response))
+  .catch(error => console.log(error))
+  console.log('Axios request complete');
+  // res.status(200);
+  // res.send();
+
+
+});
 
 /***** LAUNCH APPLICATION *****/
 
