@@ -49,11 +49,8 @@ app.get('/', (req, res) => {
 app.get('/pl', (req, res) => {
   console.log('AT: /pl');
 
-  axios({
-    method: 'get',
-    // url: 'https://jsonplaceholder.typicode.com/users' // It works with this URL. That means the issue isn't with this code, but with the vidya-backend API code.
-    url: 'http://localhost:11001/playlists'
-  })
+   // 'https://jsonplaceholder.typicode.com/users' // It works with this URL. That means the issue isn't with this code, but with the vidya-backend API code.
+  axios.get('https://localhost:11001/test')
   .then(response => console.log(response))
   .catch(error => console.log(error))
   console.log('Axios request complete');

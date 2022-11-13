@@ -15,6 +15,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', vidyaRoutes);
 
+app.get('/test', (req, res) => {
+  res.send('Hello!');
+});
+
 /***** ROUTING *****/
 
 // TODO: Add a generic "404 resource not found" route here (outside of the routers) - 404 or 400?
