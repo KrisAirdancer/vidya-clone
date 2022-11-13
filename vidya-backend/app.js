@@ -1,12 +1,10 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const vidyaRoutes = require('./routers/vidyaRoutes.js');
 
 /***** CONFIGURATIONS *****/
 
 const PORT = 11001;
-const TRACK_LISTS_DIR = './data';
 
 /***** APPLICATION SETUP *****/
 

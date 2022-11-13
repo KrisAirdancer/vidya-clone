@@ -1,19 +1,22 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
+const bodyParser = require('body-parser');
 
 /***** APPLICATION SETUP *****/
 
 // Create Router
 const router = express.Router();
 
+router.use(bodyParser.urlencoded({ extended: true }));
+
 /***** CONFIGURATIONS *****/
 
-const PORT = 11001;
 const TRACK_LISTS_DIR = './data';
 
 /***** ROUTING *****/
 
-// GET
+/* GET */
 
 /**
  * Returns the tracks-master-list.json that is needed to render the Tracks List
@@ -32,7 +35,8 @@ const TRACK_LISTS_DIR = './data';
    * :listName is the name of the list to be returned.
    */
   router.get('/list/:listName', (req, res) => {
-  
+    // TODO: The logic in here should, per the Mozilla docs, be in a helper function -- consider moving it into one.
+
     let listName = '';
     let status = 400;
   
@@ -67,12 +71,72 @@ const TRACK_LISTS_DIR = './data';
     }
   });
   
-  // PUT
+  /* PUT */
   
-  // POST
+  /**
+   * Adds the given trackID to the tracks list specified in the request body.
+   * 
+   * The target list must be specified in the response body as "targetList".
+   * 
+   * @param {*} :trackID The ID of the track to be added to the specified list.
+   * @param {*} targetList The list to which the specified trackID will be added.
+   */
+  router.put('/list/:trackID', (req, res) => {
+
+    let status = 400;
+
+    if (req.body.targetList === undefined || req.body.targetList === null) {
+      status = 400;
+    } else {
+      addTrackToList(req.body.targetList, req.params.trackID);
+      status = 200;
+    }
+
+    res.status(status);
+    res.send();
+  });
+
+  /* POST */
   
   // There are no POST routes in this API.
   
-  // DELETE
+  /* DELETE */
 
-  module.exports = router;
+/***** HELPER FUNCTIONS *****/
+
+/**
+ * Adds the specified trackID to the specifed tracks list.
+ * 
+ * @param {*} targetList The list to which the trackID will be added.
+ * @param {*} trackID The ID of the track to be added to the targetList.
+ * @returns The status code to be sent in the response.
+ */
+function addTrackToList(targetList, trackID) {
+
+  let regExp = /^[0-9]{4}$/;
+
+  if ((targetList !== 'chosen' && targetList !== 'exiled') || !regExp.test(trackID)) { // Matchs a series of digits of length 4. ex. 0034
+    return 404;
+  }
+
+  let tracksList = fs.readFileSync(path.join(TRACK_LISTS_DIR, `${targetList}-tracks.csv`), 'utf-8');
+
+  if (tracksList.length > 0) {
+    tracksList = tracksList.split(',');
+  }
+
+  let tracks = new Set(tracksList);
+  tracks.add(trackID);
+
+  fs.writeFile(path.join(TRACK_LISTS_DIR, `${targetList}-tracks.csv`), Array.from(tracks).join(','), error => {
+    if (error) {
+      console.log(error);
+    }
+  });
+
+  return 200;
+}
+
+/***** EXPORTS *****/
+
+module.exports = router;
