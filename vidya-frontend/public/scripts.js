@@ -1,3 +1,4 @@
+/// TODO: This is a test function. Remove it.
 let btn1 = () => {
     console.log('here')
     let e = document.querySelector('#btn_chosen')

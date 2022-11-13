@@ -45,11 +45,11 @@ const TRACK_LISTS_DIR = './data';
         status = 200;
         break;
       case 'chosen':
-        listName = 'chosen-tracks.json'
+        listName = 'chosen-tracks.csv'
         status = 200;
         break;
       case 'exiled':
-        listName = 'exiled-tracks.json'
+        listName = 'exiled-tracks.csv'
         status = 200;
         break;
       default:
