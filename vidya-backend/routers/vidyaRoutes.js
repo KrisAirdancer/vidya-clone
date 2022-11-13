@@ -35,7 +35,6 @@ const TRACK_LISTS_DIR = './data';
    * :listName is the name of the list to be returned.
    */
   router.get('/list/:listName', (req, res) => {
-    // TODO: The logic in here should, per the Mozilla docs, be in a helper function -- consider moving it into one.
 
     let listName = '';
     let status = 400;
