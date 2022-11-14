@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" id="root-html-tag">
+    <head>
+        <title>Vidya Clone</title>
+        <meta charset="utf-8">
+        <link rel="icon" href="./favicon.png" />
+        <link rel="stylesheet" type="text/css" href="./styles.css">
+        <script src="./scripts.js"></script>
+    </head>
+    <body>
+
+      <div id="navbar-group">
+
+        <nav class="nav-flex-container">
+
+          <select id="nav-playlist-selector">
+            <option value="playlist_vip">VIP</option>
+            <option value="playlist_source" selected>Source</option>
+          </select>
+  
+          <div id="track-info">Track Info</div>
+  
+          <ul>
+            <li>
+              <button id="btn_chosen" class="nav-button" onclick="btn1()">C</button>
+            </li>
+            <li>
+              <button id="btn_exiled" class="nav-button">E</button>
+            </li>
+            <li>
+              <button id="btn_volume" class="nav-button">V</button>
+            </li>
+          </ul>
+
+        </nav>
+
+        <div id='track-scrubber' class="track-scrubber-flex-container">
+          <label id="time-played">0:00</label>
+          <input type="range" id="track-scrubber"/>
+          <label id="time-left">1:42</label>
+        </div>
+
+      </div>
+
+      <div id='control-box-flex-container' class='control-box'>
+      
+        <div class='control-box-first-row control-box-element'></div>
+  
+        <div id='control-box-row-two-flex-container' class='control-box-second-row'>
+          <button class='control-box-element'>&lt;&lt;</button>
+          <button class='control-box-element'>&gt;/II</button>
+          <button class='control-box-element'>&gt;&gt;</button>
+        </div>
+  
+        <div id='control-box-row-three-flex-container' class='control-box-row'>
+          <button class='control-box-element'>Replay</button> <!-- TODO: This button should set the current track to replay endlessly -->
+          <button class='control-box-element'>Nav Up</button> <!-- TODO: This button should hide the navbar -->
+        </div>
+      
+      </div>
+
+    </body>
+</html>
