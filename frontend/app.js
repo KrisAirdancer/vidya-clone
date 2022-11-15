@@ -17,13 +17,13 @@ app.get('/', (req, res) => {
   send('index.html');
 });
 
+// This method for testig the /test route on the backend (vidya-backend).
 app.get('/test', (req, res) => {
 
-  let data = 'BLANK';
+  let data = '';
 
   axios.get('http://localhost:11002/test')
        .then(response => {
-         // console.log(response);
          console.log(response.data);
          data = response.data;
        })
@@ -32,6 +32,22 @@ app.get('/test', (req, res) => {
          res.send(data);
        });
 
+});
+
+// This method for testing the playlists route on the backend (vidya-backend).
+app.get('/playlists', (req, res) => {
+
+  let data = '';
+
+  axios.get('http://localhost:11002/playlists')
+       .then(response => {
+        console.log(response.data);
+        data = response.data;
+       })
+       .then(() => {
+        res.status(200);
+        res.send(data);
+       });
 });
 
 /***** ROUTING *****/
