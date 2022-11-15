@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
-const vidyaRoutes = require('./routers/vidyaRoutes.js');
-const ListGenerator = require('./models/listGenerator.js');
+const axios = require('axios');
 
 /***** CONFIGURATIONS *****/
 
@@ -14,7 +13,24 @@ const app = express();
 // Expose public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', vidyaRoutes);
+app.get('/', (req, res) => {
+  send('index.html');
+});
+
+app.get('/test', (req, res) => {
+
+  let data = '';
+
+  axios.get('http://localhost:11002/test')
+  .then(response => {
+    // console.log(response);
+    console.log(response.data);
+    data = response.data;
+  });
+
+  res.status(200);
+  res.send(data);
+});
 
 /***** ROUTING *****/
 
