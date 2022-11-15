@@ -19,17 +19,19 @@ app.get('/', (req, res) => {
 
 app.get('/test', (req, res) => {
 
-  let data = '';
+  let data = 'BLANK';
 
   axios.get('http://localhost:11002/test')
-  .then(response => {
-    // console.log(response);
-    console.log(response.data);
-    data = response.data;
-  });
+       .then(response => {
+         // console.log(response);
+         console.log(response.data);
+         data = response.data;
+       })
+       .then(() => {
+         res.status(200);
+         res.send(data);
+       });
 
-  res.status(200);
-  res.send(data);
 });
 
 /***** ROUTING *****/
