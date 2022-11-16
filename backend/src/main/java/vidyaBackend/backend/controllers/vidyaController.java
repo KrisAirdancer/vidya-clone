@@ -68,6 +68,7 @@ public class vidyaController
 			// TODO: Add logging here.
 			System.out.println(e.getMessage());
 
+			// TODO: Is returning an empty list like this the proper way to do this?
 			return new ResponseEntity<List<String>>(new ArrayList<String>(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
