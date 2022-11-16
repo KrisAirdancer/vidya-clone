@@ -1,17 +1,19 @@
 package vidyaBackend.backend.controllers;
 
-import java.io.Console;
-import java.io.File;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class vidyaController
 {
 	public final String PLAYLISTS_DIR = "src/main/data/playlists/";
+	public final String DATA_DIR = "src/main/data/";
 
 	// TODO: Ultimately, delete this method once it is done being used for testing.
     @GetMapping("/test")
@@ -40,5 +42,33 @@ public class vidyaController
 		}
 
 		return ResponseEntity.ok(playlists);
+	}
+
+	// TODO: Write doc.
+	/**
+	 * 
+	 * 
+	 * @param listName
+	 * @return
+	 */
+	@GetMapping("/list/{listName}")
+	public ResponseEntity<List<String>> getPlaylist(@PathVariable(value="listName") String listName)
+	{
+		File playlist = new File(DATA_DIR + "/" + listName + "-tracks.csv");
+
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(playlist));
+
+			String[] IDs = reader.readLine().split(",");
+			reader.close();
+
+			return new ResponseEntity<List<String>>(Arrays.asList(IDs), HttpStatus.OK);
+			
+		} catch (Exception e) {
+			// TODO: Add logging here.
+			System.out.println(e.getMessage());
+
+			return new ResponseEntity<List<String>>(new ArrayList<String>(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }
