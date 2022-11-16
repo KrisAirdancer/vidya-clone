@@ -54,6 +54,8 @@ public class vidyaController
 	@GetMapping("/list/{listName}")
 	public ResponseEntity<List<String>> getPlaylist(@PathVariable(value="listName") String listName)
 	{
+		// TODO: Handle invalid request (invalid listName)
+
 		File playlist = new File(DATA_DIR + "/" + listName + "-tracks.csv");
 
 		try {
