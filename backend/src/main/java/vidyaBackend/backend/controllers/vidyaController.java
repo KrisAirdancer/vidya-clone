@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @RestController
 public class vidyaController
@@ -46,15 +47,19 @@ public class vidyaController
 
 	// TODO: Write doc.
 	/**
+	 * Returns a JSON representation of the list of trackIDs stored in the requested playlist file.
 	 * 
-	 * 
-	 * @param listName
-	 * @return
+	 * @param listName The name of the playlist to be returned.
+	 * @return A JSON representation of the trackIDs stored in the playlist associated with listName.
 	 */
 	@GetMapping("/list/{listName}")
 	public ResponseEntity<List<String>> getPlaylist(@PathVariable(value="listName") String listName)
 	{
-		// TODO: Handle invalid request (invalid listName)
+		if (!listName.equals("chosen") && !listName.equals("exiled"))
+		{
+			// TODO: Is returning an empty list like this the proper way to do this?
+			return new ResponseEntity<List<String>>(new ArrayList<String>(), HttpStatus.BAD_REQUEST);
+		}
 
 		File playlist = new File(DATA_DIR + "/" + listName + "-tracks.csv");
 
