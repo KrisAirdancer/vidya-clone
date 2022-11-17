@@ -7,13 +7,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.google.gson.Gson;
+
+import vidyaBackend.backend.models.PutListBody;
 
 @RestController
 public class vidyaController
 {
 	public final String PLAYLISTS_DIR = "src/main/data/playlists/";
 	public final String DATA_DIR = "src/main/data/";
+
+	public HashSet<String> chosenTracks = new HashSet<String>();
+	public HashSet<String> exiledTracks = new HashSet<String>();
+
+	public vidyaController()
+	{
+		populateListSet("chosen");
+		populateListSet("exiled");
+		
+	}
+
+	/***** ROUTING *****/
 
 	// TODO: Ultimately, delete this method once it is done being used for testing.
     @GetMapping("/test")
@@ -22,6 +41,7 @@ public class vidyaController
 		return "It worked!";
 	}
 
+	// TODO: Update this method to utilize the new HashSets
 	/**
 	 * Generates a list of playlist names representing the list of playlits available
 	 * in the system (in the directory specified by PLAYLISTS_DIR).
@@ -44,14 +64,16 @@ public class vidyaController
 		return ResponseEntity.ok(playlists);
 	}
 
+	// TODO: Implement getPlaylist (/playlst/{playlistName}) here.
+
 	/**
 	 * Returns a JSON representation of the list of trackIDs stored in the requested playlist file.
 	 * 
 	 * @param listName The name of the playlist to be returned.
 	 * @return A JSON representation of the trackIDs stored in the playlist associated with listName.
 	 */
-	@GetMapping("/playlist/{listName}")
-	public ResponseEntity<List<String>> getPlaylist(@PathVariable(value="listName") String listName)
+	@GetMapping("/list/{listName}")
+	public ResponseEntity<List<String>> getList(@PathVariable(value="listName") String listName)
 	{
 		if (!listName.equals("chosen") && !listName.equals("exiled"))
 		{
@@ -111,4 +133,167 @@ public class vidyaController
 			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	/**
+	 * Updates the given list based on the request specifications:
+	 * - Add/Remove track specified as "true"/"false" in request body as "add".
+	 * - List to modify specified as "chosen"/"exiled" in request body as "list".
+	 * 
+	 * The default action is "add".
+	 * 
+	 * Example:
+	 * {
+	 * 	  "list": "chosen",
+	 *    "add": "true"
+	 * }
+	 * 
+	 * @param trackID The trackID to be added/removed to/from the specified list.
+	 * @param body Add/Remove action and list to modify are specified in request body.
+	 */
+	@PutMapping("/list/{trackID}")
+	public void updateList(@PathVariable("trackID") String trackID, @RequestBody String body)
+	{
+		Gson gson = new Gson();
+
+		PutListBody dBody;
+		try {
+			dBody = gson.fromJson(body, PutListBody.class);
+		} catch (Exception e) {
+			// TODO: Add logging here.
+			System.out.println("FIRST");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+
+		if ((!dBody.list.equals("chosen") && !dBody.list.equals("exiled")) || !trackID.matches("^[0-9]{4}$")) // Matchs a series of digits of length 4. ex. 0034
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+
+		if (dBody.list.equals("chosen"));
+		{
+			if (dBody.add) // Add track
+			{
+				this.chosenTracks.add(trackID);
+				this.exiledTracks.remove(trackID);
+			}
+			else // Remove track
+			{
+				this.chosenTracks.remove(trackID);
+			}
+		}
+		if (dBody.list.equals("exiled"))
+		{
+			if (dBody.add)
+			{
+				this.exiledTracks.add(trackID);
+				this.chosenTracks.remove(trackID);
+			}
+			else
+			{
+				this.exiledTracks.remove(trackID);
+			}
+		}
+
+		// Write changes to list file
+
+		updateLists();
+	}
+
+	/***** UTILITIES *****/
+
+	// TODO: If the filename is wrong (where the File object is created), a 200 code is returned despite the Writer not being able to write to the non-extant file. Fix this - a 500 code needs to be returned.
+	/**
+	 * Writes the data in the chosenTracks and exiledTracks HashMaps to the
+	 * CSV files on the system.
+	 */
+	public void updateLists()
+	{
+		File chosenList = new File(DATA_DIR + "chosen-tracks.csv");
+		File exiledList = new File(DATA_DIR + "exiled-tracks.csv");
+
+		try {
+			
+			BufferedWriter chosenWriter = new BufferedWriter(new FileWriter(chosenList));
+			BufferedWriter exiledWriter = new BufferedWriter(new FileWriter(exiledList));
+
+			Iterator<String> chosenIterator = this.chosenTracks.iterator();
+			Iterator<String> exiledIterator = this.exiledTracks.iterator();
+
+			StringBuilder chosen = new StringBuilder();
+			StringBuilder exiled = new StringBuilder();
+
+			while (chosenIterator.hasNext())
+			{
+				String next = chosenIterator.next();
+				chosen.append(next + ",");
+			}
+			while (exiledIterator.hasNext())
+			{
+				String next = exiledIterator.next();
+				exiled.append(next + ",");
+			}
+
+			chosen.deleteCharAt(chosen.length() - 1);
+			exiled.deleteCharAt(exiled.length() - 1);
+
+			chosenWriter.write(chosen.toString());
+			exiledWriter.write(exiled.toString());
+
+			chosenWriter.close();
+			exiledWriter.close();
+
+		} catch (Exception e) {
+			// TODO: Add logging here
+			System.out.println(e.getMessage());
+			// TODO: Not sure if this is going to propogate up to the calling methods correctly. Check that it is and adjust as necessary.
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * Populates the HashSet representations of the specified list (chosen/exiled)
+	 * from the contents of the associated playlist CSV file.
+	 * 
+	 * @param list The list (chosen/exiled) to be populated.
+	 */
+	public void populateListSet(String list)
+	{
+		File chosenList = new File(DATA_DIR + list + "-tracks.csv");
+
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(chosenList));
+
+			StringBuilder fileContents = new StringBuilder();
+
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				fileContents.append(line);
+			}
+
+			reader.close();
+
+			String[] IDs = fileContents.toString().split(",");
+
+			for (String trackID : IDs)
+			{
+				if (list.equals("chosen"))
+				{
+					this.chosenTracks.add(trackID);
+				}
+				if (list.equals("exiled"))
+				{
+					this.exiledTracks.add(trackID);
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO: Add logging here.
+			System.out.println(e.getMessage());
+		}
+	}
 }
+
+// TODO: Ultimately, replace the file-based data storage with a database.
+// TODO: Add some form of authorization check - the frontend should send an auth-token to the backend. If the token isn't valid, the backend will reject the request.
