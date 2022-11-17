@@ -50,7 +50,7 @@ public class vidyaController
 	 * @param listName The name of the playlist to be returned.
 	 * @return A JSON representation of the trackIDs stored in the playlist associated with listName.
 	 */
-	@GetMapping("/list/{listName}")
+	@GetMapping("/playlist/{listName}")
 	public ResponseEntity<List<String>> getPlaylist(@PathVariable(value="listName") String listName)
 	{
 		if (!listName.equals("chosen") && !listName.equals("exiled"))
@@ -78,6 +78,12 @@ public class vidyaController
 		}
 	}
 
+	// TODO: Write doc
+	/**
+	 * Returns a JSON representation of the contents of the tracks-master-list.json file.
+	 * 
+	 * @return A JSON representation of the coontents of the tracks-master-list.json file.
+	 */
 	@GetMapping("/master")
 	public ResponseEntity<String> getMasterList()
 	{
