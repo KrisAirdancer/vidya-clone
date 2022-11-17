@@ -78,7 +78,6 @@ public class vidyaController
 		}
 	}
 
-	// TODO: Write doc
 	/**
 	 * Returns a JSON representation of the contents of the tracks-master-list.json file.
 	 * 
