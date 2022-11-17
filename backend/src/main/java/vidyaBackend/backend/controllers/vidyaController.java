@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpStatusCodeException;
 
 @RestController
 public class vidyaController
@@ -45,7 +44,6 @@ public class vidyaController
 		return ResponseEntity.ok(playlists);
 	}
 
-	// TODO: Write doc.
 	/**
 	 * Returns a JSON representation of the list of trackIDs stored in the requested playlist file.
 	 * 
@@ -77,6 +75,35 @@ public class vidyaController
 
 			// TODO: Is returning an empty list like this the proper way to do this?
 			return new ResponseEntity<List<String>>(new ArrayList<String>(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/master")
+	public ResponseEntity<String> getMasterList()
+	{
+		File masterList = new File(DATA_DIR + "tracks-master-list.json");
+
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(masterList));
+
+			StringBuilder fileContents = new StringBuilder();
+
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				fileContents.append(line);
+			}
+
+			reader.close();
+
+			return new ResponseEntity<String>(fileContents.toString(), HttpStatus.OK);
+
+		} catch (Exception e) {
+			// TODO: Add logging here.
+			System.out.println(e.getMessage());
+
+			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

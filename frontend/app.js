@@ -34,12 +34,28 @@ app.get('/test', (req, res) => {
 
 });
 
-// This method for testing the playlists route on the backend (vidya-backend).
+// This method for testing the /playlists route on the backend (vidya-backend).
 app.get('/playlists', (req, res) => {
 
   let data = '';
 
   axios.get('http://localhost:11002/playlists')
+       .then(response => {
+        console.log(response.data);
+        data = response.data;
+       })
+       .then(() => {
+        res.status(200);
+        res.send(data);
+       });
+});
+
+// This route is for testing the /master route on vidya-backend.
+app.get('/master', (req, res) => {
+
+  let data = '';
+
+  axios.get('http://localhost:11002/master')
        .then(response => {
         console.log(response.data);
         data = response.data;
@@ -58,4 +74,7 @@ app.get('/playlists', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`vidya-backend is listening on port ${PORT}`)
-})
+});
+
+
+// TODO: Add proper documentation comments to all of the routes in this file.
