@@ -136,7 +136,7 @@ public class vidyaController
 
 	/**
 	 * Updates the given list based on the request specifications:
-	 * - Add/Remove track specified as "true"/"false" in request body as "add".
+	 * - Add/Remove track specified as "add"/"remove" in request body as "action".
 	 * - List to modify specified as "chosen"/"exiled" in request body as "list".
 	 * 
 	 * The default action is "add".
@@ -144,7 +144,7 @@ public class vidyaController
 	 * Example:
 	 * {
 	 * 	  "list": "chosen",
-	 *    "add": "true"
+	 *    "action": "add"
 	 * }
 	 * 
 	 * @param trackID The trackID to be added/removed to/from the specified list.
@@ -153,48 +153,63 @@ public class vidyaController
 	@PutMapping("/list/{trackID}")
 	public void updateList(@PathVariable("trackID") String trackID, @RequestBody String body)
 	{
+		System.out.println("AT: /list/{trackID}");
+
+		/***** Retreive Request Body *****/
+
 		Gson gson = new Gson();
 
-		PutListBody dBody;
+		PutListBody reqBody;
 		try {
-			dBody = gson.fromJson(body, PutListBody.class);
+			reqBody = gson.fromJson(body, PutListBody.class);
 		} catch (Exception e) {
 			// TODO: Add logging here.
 			System.out.println("FIRST");
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gson failure (E-0001)");
 		}
 
-		if ((!dBody.list.equals("chosen") && !dBody.list.equals("exiled")) || !trackID.matches("^[0-9]{4}$")) // Matchs a series of digits of length 4. ex. 0034
+		/***** Validate Request *****/
+
+		// Validate request body
+		if ((reqBody.list == null || reqBody.action == null) // Null fields check - for "key" values (from response) that don't map to a field in PutListBody objects
+			 || (!reqBody.list.equals("chosen") && !reqBody.list.equals("exiled")) // "value" field checks - for invalid "value" field values
+		     || (!reqBody.action.equals("add") && !reqBody.action.equals("remove")) // "value" field checks - for invalid "value" field values
+		     || !trackID.matches("^[0-9]{4}$")) // Matchs a series of digits of length 4. ex. 0034
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Improperly formatted request (E-0002)");
 		}
 
-		if (dBody.list.equals("chosen"));
+		/***** Process Request *****/
+
+		System.out.println("dbody.list: " + reqBody.list);
+		System.out.println("dbody.add: " + reqBody.action);
+		if (reqBody.list.equals("chosen"));
 		{
-			if (dBody.add) // Add track
+			if (reqBody.action.equals("add")) // Add track
 			{
+				System.out.println("ADDING");
 				this.chosenTracks.add(trackID);
 				this.exiledTracks.remove(trackID);
 			}
-			else // Remove track
+			if (reqBody.action.equals("remove")) // Remove track
 			{
 				this.chosenTracks.remove(trackID);
 			}
 		}
-		if (dBody.list.equals("exiled"))
+		if (reqBody.list.equals("exiled"))
 		{
-			if (dBody.add)
+			if (reqBody.action.equals("add"))
 			{
 				this.exiledTracks.add(trackID);
 				this.chosenTracks.remove(trackID);
 			}
-			else
+			if (reqBody.action.equals("remove"))
 			{
 				this.exiledTracks.remove(trackID);
 			}
 		}
 
-		// Write changes to list file
+		/***** Write changes to list file *****/
 
 		updateLists();
 	}

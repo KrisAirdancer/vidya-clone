@@ -3,11 +3,11 @@ package vidyaBackend.backend.models;
 public class PutListBody
 {
     public String list;
-    public boolean add;
+    public String action;
 
-    public  PutListBody(String list, boolean action)
+    public  PutListBody(String list, String action)
     {
         this.list = list;
-        this.add = action;
+        this.action = action;
     }
 }
