@@ -153,8 +153,6 @@ public class vidyaController
 	@PutMapping("/list/{trackID}")
 	public void updateList(@PathVariable("trackID") String trackID, @RequestBody String body)
 	{
-		System.out.println("AT: /list/{trackID}");
-
 		/***** Retreive Request Body *****/
 
 		Gson gson = new Gson();
@@ -164,7 +162,6 @@ public class vidyaController
 			reqBody = gson.fromJson(body, PutListBody.class);
 		} catch (Exception e) {
 			// TODO: Add logging here.
-			System.out.println("FIRST");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gson failure (E-0001)");
 		}
 
@@ -181,13 +178,10 @@ public class vidyaController
 
 		/***** Process Request *****/
 
-		System.out.println("dbody.list: " + reqBody.list);
-		System.out.println("dbody.add: " + reqBody.action);
 		if (reqBody.list.equals("chosen"));
 		{
 			if (reqBody.action.equals("add")) // Add track
 			{
-				System.out.println("ADDING");
 				this.chosenTracks.add(trackID);
 				this.exiledTracks.remove(trackID);
 			}
@@ -231,28 +225,29 @@ public class vidyaController
 			BufferedWriter chosenWriter = new BufferedWriter(new FileWriter(chosenList));
 			BufferedWriter exiledWriter = new BufferedWriter(new FileWriter(exiledList));
 
-			Iterator<String> chosenIterator = this.chosenTracks.iterator();
-			Iterator<String> exiledIterator = this.exiledTracks.iterator();
-
 			StringBuilder chosen = new StringBuilder();
 			StringBuilder exiled = new StringBuilder();
 
-			while (chosenIterator.hasNext())
+			if (!this.chosenTracks.isEmpty())
 			{
-				String next = chosenIterator.next();
-				chosen.append(next + ",");
+				for (String track : this.chosenTracks)
+				{
+					chosen.append(track + ",");
+				}
+
+				chosen.deleteCharAt(chosen.length() - 1);
+				chosenWriter.write(chosen.toString());
 			}
-			while (exiledIterator.hasNext())
+			if (!this.exiledTracks.isEmpty())
 			{
-				String next = exiledIterator.next();
-				exiled.append(next + ",");
+				for (String track : this.exiledTracks)
+				{
+					exiled.append(track + ",");
+				}
+
+				exiled.deleteCharAt(exiled.length() - 1);
+				exiledWriter.write(exiled.toString());
 			}
-
-			chosen.deleteCharAt(chosen.length() - 1);
-			exiled.deleteCharAt(exiled.length() - 1);
-
-			chosenWriter.write(chosen.toString());
-			exiledWriter.write(exiled.toString());
 
 			chosenWriter.close();
 			exiledWriter.close();
@@ -293,6 +288,9 @@ public class vidyaController
 
 			for (String trackID : IDs)
 			{
+				// Empty string check
+				if (trackID.equals("")) { continue; }
+
 				if (list.equals("chosen"))
 				{
 					this.chosenTracks.add(trackID);
