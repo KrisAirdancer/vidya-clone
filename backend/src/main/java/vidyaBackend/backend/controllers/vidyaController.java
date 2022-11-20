@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -85,7 +86,6 @@ public class vidyaController
 		}
 
 		File playlist = new File(PLAYLISTS_DIR + playlistName + "-playlist.csv");
-		System.out.println(playlist);
 
 		try {
 			
@@ -196,7 +196,7 @@ public class vidyaController
 	 * @param body Add/Remove action and list to modify are specified in request body.
 	 */
 	@PutMapping("/list/{trackID}")
-	public void updateList(@PathVariable("trackID") String trackID, @RequestBody String body)
+	public void updateList(@PathVariable(value="trackID") String trackID, @RequestBody String body)
 	{
 		/***** Retreive Request Body *****/
 
@@ -251,6 +251,48 @@ public class vidyaController
 		/***** Write changes to list file *****/
 
 		updateLists();
+	}
+
+	/**
+	 * Deletes the tracks.csv file specified by listName
+	 * 
+	 * listName must match the prefix of the tracks list to be cleared exactly.
+	 * Currently "chosen" and "exiled".
+	 * 
+	 * @param listName The tracklist to be deleted.
+	 */
+	@DeleteMapping("/reset/{listName}")
+	public void resetList(@PathVariable(value="listName") String listName)
+	{
+		if (!listName.equals("chosen") && !listName.equals("exiled"))
+		{
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Improperly formatted request (E-0003)");
+		}
+
+		/***** Clear the temporary data (HashSet) *****/
+
+		if (listName.equals("chosen"))
+		{
+			this.chosenTracks.clear();
+		}
+		if (listName.equals("exiled"))
+		{
+			this.exiledTracks.clear();;
+		}
+
+		/***** Clear the persistant data (file) *****/
+
+		File targetFile = new File(DATA_DIR + listName + "-tracks.csv");
+
+		targetFile.delete();
+
+		try {
+			targetFile.createNewFile();
+
+		} catch (IOException e) {
+			// TODO Add logging here
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create new tracks file (E-0004)");
+		}
 	}
 
 	/***** UTILITIES *****/
@@ -355,3 +397,4 @@ public class vidyaController
 
 // TODO: Ultimately, replace the file-based data storage with a database.
 // TODO: Add some form of authorization check - the frontend should send an auth-token to the backend. If the token isn't valid, the backend will reject the request.
+// TODO: Add error numbers to all non-200 responses. Ex. (E-0001)
