@@ -64,7 +64,52 @@ public class vidyaController
 		return ResponseEntity.ok(playlists);
 	}
 
-	// TODO: Implement getPlaylist (/playlst/{playlistName}) here.
+	/**
+	 * Returns the contents of the specified playlist file.
+	 * 
+	 * The playlistName needs to match one of the available playlists exactly. Currently"vip" or "mellow".
+	 * 
+	 * Note: Playlists are not build by the user of the vidya-player. Instead, the playlists
+	 * are built and maintained by the Web Master. Thus, there is only a route to get the
+	 * playlists and no routes to modify them.
+	 * 
+	 * @param playlistName The name of the playlist to be returned.
+	 * @return The trackIDs of the tracks in the specified playlist.
+	 */
+	@GetMapping("/playlist/{playlistName}")
+	public ResponseEntity<String> getPlaylist(@PathVariable(value="playlistName") String playlistName)
+	{
+		if (!playlistName.equals("mellow") && !playlistName.equals("vip"))
+		{
+			return new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+		}
+
+		File playlist = new File(PLAYLISTS_DIR + playlistName + "-playlist.csv");
+		System.out.println(playlist);
+
+		try {
+			
+			StringBuilder fileContents = new StringBuilder();
+
+			BufferedReader reader = new BufferedReader(new FileReader(playlist));
+
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				fileContents.append(line);
+			}
+			
+			reader.close();
+
+			return new ResponseEntity<String>(fileContents.toString(), HttpStatus.OK);
+
+		} catch (Exception e) {
+			// TODO: Add logging here
+			System.out.println(e.getMessage());
+
+			return new ResponseEntity<String>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	/**
 	 * Returns a JSON representation of the list of trackIDs stored in the requested playlist file.
