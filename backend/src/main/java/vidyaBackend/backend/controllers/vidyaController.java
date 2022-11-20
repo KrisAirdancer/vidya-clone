@@ -42,7 +42,6 @@ public class vidyaController
 		return "It worked!";
 	}
 
-	// TODO: Update this method to utilize the new HashSets
 	/**
 	 * Generates a list of playlist names representing the list of playlits available
 	 * in the system (in the directory specified by PLAYLISTS_DIR).
