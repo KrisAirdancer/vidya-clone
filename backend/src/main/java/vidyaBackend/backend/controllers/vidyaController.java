@@ -23,14 +23,16 @@ public class vidyaController
 	public final String PLAYLISTS_DIR = "src/main/data/playlists/";
 	public final String DATA_DIR = "src/main/data/";
 
+	public int chosenProbability; // Integer value between 0 and 100
 	public HashSet<String> chosenTracks = new HashSet<String>();
+	public HashSet<String> normalTracks = new HashSet<String>();
 	public HashSet<String> exiledTracks = new HashSet<String>();
 
 	public vidyaController()
 	{
 		populateListSet("chosen");
 		populateListSet("exiled");
-		
+		populateNormalTracksSet();
 	}
 
 	/***** ROUTING *****/
@@ -40,6 +42,22 @@ public class vidyaController
 	public String test()
 	{
 		return "It worked!";
+	}
+
+	@GetMapping("/next-track")
+	public String getNextTrack()
+	{
+		// TODO: Implement getNextTrack()
+
+		// Decide between a chosen track and all other tracks.
+			// Decision made based on the probability of selecting a chosen track.
+			// Will need to store that probability so that it persists. In the absence of a database, can either store this in its own .txt file or as the first entry in the chosen-tracks.csv file.
+		// If chosen,
+			// Choose only from the list of Chosen tracks
+		// If non-chosen,
+			// Choose only from the list of non-Chosen and non-exiled tracks (choose from normalTracks).
+
+		return "0000";
 	}
 
 	/**
@@ -391,6 +409,15 @@ public class vidyaController
 			// TODO: Add logging here.
 			System.out.println(e.getMessage());
 		}
+	}
+
+	// TODO: Write doc.
+	/**
+	 * Populates the normalTracks HashSet.
+	 */
+	public void populateNormalTracksSet()
+	{
+		// TODO: Implement populateNormalTracksSet()
 	}
 }
 
