@@ -23,7 +23,7 @@ public class vidyaController
 	public final String PLAYLISTS_DIR = "src/main/data/playlists/";
 	public final String DATA_DIR = "src/main/data/";
 
-	public int chosenProbability; // Integer value between 0 and 100
+	public int chosenProbability = 25;; // Integer value between 0 and 100. Defaults to 25.
 	public HashSet<String> chosenTracks = new HashSet<String>();
 	public HashSet<String> normalTracks = new HashSet<String>();
 	public HashSet<String> exiledTracks = new HashSet<String>();
@@ -33,6 +33,8 @@ public class vidyaController
 		populateListSet("chosen");
 		populateListSet("exiled");
 		populateNormalTracksSet();
+
+		// TODO: Implement logic to change chosenProbability to the saved value.
 	}
 
 	/***** ROUTING *****/
