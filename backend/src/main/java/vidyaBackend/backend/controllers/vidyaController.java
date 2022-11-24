@@ -23,7 +23,7 @@ public class vidyaController
 	public final String PLAYLISTS_DIR = "src/main/data/playlists/";
 	public final String DATA_DIR = "src/main/data/";
 
-	public int chosenProbability = 25;; // Integer value between 0 and 100. Defaults to 25.
+	public int chosenProbability = 25; // Integer value between 0 and 100. Defaults to 25.
 
 	public HashSet<String> chosenTracks = new HashSet<String>();
 	public HashSet<String> normalTracks = new HashSet<String>();
@@ -35,7 +35,8 @@ public class vidyaController
 		populateListSet("exiled");
 		populateNormalTracksSet();
 
-		// TODO: Implement logic to change chosenProbability to the saved value.
+		readChosenProbability();
+		System.out.println(chosenProbability);
 	}
 
 	/***** ROUTING *****/
@@ -224,6 +225,7 @@ public class vidyaController
 			// With this method, the backend, on startup, could just loop over the data (or use Gson to make an array of JSON objects from tracks-master-list.json), like I am doing in populateNormalTracksSet(), and add each trackID to the appropriate HashSet.
 			// Make this change after I finish implementing all of the backend routes - I'm almost done with them anyway - then make a v0.2.0 version of the project that contains the changeed backend.
 			// This is why databases are better. They reduce the risk of duplicate data or inconsistant data. Therefore, I should consolidate and have only a single file, tracks-master-list.json, that tracks all of the information in the system. This will prevent conflicting data between the files.
+			// Also, when doing this, consolidate the "metadata.txt" file. That is, move the data it contains to some other location and get rid of the file.
 
 		/***** Retreive Request Body *****/
 
@@ -282,6 +284,27 @@ public class vidyaController
 		/***** Write changes to list file *****/
 
 		updateLists();
+	}
+
+	// TODO: I'm using the wrong encoding for the metadata.txt file. As a result, the data is being stored incorrectly and isn't usable by the program.
+	/**
+	 * Updates the probability at whcih Chosen tracks will be played (vs Normal tracks).
+	 * 
+	 * @param probability The probability at which to play Chosen tracks.
+	 */
+	@PutMapping("/chosen-prob/{prob}")
+	public void updateChosenProbability(@PathVariable(value="prob") String probability)
+	{
+		try
+		{
+			setChosenProbability(Integer.parseInt(probability));
+		}
+		catch (Exception e) {
+			// TODO Add logging here
+			// e.printStackTrace();
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "probability must be between 0 and 100 (E-0005)");
+		}
 	}
 
 	/**
@@ -394,7 +417,7 @@ public class vidyaController
 	 * 
 	 * @param list The list (chosen/exiled) to be populated.
 	 */
-	public void populateListSet(String list)
+	private void populateListSet(String list)
 	{
 		File chosenList = new File(DATA_DIR + list + "-tracks.csv");
 
@@ -438,7 +461,7 @@ public class vidyaController
 	/**
 	 * Populates the normalTracks HashSet from the data in the tracks-master-list.json file.
 	 */
-	public void populateNormalTracksSet()
+	private void populateNormalTracksSet()
 	{
 		// TODO: I'm pretty sure I can use Gson here to convert the String returned by the BufferedReader into an array of JSON objects. If this is the case, I should use that method instead. Objects are easier and more concise to work with.
 
@@ -492,6 +515,68 @@ public class vidyaController
 				}
 
 			}
+		}
+	}
+
+	/**
+	 * Upates the probability that a Chosen track is played.
+	 * 
+	 * Updates both the metadata.txt file and this.chosenProbability.
+	 * 
+	 * @throws Exception If probability is not between 0 and 100.
+	 */
+	private void setChosenProbability(int probability) throws Exception
+	{
+		if (probability < 0 || probability > 100)
+		{
+			throw new NumberFormatException("probability must be between 0 and 100");
+		}
+
+		chosenProbability = probability;
+
+		File metadata = new File(DATA_DIR + "metadata.txt");
+
+		try
+		{
+			BufferedWriter writer = new BufferedWriter(new FileWriter(metadata));
+
+			writer.write(probability);
+
+			writer.close();
+		}
+		catch (IOException e) {
+			// TODO Add logging here
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Sets the value of this.chosenProbability to the value stored in metadata.txt.
+	 */
+	private void readChosenProbability()
+	{
+		File metadata = new File(DATA_DIR + "metadata.txt");
+
+		try
+		{
+			StringBuilder probValue = new StringBuilder();
+
+			BufferedReader reader = new BufferedReader(new FileReader(metadata));
+
+			// TODO: TO input checks. Need to ensure that the data read in from the file contains only the digits of the probability value. No whitespace, other characters, etc.
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				probValue.append(line);
+			}
+			
+			reader.close();
+
+			chosenProbability = Integer.parseInt(probValue.toString());
+		}
+		catch (Exception e) {
+			// TODO Add logging here
+			// e.printStackTrace();
 		}
 	}
 }
