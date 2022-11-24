@@ -218,6 +218,13 @@ public class vidyaController
 	@PutMapping("/list/{trackID}")
 	public void updateList(@PathVariable(value="trackID") String trackID, @RequestBody String body)
 	{
+	// TODO: Add logic to prevent trackIDs that are not in the system from being added.
+		// That is, if a trackID is sent in the request that doesn't exist in the system, the system is adding it. It shouldn't do this. Instead, this route should return a "not found" or "invalid request" error if the request contains a trackID that isn't in the system.
+		// Also, instead of shuffling trackIDs between lists, it might be easier to keep a single list (tracks-master-list.json) that has a property for each of the track objects that specifies what list it is in.
+			// With this method, the backend, on startup, could just loop over the data (or use Gson to make an array of JSON objects from tracks-master-list.json), like I am doing in populateNormalTracksSet(), and add each trackID to the appropriate HashSet.
+			// Make this change after I finish implementing all of the backend routes - I'm almost done with them anyway - then make a v0.2.0 version of the project that contains the changeed backend.
+			// This is why databases are better. They reduce the risk of duplicate data or inconsistant data. Therefore, I should consolidate and have only a single file, tracks-master-list.json, that tracks all of the information in the system. This will prevent conflicting data between the files.
+
 		/***** Retreive Request Body *****/
 
 		Gson gson = new Gson();
@@ -247,24 +254,28 @@ public class vidyaController
 		{
 			if (reqBody.action.equals("add")) // Add track
 			{
-				this.chosenTracks.add(trackID);
-				this.exiledTracks.remove(trackID);
+				chosenTracks.add(trackID);
+				exiledTracks.remove(trackID);
+				normalTracks.remove(trackID);
 			}
 			if (reqBody.action.equals("remove")) // Remove track
 			{
-				this.chosenTracks.remove(trackID);
+				chosenTracks.remove(trackID);
+				normalTracks.add(trackID);
 			}
 		}
 		if (reqBody.list.equals("exiled"))
 		{
 			if (reqBody.action.equals("add"))
 			{
-				this.exiledTracks.add(trackID);
-				this.chosenTracks.remove(trackID);
+				exiledTracks.add(trackID);
+				chosenTracks.remove(trackID);
+				normalTracks.remove(trackID);
 			}
 			if (reqBody.action.equals("remove"))
 			{
-				this.exiledTracks.remove(trackID);
+				exiledTracks.remove(trackID);
+				normalTracks.add(trackID);
 			}
 		}
 
@@ -293,11 +304,21 @@ public class vidyaController
 
 		if (listName.equals("chosen"))
 		{
-			this.chosenTracks.clear();
+			for (String ID : chosenTracks)
+			{
+				normalTracks.add(ID);
+			}
+
+			chosenTracks.clear();
 		}
 		if (listName.equals("exiled"))
 		{
-			this.exiledTracks.clear();;
+			for (String ID : exiledTracks)
+			{
+				normalTracks.add(ID);
+			}
+
+			exiledTracks.clear();;
 		}
 
 		/***** Clear the persistant data (file) *****/
@@ -419,6 +440,8 @@ public class vidyaController
 	 */
 	public void populateNormalTracksSet()
 	{
+		// TODO: I'm pretty sure I can use Gson here to convert the String returned by the BufferedReader into an array of JSON objects. If this is the case, I should use that method instead. Objects are easier and more concise to work with.
+
 		StringBuilder tracksData = new StringBuilder();
 
 		File masterList = new File(DATA_DIR + "tracks-master-list.json");
