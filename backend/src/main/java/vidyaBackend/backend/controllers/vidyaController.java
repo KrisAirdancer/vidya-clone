@@ -24,6 +24,7 @@ public class vidyaController
 	public final String DATA_DIR = "src/main/data/";
 
 	public int chosenProbability = 25;; // Integer value between 0 and 100. Defaults to 25.
+
 	public HashSet<String> chosenTracks = new HashSet<String>();
 	public HashSet<String> normalTracks = new HashSet<String>();
 	public HashSet<String> exiledTracks = new HashSet<String>();
@@ -413,13 +414,62 @@ public class vidyaController
 		}
 	}
 
-	// TODO: Write doc.
 	/**
-	 * Populates the normalTracks HashSet.
+	 * Populates the normalTracks HashSet from the data in the tracks-master-list.json file.
 	 */
 	public void populateNormalTracksSet()
 	{
-		// TODO: Implement populateNormalTracksSet()
+		StringBuilder tracksData = new StringBuilder();
+
+		File masterList = new File(DATA_DIR + "tracks-master-list.json");
+
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(masterList));
+
+			String line;
+			while ((line = reader.readLine()) != null)
+			{
+				tracksData.append(line);
+			}
+
+			reader.close();
+
+		} catch (Exception e) {
+			// TODO: Add logging here.
+			System.out.println(e.getMessage());
+		}
+
+		for (int i = 0; i < tracksData.length(); i++)
+		{
+			if (tracksData.charAt(i) == '['
+			 || tracksData.charAt(i) == ']'
+			 || tracksData.charAt(i) == '{'
+			 || tracksData.charAt(i) == '}'
+			 || tracksData.charAt(i) == '"'
+			 || tracksData.charAt(i) == ' '
+			 )
+			{
+				tracksData.deleteCharAt(i);
+				i--; // Deleting a character is equivalent to i++, so we must i-- to ensure that we don't miss characters when the for loop does its i++.
+			}
+		}
+
+		String[] trackTokens = tracksData.toString().split(",");
+
+		for (String token : trackTokens)
+		{
+			if (token.contains("trackID"))
+			{
+				String ID = token.substring(token.indexOf(":") + 1, token.length());
+
+				if (!chosenTracks.contains(ID) && !exiledTracks.contains(ID))
+				{
+					normalTracks.add(ID);
+				}
+
+			}
+		}
 	}
 }
 
