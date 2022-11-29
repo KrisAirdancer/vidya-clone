@@ -532,7 +532,7 @@ public class vidyaController
 			throw new NumberFormatException("probability must be between 0 and 100");
 		}
 
-		File metadata = new File(DATA_DIR + "metadata.csv");
+		File metadata = new File(DATA_DIR + "metadata.txt");
 
 		try
 		{
@@ -555,7 +555,7 @@ public class vidyaController
 	 */
 	private void readChosenProbability()
 	{
-		File metadata = new File(DATA_DIR + "metadata.csv");
+		File metadata = new File(DATA_DIR + "metadata.txt");
 
 		try
 		{
