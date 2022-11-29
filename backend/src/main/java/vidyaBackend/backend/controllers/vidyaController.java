@@ -297,7 +297,7 @@ public class vidyaController
 	{
 		try
 		{
-			setChosenProbability(Integer.parseInt(probability));
+			setChosenProbability(probability);
 		}
 		catch (Exception e) {
 			// TODO Add logging here
@@ -525,16 +525,14 @@ public class vidyaController
 	 * 
 	 * @throws Exception If probability is not between 0 and 100.
 	 */
-	private void setChosenProbability(int probability) throws Exception
+	private void setChosenProbability(String probability) throws Exception
 	{
-		if (probability < 0 || probability > 100)
+		if (Integer.parseInt(probability) < 0 || Integer.parseInt(probability) > 100)
 		{
 			throw new NumberFormatException("probability must be between 0 and 100");
 		}
 
-		chosenProbability = probability;
-
-		File metadata = new File(DATA_DIR + "metadata.txt");
+		File metadata = new File(DATA_DIR + "metadata.csv");
 
 		try
 		{
@@ -548,6 +546,8 @@ public class vidyaController
 			// TODO Add logging here
 			e.printStackTrace();
 		}
+
+		chosenProbability = Integer.parseInt(probability);
 	}
 
 	/**
@@ -555,7 +555,7 @@ public class vidyaController
 	 */
 	private void readChosenProbability()
 	{
-		File metadata = new File(DATA_DIR + "metadata.txt");
+		File metadata = new File(DATA_DIR + "metadata.csv");
 
 		try
 		{
