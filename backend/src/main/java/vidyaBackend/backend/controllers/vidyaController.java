@@ -20,14 +20,17 @@ import vidyaBackend.backend.models.PutListBody;
 @RestController
 public class vidyaController
 {
-	public final String PLAYLISTS_DIR = "src/main/data/playlists/";
-	public final String DATA_DIR = "src/main/data/";
+	private final String PLAYLISTS_DIR = "src/main/data/playlists/";
+	private final String DATA_DIR = "src/main/data/";
 
-	public int chosenProbability = 25; // Integer value between 0 and 100. Defaults to 25.
+	private String currentTrack;
 
-	public HashSet<String> chosenTracks = new HashSet<String>();
-	public HashSet<String> normalTracks = new HashSet<String>();
-	public HashSet<String> exiledTracks = new HashSet<String>();
+	private final int DEFAULT_CHOSEN_PROBABILITY = 25;
+	private int chosenProbability;
+
+	private HashSet<String> chosenTracks = new HashSet<String>();
+	private HashSet<String> normalTracks = new HashSet<String>();
+	private HashSet<String> exiledTracks = new HashSet<String>();
 
 	public vidyaController()
 	{
@@ -35,8 +38,10 @@ public class vidyaController
 		populateListSet("exiled");
 		populateNormalTracksSet();
 
+		chosenProbability = DEFAULT_CHOSEN_PROBABILITY;
 		readChosenProbability();
-		System.out.println(chosenProbability);
+
+		currentTrack = getRandomTrack();
 	}
 
 	/***** ROUTING *****/
@@ -48,6 +53,22 @@ public class vidyaController
 		return "It worked!";
 	}
 
+	/**
+	 * Returns the trackID of the track that is currently playing.
+	 * 
+	 * @return The trackID of the track that is currently playing.
+	 */
+	@GetMapping("/current-track")
+	public String getCurrentTrack()
+	{
+		return currentTrack;
+	}
+
+	/**
+	 * Returns the trackID of a randomly selected track that is available in the system.
+	 * 
+	 * @return The trackID of a randomly selected track.
+	 */
 	@GetMapping("/random-track")
 	public String getRandomTrack()
 	{
@@ -56,21 +77,20 @@ public class vidyaController
 		Random random = new Random();
 
 		int randomValue = random.nextInt(100 + 1); // This does generate 0s and 100s
-		System.out.println(randomValue);
 
-		if (randomValue <= chosenProbability)
+		if (randomValue <= chosenProbability) // Select and return a track from chosenTracks
 		{
-			// Select and return a track from chosenTracks
-
 			int index = random.nextInt(chosenTracks.size());
-			return chosenTracks.toArray(new String[chosenTracks.size()])[index]; // Convert chosentTracks HashSet into an Array, then index into that array to get the randomly selected track.
+			String track = chosenTracks.toArray(new String[chosenTracks.size()])[index]; // Convert chosentTracks HashSet into an Array, then index into that array to get the randomly selected track.
+			currentTrack = track;
+			return track;
 		}
-		else
+		else // Select and return a track from normalTracks
 		{
-			// Select and return a track from normalTracks
-
 			int index = random.nextInt(normalTracks.size());
-			return normalTracks.toArray(new String[normalTracks.size()])[index]; // Convert chosentTracks HashSet into an Array, then index into that array to get the randomly selected track.
+			String track = normalTracks.toArray(new String[normalTracks.size()])[index]; // Convert chosentTracks HashSet into an Array, then index into that array to get the randomly selected track.
+			currentTrack = track;
+			return track;
 		}
 	}
 
