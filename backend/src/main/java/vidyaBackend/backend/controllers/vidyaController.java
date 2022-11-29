@@ -48,20 +48,30 @@ public class vidyaController
 		return "It worked!";
 	}
 
-	@GetMapping("/next-track")
-	public String getNextTrack()
+	@GetMapping("/random-track")
+	public String getRandomTrack()
 	{
-		// TODO: Implement getNextTrack()
+		// TODO: Create a class varible to hold the current track (String currentTrack) and make sure it is getting updated properly.
 
-		// Decide between a chosen track and all other tracks.
-			// Decision made based on the probability of selecting a chosen track.
-			// Will need to store that probability so that it persists. In the absence of a database, can either store this in its own .txt file or as the first entry in the chosen-tracks.csv file.
-		// If chosen,
-			// Choose only from the list of Chosen tracks
-		// If non-chosen,
-			// Choose only from the list of non-Chosen and non-exiled tracks (choose from normalTracks).
+		Random random = new Random();
 
-		return "0000";
+		int randomValue = random.nextInt(100 + 1); // This does generate 0s and 100s
+		System.out.println(randomValue);
+
+		if (randomValue <= chosenProbability)
+		{
+			// Select and return a track from chosenTracks
+
+			int index = random.nextInt(chosenTracks.size());
+			return chosenTracks.toArray(new String[chosenTracks.size()])[index]; // Convert chosentTracks HashSet into an Array, then index into that array to get the randomly selected track.
+		}
+		else
+		{
+			// Select and return a track from normalTracks
+
+			int index = random.nextInt(normalTracks.size());
+			return normalTracks.toArray(new String[normalTracks.size()])[index]; // Convert chosentTracks HashSet into an Array, then index into that array to get the randomly selected track.
+		}
 	}
 
 	/**
