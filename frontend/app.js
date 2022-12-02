@@ -36,7 +36,6 @@ app.get('/', (req, res) => {
   send('index.html');
 });
 
-// /random-track
 // /playlist/{playlistName}
 // /list/{listName}
 // /list/{trackID}
@@ -63,6 +62,21 @@ app.get('/random-track', (req, res) => {
   data = '';
 
   axios.get(`${BACKEND_URL}/random-track`)
+       .then(response => {
+        console.log(response.data);
+        data = response.data;
+       })
+       .then(() => {
+        res.status(200);
+        res.send(data);
+       })
+});
+
+app.get('/playlists', (req, res) => {
+
+  data = '';
+
+  axios.get(`${BACKEND_URL}/playlists`)
        .then(response => {
         console.log(response.data);
         data = response.data;
@@ -117,3 +131,4 @@ app.listen(PORT, () => {
 
 
 // TODO: Add proper documentation comments to all of the routes in this file.
+// TODO: Add docs to all routes in this file.
