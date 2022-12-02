@@ -72,21 +72,6 @@ app.get('/random-track', (req, res) => {
        })
 });
 
-app.get('/playlists', (req, res) => {
-
-  data = '';
-
-  axios.get(`${BACKEND_URL}/playlists`)
-       .then(response => {
-        console.log(response.data);
-        data = response.data;
-       })
-       .then(() => {
-        res.status(200);
-        res.send(data);
-       })
-});
-
 // This method for testing the /playlists route on the backend (vidya-backend).
 app.get('/playlists', (req, res) => {
 
