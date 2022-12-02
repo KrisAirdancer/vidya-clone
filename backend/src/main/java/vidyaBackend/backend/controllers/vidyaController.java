@@ -64,6 +64,7 @@ public class vidyaController
 		return currentTrack;
 	}
 
+	// TODO: If the track that is chosen is the track that is currently playing, select a new track. That is, never replay the same track twice in a row.
 	/**
 	 * Returns the trackID of a randomly selected track that is available in the system.
 	 * 

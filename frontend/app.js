@@ -36,7 +36,6 @@ app.get('/', (req, res) => {
   send('index.html');
 });
 
-// /current-track
 // /random-track
 // /playlist/{playlistName}
 // /list/{listName}
@@ -49,6 +48,21 @@ app.get('/current-track', (req, res) => {
   data = '';
 
   axios.get(`${BACKEND_URL}/current-track`)
+       .then(response => {
+        console.log(response.data);
+        data = response.data;
+       })
+       .then(() => {
+        res.status(200);
+        res.send(data);
+       })
+});
+
+app.get('/random-track', (req, res) => {
+
+  data = '';
+
+  axios.get(`${BACKEND_URL}/random-track`)
        .then(response => {
         console.log(response.data);
         data = response.data;
