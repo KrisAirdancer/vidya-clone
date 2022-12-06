@@ -101,6 +101,21 @@ app.get('/playlist/:playlistName', (req, res) => {
       });
 });
 
+app.get('/list/:listName', (req, res) => {
+
+  let listName = req.params.listName;
+
+  axios.get(`${BACKEND_URL}/list/${listName}`)
+       .then(response => {
+          console.log(response.data);
+          data = response.data;
+       })
+       .then(() => {
+          res.status(200);
+          res.send(data);
+      });
+});
+
 // This route is for testing the /master route on vidya-backend.
 app.get('/master', (req, res) => {
 
