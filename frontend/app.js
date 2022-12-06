@@ -36,7 +36,6 @@ app.get('/', (req, res) => {
   send('index.html');
 });
 
-// /playlist/{playlistName}
 // /list/{listName}
 // /list/{trackID}
 // /chosen-prob/{prob}
@@ -72,12 +71,11 @@ app.get('/random-track', (req, res) => {
        })
 });
 
-// This method for testing the /playlists route on the backend (vidya-backend).
 app.get('/playlists', (req, res) => {
 
   let data = '';
 
-  axios.get('http://localhost:11002/playlists')
+  axios.get(`${BACKEND_URL}/playlists`)
        .then(response => {
         console.log(response.data);
         data = response.data;
@@ -88,12 +86,27 @@ app.get('/playlists', (req, res) => {
        });
 });
 
+app.get('/playlist/:playlistName', (req, res) => {
+
+  let playlistName = req.params.playlistName;
+
+  axios.get(`${BACKEND_URL}/playlist/${playlistName}`)
+       .then(response => {
+          console.log(response.data);
+          data = response.data;
+       })
+       .then(() => {
+          res.status(200);
+          res.send(data);
+      });
+});
+
 // This route is for testing the /master route on vidya-backend.
 app.get('/master', (req, res) => {
 
   let data = '';
 
-  axios.get('http://localhost:11002/master')
+  axios.get(`${BACKEND_URL}/master`)
        .then(response => {
         console.log(response.data);
         data = response.data;
@@ -117,3 +130,4 @@ app.listen(PORT, () => {
 
 // TODO: Add proper documentation comments to all of the routes in this file.
 // TODO: Add docs to all routes in this file.
+// TODO: Remove all print statements
