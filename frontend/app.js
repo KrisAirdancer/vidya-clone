@@ -115,6 +115,13 @@ app.get('/list/:listName', (req, res) => {
       });
 });
 
+app.get('/list/:trackID', (req, res) => {
+  // Going to have to respond based on the status code that is returned by the backend
+  // Will need to get the action and list out of the body and pass that to the backend in the response body (see docs on the backend route)
+  // Doesn't return anything other than the status code to say that the operation was successful or not
+});
+
+
 // This route is for testing the /master route on vidya-backend.
 app.get('/master', (req, res) => {
 
@@ -145,3 +152,4 @@ app.listen(PORT, () => {
 // TODO: Add proper documentation comments to all of the routes in this file.
 // TODO: Add docs to all routes in this file.
 // TODO: Remove all print statements
+// TODO: Need set the status code of these responses based on the status codes of the responses from the backend
