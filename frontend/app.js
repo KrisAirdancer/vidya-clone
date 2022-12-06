@@ -36,7 +36,6 @@ app.get('/', (req, res) => {
   send('index.html');
 });
 
-// /list/{listName}
 // /list/{trackID}
 // /chosen-prob/{prob}
 // /reset/{listName}
