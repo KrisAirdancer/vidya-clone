@@ -250,13 +250,15 @@ public class vidyaController
 	@PutMapping("/list/{trackID}")
 	public void updateList(@PathVariable(value="trackID") String trackID, @RequestBody String body)
 	{
-	// TODO: Add logic to prevent trackIDs that are not in the system from being added.
-		// That is, if a trackID is sent in the request that doesn't exist in the system, the system is adding it. It shouldn't do this. Instead, this route should return a "not found" or "invalid request" error if the request contains a trackID that isn't in the system.
-		// Also, instead of shuffling trackIDs between lists, it might be easier to keep a single list (tracks-master-list.json) that has a property for each of the track objects that specifies what list it is in.
-			// With this method, the backend, on startup, could just loop over the data (or use Gson to make an array of JSON objects from tracks-master-list.json), like I am doing in populateNormalTracksSet(), and add each trackID to the appropriate HashSet.
-			// Make this change after I finish implementing all of the backend routes - I'm almost done with them anyway - then make a v0.2.0 version of the project that contains the changeed backend.
-			// This is why databases are better. They reduce the risk of duplicate data or inconsistant data. Therefore, I should consolidate and have only a single file, tracks-master-list.json, that tracks all of the information in the system. This will prevent conflicting data between the files.
-			// Also, when doing this, consolidate the "metadata.txt" file. That is, move the data it contains to some other location and get rid of the file.
+		// TODO: Add logic to prevent trackIDs that are not in the system from being added.
+			// That is, if a trackID is sent in the request that doesn't exist in the system, the system is adding it. It shouldn't do this. Instead, this route should return a "not found" or "invalid request" error if the request contains a trackID that isn't in the system.
+			// Also, instead of shuffling trackIDs between lists, it might be easier to keep a single list (tracks-master-list.json) that has a property for each of the track objects that specifies what list it is in.
+				// With this method, the backend, on startup, could just loop over the data (or use Gson to make an array of JSON objects from tracks-master-list.json), like I am doing in populateNormalTracksSet(), and add each trackID to the appropriate HashSet.
+				// Make this change after I finish implementing all of the backend routes - I'm almost done with them anyway - then make a v0.2.0 version of the project that contains the changeed backend.
+				// This is why databases are better. They reduce the risk of duplicate data or inconsistant data. Therefore, I should consolidate and have only a single file, tracks-master-list.json, that tracks all of the information in the system. This will prevent conflicting data between the files.
+				// Also, when doing this, consolidate the "metadata.txt" file. That is, move the data it contains to some other location and get rid of the file.
+
+		System.out.println("HERE"); // TODO: Remove this print statement
 
 		/***** Retreive Request Body *****/
 

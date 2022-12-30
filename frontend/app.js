@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const bodyParser = require('body-parser');
 
 /***** CONFIGURATIONS *****/
 
@@ -14,6 +15,10 @@ const app = express();
 // Expose public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// body-parser to parse JSON request bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // This method for testig the /test route on the backend (vidya-backend).
 app.get('/test', (req, res) => {
@@ -22,7 +27,7 @@ app.get('/test', (req, res) => {
 
   axios.get(`${BACKEND_URL}/test`)
        .then(response => {
-         console.log(response.data);
+        //  console.log(response.data);
          data = response.data;
        })
        .then(() => {
@@ -36,17 +41,13 @@ app.get('/', (req, res) => {
   send('index.html');
 });
 
-// /list/{trackID}
-// /chosen-prob/{prob}
-// /reset/{listName}
-
 app.get('/current-track', (req, res) => {
 
   data = '';
 
   axios.get(`${BACKEND_URL}/current-track`)
        .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         data = response.data;
        })
        .then(() => {
@@ -61,7 +62,7 @@ app.get('/random-track', (req, res) => {
 
   axios.get(`${BACKEND_URL}/random-track`)
        .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         data = response.data;
        })
        .then(() => {
@@ -76,7 +77,7 @@ app.get('/playlists', (req, res) => {
 
   axios.get(`${BACKEND_URL}/playlists`)
        .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         data = response.data;
        })
        .then(() => {
@@ -91,7 +92,7 @@ app.get('/playlist/:playlistName', (req, res) => {
 
   axios.get(`${BACKEND_URL}/playlist/${playlistName}`)
        .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           data = response.data;
        })
        .then(() => {
@@ -106,7 +107,7 @@ app.get('/list/:listName', (req, res) => {
 
   axios.get(`${BACKEND_URL}/list/${listName}`)
        .then(response => {
-          console.log(response.data);
+          // console.log(response.data);
           data = response.data;
        })
        .then(() => {
@@ -115,27 +116,44 @@ app.get('/list/:listName', (req, res) => {
       });
 });
 
-app.get('/list/:trackID', (req, res) => {
-  // Going to have to respond based on the status code that is returned by the backend
-  // Will need to get the action and list out of the body and pass that to the backend in the response body (see docs on the backend route)
-  // Doesn't return anything other than the status code to say that the operation was successful or not
-});
-
-
-// This route is for testing the /master route on vidya-backend.
 app.get('/master', (req, res) => {
 
   let data = '';
 
   axios.get(`${BACKEND_URL}/master`)
        .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         data = response.data;
        })
        .then(() => {
         res.status(200);
         res.send(data);
        });
+});
+
+app.put('/list/:trackID', (req, res) => {
+  // Going to have to respond based on the status code that is returned by the backend
+  // Will need to get the action and list out of the body and pass that to the backend in the response body (see docs on the backend route)
+  // Doesn't return anything other than the status code to say that the operation was successful or not
+
+  let trackID = req.params.trackID;
+
+  console.log(trackID);
+  console.log(req.body);
+
+  axios({
+    method: 'put',
+    url: `${BACKEND_URL}/list/${trackID}`,
+    data: {
+      list: `${req.body.list}`,
+      action: `${req.body.action}`
+    }
+  }).then(response => {
+    console.log(response);
+  }).then(() => {
+     res.status(200); // TODO: Temporary status code. Set the status code correctly.
+     res.send();
+  });
 });
 
 /***** ROUTING *****/
@@ -145,7 +163,7 @@ app.get('/master', (req, res) => {
 /***** LAUNCH APPLICATION *****/
 
 app.listen(PORT, () => {
-  console.log(`vidya-backend is listening on port ${PORT}`)
+  console.log(`vidya-frontend is listening on port ${PORT}`)
 });
 
 
