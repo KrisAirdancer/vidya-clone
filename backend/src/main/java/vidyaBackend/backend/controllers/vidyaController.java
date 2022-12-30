@@ -258,8 +258,6 @@ public class vidyaController
 				// This is why databases are better. They reduce the risk of duplicate data or inconsistant data. Therefore, I should consolidate and have only a single file, tracks-master-list.json, that tracks all of the information in the system. This will prevent conflicting data between the files.
 				// Also, when doing this, consolidate the "metadata.txt" file. That is, move the data it contains to some other location and get rid of the file.
 
-		System.out.println("HERE"); // TODO: Remove this print statement
-
 		/***** Retreive Request Body *****/
 
 		Gson gson = new Gson();
