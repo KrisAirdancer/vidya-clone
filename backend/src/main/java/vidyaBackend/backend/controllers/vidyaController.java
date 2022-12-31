@@ -248,7 +248,7 @@ public class vidyaController
 	 * @param body Add/Remove action and list to modify are specified in request body.
 	 */
 	@PutMapping("/list/{trackID}")
-	public void updateList(@PathVariable(value="trackID") String trackID, @RequestBody String body)
+	public ResponseEntity<String> updateList(@PathVariable(value="trackID") String trackID, @RequestBody String body)
 	{
 		// TODO: Add logic to prevent trackIDs that are not in the system from being added.
 			// That is, if a trackID is sent in the request that doesn't exist in the system, the system is adding it. It shouldn't do this. Instead, this route should return a "not found" or "invalid request" error if the request contains a trackID that isn't in the system.
@@ -267,7 +267,7 @@ public class vidyaController
 			reqBody = gson.fromJson(body, PutListBody.class);
 		} catch (Exception e) {
 			// TODO: Add logging here.
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "gson failure (E-0001)");
+			return new ResponseEntity<String>("", HttpStatus.BAD_REQUEST);
 		}
 
 		/***** Validate Request *****/
@@ -278,7 +278,8 @@ public class vidyaController
 		     || (!reqBody.action.equals("add") && !reqBody.action.equals("remove")) // "value" field checks - for invalid "value" field values
 		     || !trackID.matches("^[0-9]{4}$")) // Matchs a series of digits of length 4. ex. 0034
 		{
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Improperly formatted request (E-0002)");
+			return new ResponseEntity<String>("Improperly formatted or invalid request (E-0002)", HttpStatus.BAD_REQUEST);
+
 		}
 
 		/***** Process Request *****/
@@ -315,6 +316,8 @@ public class vidyaController
 		/***** Write changes to list file *****/
 
 		updateLists();
+		
+		return new ResponseEntity<String>("", HttpStatus.OK);
 	}
 
 	// TODO: I'm using the wrong encoding for the metadata.txt file. As a result, the data is being stored incorrectly and isn't usable by the program.

@@ -132,15 +132,8 @@ app.get('/master', (req, res) => {
 });
 
 app.put('/list/:trackID', (req, res) => {
-  // Going to have to respond based on the status code that is returned by the backend
-  // Will need to get the action and list out of the body and pass that to the backend in the response body (see docs on the backend route)
-  // Doesn't return anything other than the status code to say that the operation was successful or not
-    // TODO: Set this method up to return the correct status code
 
   let trackID = req.params.trackID;
-
-  console.log(trackID);
-  console.log(req.body);
 
   axios({
     method: 'put',
@@ -148,12 +141,16 @@ app.put('/list/:trackID', (req, res) => {
     data: {
       list: `${req.body.list}`,
       action: `${req.body.action}`
+    },
+    validateStatus: function(status) {
+      return true;
     }
   }).then(response => {
-    console.log(response);
-  }).then(() => {
-     res.status(200); // TODO: Temporary status code. Set the status code correctly.
-     res.send();
+    res.status(response.status);
+    res.send();
+  }).catch(response => {
+    res.status(response.status);
+    res.send();
   });
 });
 
