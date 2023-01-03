@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" id="root-html-tag">
+<head>
+    <title>Vidya Clone</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="./favicon.ico" />
+</head>
+<body>
+
+  <div id="navbar-group">
+
+    <nav class="nav-flex-container">
+
+      <select id="nav-playlist-selector">
+        <option value="playlist_vip">VIP</option>
+        <option value="playlist_source" selected>Source</option>
+      </select>
+
+      <div id="track-info">Track Info</div>
+
+      <ul>
+        <li>
+          <button id="btn_chosen" class="nav-button" onclick="btn1()">C</button>
+        </li>
+        <li>
+          <button id="btn_exiled" class="nav-button">E</button>
+        </li>
+        <li>
+          <button id="btn_volume" class="nav-button">V</button>
+        </li>
+      </ul>
+
+    </nav>
+
+    <div id='track-scrubber' class="track-scrubber-flex-container">
+      <label id="time-played">0:00</label>
+      <input type="range" id="track-scrubber"/>
+      <label id="time-left">1:42</label>
+    </div>
+
+  </div>
+
+  <div id='control-box-flex-container' class='control-box'>
+  
+    <div class='control-box-first-row control-box-element'></div>
+
+    <div id='control-box-row-two-flex-container' class='control-box-second-row'>
+      <button class='control-box-element'>&lt;&lt;</button>
+      <button class='control-box-element'>&gt;/II</button>
+      <button class='control-box-element'>&gt;&gt;</button>
+    </div>
+
+    <div id='control-box-row-three-flex-container' class='control-box-row'>
+      <button class='control-box-element'>Replay</button> <!-- TODO: This button should set the current track to replay endlessly -->
+      <button class='control-box-element'>Nav Up</button> <!-- TODO: This button should hide the navbar -->
+    </div>
+  
+  </div>
+
+</body>
+<style>
+  /* TODO: Border color & styling for track bars: `border 1px solid #102742` */
+  /* Border gradient colors for the gradiated border: (to bottom, #C0CCD9, #090C11) */
+  /* Exiled Colors
+    border-color: #3B0E24;
+    background-color: #4A122D;
+    color: #E79DC0;
+  */
+  /* Chosen Colors
+    border-color: #243B0E;
+    background-color: #2D4A12;
+    color: #BFE490;
+  */
+  /* Scrubber background color: #7F6157 */
+  /* Track hover background-color: #94BAFF */
+  /* Track hover text color: #122D4A */
+
+  :root {
+      --site-blue: #122D4A;
+      --site-orange: #FFA366;
+      --site-light-blue: #94BAFF;
+      --site-brown-orange: #7F6157;
+      --nav-button-border: #636363;
+      --top-level-border: #919191;;
+      --fade-light: #1F4B7F;
+      --fade-dark: #0A1929;
+      --track-scrubber-height: 0.8rem;
+      --control-box-height: 5.5rem;
+      --control-box-width: 9.3rem;
+      --site-font-family: Helvetica, Arial, sans-serif;
+  }
+
+  /* Setting the reference size for "rem" values */
+  root-html-tag {
+      font-size: 12px;
+  }
+
+  /**** General Site Styling *****/
+
+  body {
+      margin: 0;
+      background: var(--site-blue);
+      /* Hides the scrollbar that runs up next to the navbar */
+      overflow-y: hidden;
+  }
+
+  /**** Navbar *****/
+
+  #navbar-group {
+      position: sticky;
+      top: 0;
+  }
+
+  /* TODO: Find a way to add a gradient to the border like it is in the real thing - the bottom is slightly darker than the top. */
+  nav {
+      top: 0;
+      height: 4rem;
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      color: var(--site-orange);
+      padding: 0.15rem 0.1rem 0.15rem 0.1rem; /* top right bottom left */
+      border: 1px solid var(--top-level-border);
+  }
+
+  nav ul {
+      margin: 0;
+      list-style: none;
+  }
+
+  .nav-button {
+      height: 1.35rem;
+      width: 2rem;
+      font-size: 0.75rem;
+      text-align: center;
+      color: var(--site-orange);
+      border: 1px solid var(--nav-button-border);
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      cursor: pointer;
+  }
+
+  #nav-playlist-selector {
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      color: 1px solid var(--site-orange);
+      font-family: var(--site-font-family);
+  }
+
+  /**** Tracks List *****/
+
+  #track-info {
+      font-family: var(--site-font-family);
+  }
+
+  /* TODO: Move these colors into a variable in :root */
+  .track-info:hover {
+      cursor: pointer;
+      color: #122D4A;
+      background-color: #94BAFF;
+  }
+
+  /**** Site Scrollbar *****/
+
+  #track-list {
+      position: fixed;
+      top: 5.9rem;
+      bottom: 0; /* Sets the bottom bound of the container to the bottom of the screen. Otherwise, some of the screen is hidden off the bottom of the screen and cannot be scrolled to. */
+      width: 100%;
+      max-height: 100%;
+      overflow-y: scroll; /* Displays a scrollbar on the track-list ul element */
+  }
+
+  #track-list::-webkit-scrollbar {
+      width: auto;
+  }
+
+  #track-list::-webkit-scrollbar-track {
+      border: 0.2rem solid var(--site-blue);
+      background-color: var(--site-brown-orange);
+  }
+
+  #track-list::-webkit-scrollbar-thumb {
+      cursor: none;
+      height: 1rem;
+      border-radius: 3px;
+      background-color: var(--site-orange);
+  }
+
+  #track-list::-webkit-scrollbar-thumb:hover {
+      background: var(--site-light-blue);
+  }
+
+  /**** Track Scrubber *****/
+
+  /* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
+  /* TODO: The text should have two leading zeros (00:00) instead of just one (0:00) */
+  #track-scrubber label {
+      color: var(--site-orange);
+      border-width: 2px;
+      border-style: solid;
+      border-color: var(--nav-button-border);
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+      font-size: .8rem;
+      text-align: center;
+      font-family: var(--site-font-family);
+      height: var(--track-scrubber-height);
+  }
+
+  /* TODO: The code example at the top of this page could be helpful in setting up the properties of the track-scrubber: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range */
+  input[type="range"] {
+      appearance: none;
+      margin: 0;
+      padding: 0.3rem;
+      height: var(--track-scrubber-height) - 0.1rem;
+      border-width: 1px 1px 2px 1px;
+      border-style: solid;
+      border-color: var(--nav-button-border);
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      cursor: pointer;
+  }
+
+  /* TODO: This article shows how to setup the slider bar coloration. Archive this article. https://nikitahl.com/style-range-input-css */
+  input[type="range"]::-webkit-slider-runnable-track {
+      appearance: none;
+      background: var(--site-brown-orange);
+      background-image: linear-gradient(var(--site-orange), var(--site-orange));
+      background-size: 50% 100%; /* The first number is the widht, the second number is the height */
+      background-repeat: no-repeat;
+      height: 4px;
+  }
+
+  /* TODO: How do I set the position of the thumb? */
+  input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      background: var(--site-orange);
+      height: 12px;
+      width: 6px;
+      margin: -4px 0 0 0;
+      border-radius: 2px;
+  }
+
+  /**** TrackList *****/
+
+  #track-list {
+      margin: 0;
+      padding: 0;
+  }
+
+  .track-info {
+      list-style: none;
+      padding: 5px 2px 5px 10px; /* top right bottom left */
+      color: var(--site-orange);
+      border: 1px solid #102742;
+      font-family: var(--site-font-family);
+      font-size: 0.75rem;
+  }
+
+  /***** Control Box *****/
+
+  .control-box {
+      all: unset;
+      
+      position: absolute;
+      bottom: 5rem;
+      left: calc(50% - (var(--control-box-width) / 2));
+      height: var(--control-box-height);
+      width: var(--control-box-width);
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      border: 0.5px solid var(--top-level-border);
+      font-family: var(--site-font-family);
+  }
+
+  /* TODO: The border on the control box and its buttons will need to have the same fade effect as the original Vidya player (same as the navbar) */
+  .control-box-first-row {
+      flex-grow: 1;
+      font-size: 14px;
+      min-height: 1.1rem;
+  }
+
+  .control-box-second-row {
+      text-align: center;
+      flex-grow: 10;
+      min-height: 2.1rem;
+  }
+
+  .control-box-third-row {
+      text-align: center;
+      flex-grow: 10;
+      min-height: 1.1rem;
+  }
+
+  .control-box-element {
+      color: var(--site-orange);
+      width: 100%;
+      background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+      border: 0.5px solid var(--top-level-border);
+      cursor: pointer;
+      text-align: center;
+  }
+
+  .control-box-element:hover {
+      color: var(--site-light-blue);
+  }
+
+  /**** Flexbox Containers *****/
+
+  .nav-flex-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+  }
+
+  .track-scrubber-flex-container {
+      display: flex;
+  }
+
+  #control-box-flex-container {
+      display: flex;
+      flex-direction: column;
+  }
+
+  #control-box-row-two-flex-container {
+      display: flex;
+      flex-direction: row;
+  }
+
+  #control-box-row-three-flex-container {
+      display: flex;
+      flex-direction: row;
+  }
+
+  /**** Flexbox Items *****/
+
+  #nav-playlist-selector {
+      align-self: flex-end;
+  }
+
+  #track-scrubber {
+      flex: 1;
+  }
+</style>
+<script>
+  // TODO: This is a test function. Remove it.
+  let btn1 = () => {
+    // console.log('here')
+    let e = document.querySelector('#btn_chosen')
+    
+    if (e.style.color === 'red') {
+        e.style.color = '#FFA366';
+        // console.log(e.style.color)
+    } else {
+        e.style.color = 'red';
+    }
+  }
+</script>
+</html>
