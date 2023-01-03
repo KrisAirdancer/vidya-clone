@@ -84,15 +84,18 @@ nav ul {
 
 /**** Tracks List *****/
 
-#track-info {
-    font-family: var(--site-font-family);
+#tracks-list {
+    margin: 0;
+    padding: 0;
 }
 
-/* TODO: Move these colors into a variable in :root */
-.track-info:hover {
-    cursor: pointer;
-    color: #122D4A;
-    background-color: #94BAFF;
+.track-info {
+    list-style: none;
+    padding: 5px 2px 5px 10px; /* top right bottom left */
+    color: var(--site-orange);
+    border: 1px solid #0a192b; /* TODO: Move this color to :root */
+    font-family: var(--site-font-family);
+    font-size: 0.75rem;
 }
 
 /**** Site Scrollbar *****/
