@@ -2,6 +2,7 @@
 
 let masterTracksList = {};
 let tracksMap = new Map();
+let currentTrack = new Audio();
 
 /***************
  * Run Scripts *
@@ -20,9 +21,37 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
     .then(() => { // ***** Generate tracksHTML from playlist file
       generateTracksListHTML();
     })
-    .then(() => {
+    .then(() => { // ***** Apply event handlers/listeners *****
       applyTracksListEventHandler();
-    });
+      applyPlayPauseEventHandler();
+    })
+
+/************************
+ * Apply Event Handlers *
+ ************************/
+
+// Applies an event listener to the #tracksList-group element to get the selected track
+function applyTracksListEventHandler()
+{
+  let tracksListGroup = document.querySelector('#tracksList-group');
+  
+  tracksListGroup.addEventListener('click', e => {
+
+    currentTrack.pause();
+    setCurrentTrack(e.target.id);
+    currentTrack.play();
+  });
+}
+
+// Applies an event handler to the play/pause button in the controls box
+function applyPlayPauseEventHandler()
+{
+  let playPauseBtn = document.querySelector('#play-pause-btn');
+
+  playPauseBtn.addEventListener('click', e => {
+    playPauseCurrentTrack();
+  });
+}
 
 /*************
  * Functions *
@@ -65,7 +94,6 @@ function generateTracksListHTML()
   
   let tracksHTML = [];
 
-  console.log(masterTracksList);
   masterTracksList.forEach(track => {
   
     tracksHTML.push(
@@ -80,25 +108,23 @@ function generateTracksListHTML()
   tracksList.innerHTML = tracksHTML.join('');
 }
 
-/**************************************
- * Handle click events in tracks list *
- **************************************/
-
-// Applies an event listener to the #tracksList-group element to get the selected track
-function applyTracksListEventHandler()
+// Sets currentTrack to the track with ID trackURL
+function setCurrentTrack(trackID)
 {
-  let tracksListGroup = document.querySelector('#tracksList-group');
-  
-  tracksListGroup.addEventListener('click', e => {
-    console.log('AT: tracksListGroup Event Listener');
-  
-    console.log(e.target);
-    console.log(e.target.id);
-    console.log(masterTracksList);
-    console.log(tracksMap.get(e.target.id).trackURL);
+  let trackURL = tracksMap.get(trackID).trackURL;
 
-    // let trackAudio = new Audio('http://localhost:5500/single-file/tracks/0013 - HAWKEN - Origin.mp3');
-    let trackAudio = new Audio(`${tracksMap.get(e.target.id).trackURL}`);
-    trackAudio.play();
-  });
+  currentTrack = new Audio(`${trackURL}`);
+}
+
+// Toggles the state of the currently track between playing and paused
+function playPauseCurrentTrack()
+{
+  if (currentTrack.paused)
+  {
+    currentTrack.play();
+  }
+  else
+  {
+    currentTrack.pause();
+  }
 }
