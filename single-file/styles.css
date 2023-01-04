@@ -22,6 +22,7 @@
     --nav-button-border: #636363;
     --top-level-border: #919191;;
     --fade-light: #1F4B7F;
+    --fade-light-2: #94BAFF;
     --fade-dark: #0A1929;
     --track-scrubber-height: 0.8rem;
     --control-box-height: 5.5rem;
@@ -96,6 +97,12 @@ nav ul {
     border: 1px solid #0a192b; /* TODO: Move this color to :root */
     font-family: var(--site-font-family);
     font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.track-info:hover {
+    background-color: var(--fade-light-2);
+    color: var(--site-blue);
 }
 
 /**** Site Scrollbar *****/

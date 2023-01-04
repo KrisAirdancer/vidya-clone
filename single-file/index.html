@@ -23,7 +23,7 @@
 
       <ul>
         <li>
-          <button id="btn_chosen" class="nav-button" onclick="btn1()">C</button>
+          <button id="btn_chosen" class="nav-button" onclick="addToChosen()">C</button>
         </li>
         <li>
           <button id="btn_exiled" class="nav-button">E</button>
@@ -43,7 +43,7 @@
 
   </div>
 
-  <div id="tracksList-group">
+  <div id="tracksList-group" onclick="playSelectedTrack(this)">
     <ul id="tracks-list"></ul> <!-- Inject tracks list HTML here -->
   </div>
 
