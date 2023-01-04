@@ -9,7 +9,7 @@ let tracksHTML = [];
 
 let reader = new FileReader();
 
-fetch('playlists/vip-playlist.json')
+fetch('playlists/all-tracks.json')
     .then(response => response.json())
     .then(tracksData => {
 

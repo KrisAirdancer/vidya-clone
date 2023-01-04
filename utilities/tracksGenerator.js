@@ -17,7 +17,19 @@ async function generateTracksJSON(tracksDir, targetDir) {
 
     let files = fs.readdirSync(tracksDir);
 
-    files.forEach(file => {
+    let sortedFiles = files.sort((a, b) => {
+
+        // Cut off the trackID (first 6 characters) and cut off the file extension (last 4 characters)
+        if (a.substring(7, a.length - 4) < b.substring(7, b.length - 4)) {
+          return -1;
+        } else if (a.gameName > b.gameName) {
+          return 1;
+        } else { // a === b
+          return 0;
+        }
+      })
+
+    sortedFiles.forEach(file => {
         // console.log(file);
 
         // Tokenize track names
