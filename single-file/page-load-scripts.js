@@ -27,7 +27,7 @@ fetch('playlists/vip-playlist.json')
         sortedTracks.forEach(track => {
 
             tracksHTML.push(
-                `<li class="track-info">${track.trackGame} - ${track.trackName}</li>`
+                `<li class="track-info">${track.trackGame} — ${track.trackName}</li>`
             );
         });
         
