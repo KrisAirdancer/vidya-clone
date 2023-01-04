@@ -2,8 +2,8 @@ const fs = require('fs');
 const fsPromises = require('fs/promises');
 
 // Directories being accessed
-const TRACKS_DIR = '../frontend/public/tracks';
-const TRACKS_MASTER_LIST_DIR = '../backend/src/main/data/tracks-master-list.json';
+const TRACKS_DIR = '../single-file/tracks';
+const TRACKS_MASTER_LIST_DIR = './tracks-master-list.json';
 
 /**
  * Generates a JSON representation of all of the tracks located at tracksDir and stores
@@ -18,6 +18,7 @@ async function generateTracksJSON(tracksDir, targetDir) {
     let files = fs.readdirSync(tracksDir);
 
     files.forEach(file => {
+        // console.log(file);
 
         // Tokenize track names
         let tokens = file.split(' - ');
@@ -25,9 +26,10 @@ async function generateTracksJSON(tracksDir, targetDir) {
         let track = {
             trackID: tokens[0],
             trackGame: tokens[1],
-            trackName: tokens[2]
+            trackName: tokens[2],
+            trackURL: `http://localhost:5500/single-file/tracks/${file}`
         };
-        
+
         metadata.push(track);
     });
 

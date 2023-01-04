@@ -1,12 +1,116 @@
 [
     {
-        "trackName": "A Prosk Winter",
-        "gameName": "HAWKEN",
-        "trackID": "0001"
+        "trackID": "0001",
+        "trackGame": "HAWKEN",
+        "trackName": "A Prosk Winter.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0001 - HAWKEN - A Prosk Winter.mp3"
     },
     {
-        "trackName": "Bypass",
-        "gameName": "HAWKEN",
-        "trackID": "0002"
+        "trackID": "0002",
+        "trackGame": "HAWKEN",
+        "trackName": "Bypass.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0002 - HAWKEN - Bypass.mp3"
+    },
+    {
+        "trackID": "0003",
+        "trackGame": "HAWKEN",
+        "trackName": "Catalyst.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0003 - HAWKEN - Catalyst.mp3"
+    },
+    {
+        "trackID": "0004",
+        "trackGame": "HAWKEN",
+        "trackName": "Cavorite.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0004 - HAWKEN - Cavorite.mp3"
+    },
+    {
+        "trackID": "0005",
+        "trackGame": "HAWKEN",
+        "trackName": "Constructor.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0005 - HAWKEN - Constructor.mp3"
+    },
+    {
+        "trackID": "0006",
+        "trackGame": "HAWKEN",
+        "trackName": "Graphene.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0006 - HAWKEN - Graphene.mp3"
+    },
+    {
+        "trackID": "0007",
+        "trackGame": "HAWKEN",
+        "trackName": "H.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0007 - HAWKEN - H.mp3"
+    },
+    {
+        "trackID": "0008",
+        "trackGame": "HAWKEN",
+        "trackName": "How to Win a War.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0008 - HAWKEN - How to Win a War.mp3"
+    },
+    {
+        "trackID": "0009",
+        "trackGame": "HAWKEN",
+        "trackName": "Illal.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0009 - HAWKEN - Illal.mp3"
+    },
+    {
+        "trackID": "0010",
+        "trackGame": "HAWKEN",
+        "trackName": "Made of Metal I.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0010 - HAWKEN - Made of Metal I.mp3"
+    },
+    {
+        "trackID": "0011",
+        "trackGame": "HAWKEN",
+        "trackName": "Made of Metal II.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0011 - HAWKEN - Made of Metal II.mp3"
+    },
+    {
+        "trackID": "0012",
+        "trackGame": "HAWKEN",
+        "trackName": "Man and Machine.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0012 - HAWKEN - Man and Machine.mp3"
+    },
+    {
+        "trackID": "0013",
+        "trackGame": "HAWKEN",
+        "trackName": "Origin.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0013 - HAWKEN - Origin.mp3"
+    },
+    {
+        "trackID": "0014",
+        "trackGame": "HAWKEN",
+        "trackName": "Rust and Ruin.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0014 - HAWKEN - Rust and Ruin.mp3"
+    },
+    {
+        "trackID": "0015",
+        "trackGame": "HAWKEN",
+        "trackName": "Survivalist I.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0015 - HAWKEN - Survivalist I.mp3"
+    },
+    {
+        "trackID": "0016",
+        "trackGame": "HAWKEN",
+        "trackName": "Survivalist II.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0016 - HAWKEN - Survivalist II.mp3"
+    },
+    {
+        "trackID": "0017",
+        "trackGame": "HAWKEN",
+        "trackName": "Survivalist III.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0017 - HAWKEN - Survivalist III.mp3"
+    },
+    {
+        "trackID": "0018",
+        "trackGame": "HAWKEN",
+        "trackName": "Survivalist IV.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0018 - HAWKEN - Survivalist IV.mp3"
+    },
+    {
+        "trackID": "0019",
+        "trackGame": "HAWKEN",
+        "trackName": "The Crion Incident.mp3",
+        "trackURL": "http://localhost:5500/single-file/tracks/0019 - HAWKEN - The Crion Incident.mp3"
     }
 ]
