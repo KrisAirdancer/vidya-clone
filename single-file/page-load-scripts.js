@@ -12,21 +12,28 @@ let reader = new FileReader();
 fetch('playlists/vip-playlist.json')
     .then(response => response.json())
     .then(tracksData => {
-        // console.log(tracksData);
 
-        tracksData.forEach(track => {
-            // console.log(track);
+        let sortedTracks = tracksData.sort((a, b) => {
+
+            if (`${a.trackGame} - ${a.trackName}` < `${b.trackGame} - ${b.trackName}`) {
+              return -1;
+            } else if (a.gameName > b.gameName) {
+              return 1;
+            } else { // a === b
+              return 0;
+            }
+          })
+
+        sortedTracks.forEach(track => {
 
             tracksHTML.push(
                 `<li class="track-info">${track.trackGame} - ${track.trackName}</li>`
             );
         });
-
-        console.log(tracksHTML.join(''));
         
         // Inject tracks HTML into DOM
         
         let tracksList = document.querySelector('#tracks-list');
-        console.log('here');
+
         tracksList.innerHTML = tracksHTML.join('');
     });

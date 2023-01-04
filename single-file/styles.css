@@ -100,32 +100,32 @@ nav ul {
 
 /**** Site Scrollbar *****/
 
-#track-list {
+#tracks-list {
     position: fixed;
     top: 5.9rem;
     bottom: 0; /* Sets the bottom bound of the container to the bottom of the screen. Otherwise, some of the screen is hidden off the bottom of the screen and cannot be scrolled to. */
     width: 100%;
     max-height: 100%;
-    overflow-y: scroll; /* Displays a scrollbar on the track-list ul element */
+    overflow-y: scroll; /* Displays a scrollbar on the tracks-list ul element */
 }
 
-#track-list::-webkit-scrollbar {
+#tracks-list::-webkit-scrollbar {
     width: auto;
 }
 
-#track-list::-webkit-scrollbar-track {
+#tracks-list::-webkit-scrollbar-track {
     border: 0.2rem solid var(--site-blue);
     background-color: var(--site-brown-orange);
 }
 
-#track-list::-webkit-scrollbar-thumb {
+#tracks-list::-webkit-scrollbar-thumb {
     cursor: none;
     height: 1rem;
     border-radius: 3px;
     background-color: var(--site-orange);
 }
 
-#track-list::-webkit-scrollbar-thumb:hover {
+#tracks-list::-webkit-scrollbar-thumb:hover {
     background: var(--site-light-blue);
 }
 
@@ -181,7 +181,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 /**** TrackList *****/
 
-#track-list {
+#tracks-list {
     margin: 0;
     padding: 0;
 }

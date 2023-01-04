@@ -26,7 +26,7 @@ async function generateTracksJSON(tracksDir, targetDir) {
         let track = {
             trackID: tokens[0],
             trackGame: tokens[1],
-            trackName: tokens[2],
+            trackName: tokens[2].substring(0, tokens[2].indexOf('.mp3')),
             trackURL: `http://localhost:5500/single-file/tracks/${file}`
         };
 
