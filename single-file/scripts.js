@@ -6,6 +6,7 @@ let previousStack = [];
 let nextStack = [];
 let currentTrack = {
   trackID: undefined,
+  trackURL: undefined,
   trackAudio: new Audio()
 }
 
@@ -142,15 +143,18 @@ function setCurrentTrack(trackID)
   {
     previousStack.push({
       trackID: currentTrack.trackID,
-      trackAudio: new Audio(currentTrack.trackURL)
+      trackURL: currentTrack.trackURL
     });
   }
   nextStack = [];
 
   let trackURL = tracksMap.get(trackID).trackURL;
 
-  currentTrack.trackAudio = new Audio(`${trackURL}`);
-  currentTrack.trackID = trackID;
+  currentTrack = {
+    trackID: trackID,
+    trackURL: trackURL,
+    trackAudio: new Audio(`${trackURL}`)
+  }
 }
 
 // Toggles the state of the currently track between playing and paused
@@ -172,21 +176,28 @@ function playNextTrack()
   currentTrack.trackAudio.pause();
   previousStack.push({
     trackID: currentTrack.trackID,
-    trackAudio: new Audio(currentTrack.trackURL)
+    trackURL: currentTrack.trackURL
   });
   
   if(nextStack.length !== 0) // There are tracks in the nextTracks history
   {
     let newTrack = nextStack.pop();
-    currentTrack.trackAudio = newTrack.trackAudio;
-    currentTrack.trackID = newTrack.trackID;
+    currentTrack = {
+      trackID: newTrack.trackID,
+      trackURL: newTrack.trackURL,
+      trackAudio: new Audio(newTrack.trackURL)
+    }
   }
   else // There are no tracks in the nextTracks history, we need to select a random track
   {
     let trackID = getRandomTrackID();
     let newTrack = tracksMap.get(trackID);
-    currentTrack.trackAudio = new Audio(newTrack.trackURL);
-    currentTrack.trackID = newTrack.trackID;
+    console.log(newTrack);
+    currentTrack = {
+      trackID: newTrack.trackID,
+      trackURL: newTrack.trackURL,
+      trackAudio: new Audio(newTrack.trackURL)
+    }
   }
 
   currentTrack.trackAudio.play();
@@ -195,28 +206,21 @@ function playNextTrack()
 // Plays the previous track
 function playPreviousTrack()
 {
-  // if(previousStack.length === 0)
-  // {
-  //   return;
-  // }
-
   if (previousStack.length !== 0) // If previousStack is not empty
   {
     currentTrack.trackAudio.pause();
 
     nextStack.push({ // Push currentTrack onto stack
       trackID: currentTrack.trackID,
-      trackAudio: new Audio(currentTrack.trackURL)
+      trackURL: currentTrack.trackURL
     });
+
     prev = previousStack.pop();
     currentTrack = {
       trackID: prev.trackID,
-      trackAudio: new Audio(tracksMap.get(prev.trackID).trackURL)
+      trackURL: prev.trackURL,
+      trackAudio: new Audio(prev.trackURL)
     }
-
-
-
-    console.log(currentTrack);
 
     currentTrack.trackAudio.play();
   }
