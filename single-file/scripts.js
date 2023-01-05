@@ -2,7 +2,14 @@
 
 let masterTracksList = {};
 let tracksMap = new Map();
-let currentTrack = new Audio();
+let currentTrack = {
+  trackID: new Audio(),
+  trackAudio: new Audio()
+}
+let previousTrack = {
+  trackID: new Audio(),
+  trackAudio: new Audio()
+}
 
 /***************
  * Run Scripts *
@@ -24,6 +31,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
     .then(() => { // ***** Apply event handlers/listeners *****
       applyTracksListEventHandler();
       applyPlayPauseEventHandler();
+      applyNextTrackEventHandler();
     })
 
 /************************
@@ -37,9 +45,9 @@ function applyTracksListEventHandler()
   
   tracksListGroup.addEventListener('click', e => {
 
-    currentTrack.pause();
+    currentTrack.trackAudio.pause();
     setCurrentTrack(e.target.id);
-    currentTrack.play();
+    currentTrack.trackAudio.play();
   });
 }
 
@@ -50,6 +58,16 @@ function applyPlayPauseEventHandler()
 
   playPauseBtn.addEventListener('click', e => {
     playPauseCurrentTrack();
+  });
+}
+
+// Applies an event handler to the next track button in the controls box
+function applyNextTrackEventHandler()
+{
+  let nextTrackBtn = document.querySelector('#next-track-btn');
+  
+  nextTrackBtn.addEventListener('click', e => {
+    playRandomTrack();
   });
 }
 
@@ -78,7 +96,6 @@ function loadTracksMasterList(tracksData)
 function populateTracksMap()
 {
   masterTracksList.forEach(track => {
-    // console.log(track);
 
     tracksMap.set(track.trackID, track);
   });
@@ -113,18 +130,46 @@ function setCurrentTrack(trackID)
 {
   let trackURL = tracksMap.get(trackID).trackURL;
 
-  currentTrack = new Audio(`${trackURL}`);
+  previousTrack = currentTrack;
+  currentTrack.trackAudio = new Audio(`${trackURL}`);
+  currentTrack.trackID = trackID;
 }
 
 // Toggles the state of the currently track between playing and paused
 function playPauseCurrentTrack()
 {
-  if (currentTrack.paused)
+  if (currentTrack.trackAudio.paused)
   {
-    currentTrack.play();
+    currentTrack.trackAudio.play();
   }
   else
   {
-    currentTrack.pause();
+    currentTrack.trackAudio.pause();
   }
+}
+
+// Plays a random track from the currently selected playlist
+function playRandomTrack()
+{
+  // TODO: Add logic to select a track only from the currently selected playlist and not from the entire library
+
+  let trackID = getRandomTrackID();
+
+  currentTrack.trackAudio.pause();
+  setCurrentTrack(trackID);
+  currentTrack.trackAudio.play();
+}
+
+// Randomly generate a track ID from the list of available tracks
+function getRandomTrackID()
+{
+  let trackIDs = [];
+
+  tracksMap.forEach(entry => {
+    trackIDs.push(entry.trackID);
+  });
+  
+  let trackID = trackIDs[Math.round(Math.random() * (trackIDs.length - 0) - 0)]; // Math.random() * (max - min) + min
+
+  return trackID;
 }
