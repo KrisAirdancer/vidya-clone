@@ -2,12 +2,10 @@
 
 let masterTracksList = {};
 let tracksMap = new Map();
+let previousStack = [];
+let nextStack = [];
 let currentTrack = {
-  trackID: new Audio(),
-  trackAudio: new Audio()
-}
-let previousTrack = {
-  trackID: new Audio(),
+  trackID: undefined,
   trackAudio: new Audio()
 }
 
@@ -32,6 +30,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyTracksListEventHandler();
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
+      applyPreviousTrackEventHandler();
     })
 
 /************************
@@ -67,7 +66,17 @@ function applyNextTrackEventHandler()
   let nextTrackBtn = document.querySelector('#next-track-btn');
   
   nextTrackBtn.addEventListener('click', e => {
-    playRandomTrack();
+    playNextTrack();
+  });
+}
+
+// Applies an event handler to the previous track button in the controls box
+function applyPreviousTrackEventHandler()
+{
+  let nextTrackBtn = document.querySelector('#previous-track-btn');
+  
+  nextTrackBtn.addEventListener('click', e => {
+    playPreviousTrack();
   });
 }
 
@@ -128,9 +137,18 @@ function generateTracksListHTML()
 // Sets currentTrack to the track with ID trackURL
 function setCurrentTrack(trackID)
 {
+
+  if (currentTrack.trackID !== undefined)
+  {
+    previousStack.push({
+      trackID: currentTrack.trackID,
+      trackAudio: new Audio(currentTrack.trackURL)
+    });
+  }
+  nextStack = [];
+
   let trackURL = tracksMap.get(trackID).trackURL;
 
-  previousTrack = currentTrack;
   currentTrack.trackAudio = new Audio(`${trackURL}`);
   currentTrack.trackID = trackID;
 }
@@ -145,6 +163,62 @@ function playPauseCurrentTrack()
   else
   {
     currentTrack.trackAudio.pause();
+  }
+}
+
+// Plays the next track
+function playNextTrack()
+{
+  currentTrack.trackAudio.pause();
+  previousStack.push({
+    trackID: currentTrack.trackID,
+    trackAudio: new Audio(currentTrack.trackURL)
+  });
+  
+  if(nextStack.length !== 0) // There are tracks in the nextTracks history
+  {
+    let newTrack = nextStack.pop();
+    currentTrack.trackAudio = newTrack.trackAudio;
+    currentTrack.trackID = newTrack.trackID;
+  }
+  else // There are no tracks in the nextTracks history, we need to select a random track
+  {
+    let trackID = getRandomTrackID();
+    let newTrack = tracksMap.get(trackID);
+    currentTrack.trackAudio = new Audio(newTrack.trackURL);
+    currentTrack.trackID = newTrack.trackID;
+  }
+
+  currentTrack.trackAudio.play();
+}
+
+// Plays the previous track
+function playPreviousTrack()
+{
+  // if(previousStack.length === 0)
+  // {
+  //   return;
+  // }
+
+  if (previousStack.length !== 0) // If previousStack is not empty
+  {
+    currentTrack.trackAudio.pause();
+
+    nextStack.push({ // Push currentTrack onto stack
+      trackID: currentTrack.trackID,
+      trackAudio: new Audio(currentTrack.trackURL)
+    });
+    prev = previousStack.pop();
+    currentTrack = {
+      trackID: prev.trackID,
+      trackAudio: new Audio(tracksMap.get(prev.trackID).trackURL)
+    }
+
+
+
+    console.log(currentTrack);
+
+    currentTrack.trackAudio.play();
   }
 }
 
@@ -163,6 +237,8 @@ function playRandomTrack()
 // Randomly generate a track ID from the list of available tracks
 function getRandomTrackID()
 {
+  // TODO: Add logic to prevent the currently playing track from being returned.
+
   let trackIDs = [];
 
   tracksMap.forEach(entry => {
