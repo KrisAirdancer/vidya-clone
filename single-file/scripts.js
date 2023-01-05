@@ -198,9 +198,7 @@ function playNextTrack()
       trackID = getRandomTrackID();
     }
 
-    console.log(trackID);
     let newTrack = tracksMap.get(trackID);
-    console.log(newTrack);
     currentTrack = {
       trackID: newTrack.trackID,
       trackURL: newTrack.trackURL,
@@ -209,6 +207,9 @@ function playNextTrack()
   }
 
   currentTrack.trackAudio.play();
+
+  console.log(currentTrack.trackID);
+  console.log(currentTrack);
 }
 
 // Plays the previous track
@@ -232,6 +233,9 @@ function playPreviousTrack()
 
     currentTrack.trackAudio.play();
   }
+
+  console.log(currentTrack.trackID);
+  console.log(currentTrack);
 }
 
 // Plays a random track from the currently selected playlist
