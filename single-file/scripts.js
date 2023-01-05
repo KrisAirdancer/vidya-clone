@@ -1,5 +1,3 @@
-// These scripts run to setup and build the webpage/GUI.
-
 let masterTracksList = {};
 let tracksMap = new Map();
 let previousStack = [];
@@ -155,6 +153,8 @@ function setCurrentTrack(trackID)
     trackURL: trackURL,
     trackAudio: new Audio(`${trackURL}`)
   }
+
+  console.log(currentTrack);
 }
 
 // Toggles the state of the currently track between playing and paused
@@ -191,6 +191,14 @@ function playNextTrack()
   else // There are no tracks in the nextTracks history, we need to select a random track
   {
     let trackID = getRandomTrackID();
+
+    // Ensure that the current track is not returned
+    while (trackID === currentTrack.trackID)
+    {
+      trackID = getRandomTrackID();
+    }
+
+    console.log(trackID);
     let newTrack = tracksMap.get(trackID);
     console.log(newTrack);
     currentTrack = {
@@ -241,8 +249,6 @@ function playRandomTrack()
 // Randomly generate a track ID from the list of available tracks
 function getRandomTrackID()
 {
-  // TODO: Add logic to prevent the currently playing track from being returned.
-
   let trackIDs = [];
 
   tracksMap.forEach(entry => {
