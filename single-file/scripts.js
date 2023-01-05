@@ -31,6 +31,10 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler();
     })
+    .then(() => {
+      setCurrentTrack(getRandomTrackID());
+      // currentTrack.trackAudio.play(); // Need to resolve the "user didn't interact with the DOM first error before I can start playing audio right when the page loads"
+    });
 
 /************************
  * Apply Event Handlers *
@@ -151,7 +155,7 @@ function setCurrentTrack(trackID)
   currentTrack = {
     trackID: trackID,
     trackURL: trackURL,
-    trackAudio: new Audio(`${trackURL}`)
+    trackAudio: new Audio(trackURL)
   }
 
   console.log(currentTrack);
