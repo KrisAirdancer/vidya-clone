@@ -30,6 +30,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler();
+      applyTrackScrubberEventListener()
     })
     .then(() => {
       setCurrentTrack(getRandomTrackID());
@@ -89,7 +90,21 @@ function applyDurationLoadEventListener()
   currentTrack.trackAudio.addEventListener("loadeddata", () => {
     let duration = currentTrack.trackAudio.duration;
     
-    document.querySelector('#track-scrubber').setAttribute('max', duration);
+    document.querySelector('#track-scrubber-bar').setAttribute('max', duration);
+  });
+}
+
+function applyTrackScrubberEventListener()
+{
+  let trackScrubber = document.querySelector('#track-scrubber-bar');
+
+  trackScrubber.addEventListener('input', e => {
+    console.log(e.target.value);
+    // TODO: Add the logic (call a separate function) to update the currentTime attribute of the currentTrack
+    // TODO: Figure out a way to prevent the audio from sounding like it is scrubbing (the scratchy audio) when the track scrubber is slid around
+    currentTrack.trackAudio.pause();
+    currentTrack.trackAudio.currentTime = e.target.value;
+    currentTrack.trackAudio.play();
   });
 }
 

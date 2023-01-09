@@ -171,7 +171,7 @@ input[type="range"]::-webkit-slider-runnable-track {
     appearance: none;
     background: var(--site-brown-orange);
     background-image: linear-gradient(var(--site-orange), var(--site-orange));
-    background-size: 50% 100%; /* The first number is the widht, the second number is the height */
+    background-size: 0% 100%; /* The first number is the wihht, the second number is the height */
     background-repeat: no-repeat;
     height: 4px;
 }
@@ -283,6 +283,10 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 #track-scrubber {
+    flex: 1;
+}
+
+#track-scrubber-bar {
     flex: 1;
 }
 
