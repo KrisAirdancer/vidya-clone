@@ -83,6 +83,16 @@ function applyPreviousTrackEventHandler()
   });
 }
 
+// Applies an event handler to the currentTrack that fires when the audio data is loaded
+function applyDurationLoadEventListener()
+{
+  currentTrack.trackAudio.addEventListener("loadeddata", () => {
+    let duration = currentTrack.trackAudio.duration;
+    
+    document.querySelector('#track-scrubber').setAttribute('max', duration);
+  });
+}
+
 /*************
  * Functions *
  *************/
@@ -157,6 +167,7 @@ function setCurrentTrack(trackID)
     trackURL: trackURL,
     trackAudio: new Audio(trackURL)
   }
+  applyDurationLoadEventListener();
 
   console.log(currentTrack);
 }
@@ -172,6 +183,8 @@ function playPauseCurrentTrack()
   {
     currentTrack.trackAudio.pause();
   }
+
+  // console.log('play/pause duration: ' + currentTrack.trackAudio.duration);
 }
 
 // Plays the next track
@@ -209,7 +222,8 @@ function playNextTrack()
       trackAudio: new Audio(newTrack.trackURL)
     }
   }
-
+  applyDurationLoadEventListener();
+  
   currentTrack.trackAudio.play();
 
   console.log(currentTrack.trackID);
@@ -237,6 +251,7 @@ function playPreviousTrack()
 
     currentTrack.trackAudio.play();
   }
+  applyDurationLoadEventListener();
 
   console.log(currentTrack.trackID);
   console.log(currentTrack);
