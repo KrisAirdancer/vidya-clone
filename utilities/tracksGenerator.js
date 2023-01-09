@@ -2,7 +2,7 @@ const fs = require('fs');
 const fsPromises = require('fs/promises');
 
 // Directories being accessed
-const TRACKS_DIR = '../single-file/tracks';
+const TRACKS_DIR = '../tracks';
 const TRACKS_MASTER_LIST_DIR = './tracks-master-list.json';
 
 /**
@@ -39,7 +39,7 @@ async function generateTracksJSON(tracksDir, targetDir) {
             trackID: tokens[0],
             trackGame: tokens[1],
             trackName: tokens[2].substring(0, tokens[2].indexOf('.mp3')),
-            trackURL: `http://localhost:5500/single-file/tracks/${file}`
+            trackURL: `http://localhost:5500/tracks/${file}`
         };
 
         metadata.push(track);
