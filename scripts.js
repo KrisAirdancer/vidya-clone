@@ -30,7 +30,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler();
-      applyTrackScrubberEventListener()
+      applyTrackScrubberEventListener();
     })
     .then(() => {
       setCurrentTrack(getRandomTrackID());
@@ -84,7 +84,7 @@ function applyPreviousTrackEventHandler()
   });
 }
 
-// Applies an event handler to the currentTrack that fires when the audio data is loaded
+// Applies an event handler to the currentTrack HTMLAudioElement to set the `max` value of the #track-scrubber-bar
 function applyDurationLoadEventListener()
 {
   currentTrack.trackAudio.addEventListener("loadeddata", () => {
@@ -94,13 +94,23 @@ function applyDurationLoadEventListener()
   });
 }
 
+// Applies an event listener to the currentTrack HTMLAudioElement to update the `value` (position) of the #track-scrubber-bar
+function applyCurrentTimeChangeEventListener()
+{
+  currentTrack.trackAudio.addEventListener("timeupdate", () => {
+
+    let updatedTime = currentTrack.trackAudio.currentTime;
+
+    document.getElementById('track-scrubber-bar').value = updatedTime;
+  });
+}
+
 // Applies an event handler to the #track-scrubber-bar to update the play position of the currentTrack
 function applyTrackScrubberEventListener()
 {
   let trackScrubber = document.querySelector('#track-scrubber-bar');
 
   trackScrubber.addEventListener('input', e => {
-    console.log(e.target.value);
     // TODO: Add the logic (call a separate function) to update the currentTime attribute of the currentTrack
     // TODO: Figure out a way to prevent the audio from sounding like it is scrubbing (the scratchy audio) when the track scrubber is slid around
     currentTrack.trackAudio.pause();
@@ -184,6 +194,7 @@ function setCurrentTrack(trackID)
     trackAudio: new Audio(trackURL)
   }
   applyDurationLoadEventListener();
+  applyCurrentTimeChangeEventListener();
 
   console.log(currentTrack);
 }
@@ -199,8 +210,6 @@ function playPauseCurrentTrack()
   {
     currentTrack.trackAudio.pause();
   }
-
-  // console.log('play/pause duration: ' + currentTrack.trackAudio.duration);
 }
 
 // Plays the next track
@@ -239,6 +248,7 @@ function playNextTrack()
     }
   }
   applyDurationLoadEventListener();
+  applyCurrentTimeChangeEventListener();
   
   currentTrack.trackAudio.play();
 
@@ -268,6 +278,7 @@ function playPreviousTrack()
     currentTrack.trackAudio.play();
   }
   applyDurationLoadEventListener();
+  applyCurrentTimeChangeEventListener();
 
   console.log(currentTrack.trackID);
   console.log(currentTrack);
