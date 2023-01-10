@@ -94,6 +94,7 @@ function applyDurationLoadEventListener()
   });
 }
 
+// Applies an event handler to the #track-scrubber-bar to update the play position of the currentTrack
 function applyTrackScrubberEventListener()
 {
   let trackScrubber = document.querySelector('#track-scrubber-bar');
