@@ -196,6 +196,8 @@ function setCurrentTrack(trackID)
   applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
 
+  updateTrackInfoInHeader(currentTrack.trackID);
+
   console.log(currentTrack);
 }
 
@@ -249,6 +251,8 @@ function playNextTrack()
   }
   applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
+
+  updateTrackInfoInHeader(currentTrack.trackID);
   
   currentTrack.trackAudio.play();
 
@@ -280,6 +284,8 @@ function playPreviousTrack()
   applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
 
+  updateTrackInfoInHeader(currentTrack.trackID);
+
   console.log(currentTrack.trackID);
   console.log(currentTrack);
 }
@@ -308,4 +314,13 @@ function getRandomTrackID()
   let trackID = trackIDs[Math.round(Math.random() * (trackIDs.length - 0) - 0)]; // Math.random() * (max - min) + min
 
   return trackID;
+}
+
+// Updates the track info text displayed in the site header
+function updateTrackInfoInHeader(trackID)
+{
+  let trackData = tracksMap.get(trackID);
+  
+  let trackInfoDiv = document.querySelector('#track-info');
+  trackInfoDiv.textContent = `${trackData.trackName} — ${trackData.trackGame}`;
 }
