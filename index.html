@@ -35,10 +35,18 @@
 
     </nav>
 
-    <div id='track-scrubber' class="track-scrubber-flex-container">
-      <label id="time-played">0:00</label>
-      <input type="range" id="track-scrubber-bar" class="track-scrubber" min="0" max="100" value="0" step="0.000001"/>
-      <label id="time-left">1:42</label>
+    <div id="scrubber-group">
+      <div id="time-played" class="scrubber-label">00:00</div>
+
+      <div id="scrubber-body">
+        <div id="scrubber-bar-background">
+          <div id="scrubber-bar-progress">
+            <div id="scrubber-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="time-left" class="scrubber-label">01:42</div>
     </div>
 
   </div>

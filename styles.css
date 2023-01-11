@@ -24,7 +24,7 @@
     --fade-light: #1F4B7F;
     --fade-light-2: #94BAFF;
     --fade-dark: #0A1929;
-    --track-scrubber-height: 0.8rem;
+    --scrubber-height: 1.5rem;
     --control-box-height: 5rem;
     --control-box-width: 9.3rem;
     --site-font-family: Helvetica, Arial, sans-serif;
@@ -109,7 +109,7 @@ nav ul {
 
 #tracks-list {
     position: fixed;
-    top: 5.9rem;
+    top: 6.0rem; /* TODO: This is here to keep the tracks list from running over top of the navbar and scrubber. Restrucutre the project so that the navbar, tracks list, and scrubber are in a flex container so I don't have to do hacky things like this. */
     bottom: 0; /* Sets the bottom bound of the container to the bottom of the screen. Otherwise, some of the screen is hidden off the bottom of the screen and cannot be scrolled to. */
     width: 100%;
     max-height: 100%;
@@ -138,52 +138,61 @@ nav ul {
 
 /**** Track Scrubber *****/
 
-/* TODO: The text is aligned to the bottom of the labels. Find a way to center it veritcally. */
-/* TODO: The text should have two leading zeros (00:00) instead of just one (0:00) */
-#track-scrubber label {
-    color: var(--site-orange);
-    border-width: 2px;
-    border-style: solid;
-    border-color: var(--nav-button-border);
-    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
-    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
-    font-size: .8rem;
-    text-align: center;
-    font-family: var(--site-font-family);
-    height: var(--track-scrubber-height);
+#scrubber-group {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    height: var(--scrubber-height);
 }
 
-/* TODO: The code example at the top of this page could be helpful in setting up the properties of the track-scrubber: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range */
-input[type="range"] {
-    appearance: none;
+#scrubber-body {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    height: var(--scrubber-height);
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
+    border: 2px solid var(--nav-button-border);
+    margin: 0;
+    padding: 0px 5px 0px 5px;
+}
+
+#scrubber-bar-background {
+    background-color: var(--site-brown-orange);
+    height: 25%;
+    width: 100%;
+}
+
+#scrubber-bar-progress {
+    position: relative;
+    background-color: var(--site-orange);
+    height: 100%;
+    width: 50%;
+}
+
+#scrubber-thumb {
+    background-color: var(--site-orange);
+    height: 0.9rem;
+    width: 0.4rem;
+    border-radius: 5px;
+    border: 1px solid var(--nav-button-border);
+    position: absolute;
+    top: -0.3rem;
+    left: 100%;
+}
+
+/* TODO: The font in the labels (divs) is not centered vertically. Fix this. */
+.scrubber-label {
+    box-sizing: border-box;
+    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     margin: 0;
     padding: 0.3rem;
-    height: var(--track-scrubber-height) - 0.1rem;
-    border-width: 1px 1px 2px 1px;
-    border-style: solid;
-    border-color: var(--nav-button-border);
-    background-image: linear-gradient(var(--fade-light), var(--fade-dark));
-    cursor: pointer;
-}
-
-/* TODO: This article shows how to setup the slider bar coloration. Archive this article. https://nikitahl.com/style-range-input-css */
-input[type="range"]::-webkit-slider-runnable-track {
-    appearance: none;
-    background: var(--site-brown-orange);
-    background-image: linear-gradient(var(--site-orange), var(--site-orange));
-    background-size: 0% 100%; /* The first number is the wihht, the second number is the height */
-    background-repeat: no-repeat;
-    height: 4px;
-}
-
-/* TODO: How do I set the position of the thumb? */
-input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    background: var(--site-orange);
-    height: 12px;
-    width: 6px;
-    margin: -4px 0 0 0;
-    border-radius: 2px;
+    color: var(--site-orange);
+    border: 2px solid var(--nav-button-border);
+    height: var(--scrubber-height);
+    font-family: var(--site-font-family);
+    font-size: 0.8rem;
 }
 
 /**** TrackList *****/
@@ -257,10 +266,6 @@ input[type="range"]::-webkit-slider-thumb {
     align-items: flex-start;
 }
 
-.track-scrubber-flex-container {
-    display: flex;
-}
-
 #control-box-flex-container {
     display: flex;
     flex-direction: column;
@@ -280,13 +285,5 @@ input[type="range"]::-webkit-slider-thumb {
 
 #nav-playlist-selector {
     align-self: flex-end;
-}
-
-#track-scrubber {
-    flex: 1;
-}
-
-#track-scrubber-bar {
-    flex: 1;
 }
 
