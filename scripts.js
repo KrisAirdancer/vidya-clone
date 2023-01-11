@@ -30,7 +30,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler();
-      applyTrackScrubberEventListener();
+      applyScrubberEventListener();
     })
     .then(() => {
       setCurrentTrack(getRandomTrackID());
@@ -84,13 +84,14 @@ function applyPreviousTrackEventHandler()
   });
 }
 
+// TODO: Update this function
 // Applies an event handler to the currentTrack HTMLAudioElement to set the `max` value of the #track-scrubber-bar
 function applyDurationLoadEventListener()
 {
   currentTrack.trackAudio.addEventListener("loadeddata", () => {
     let duration = currentTrack.trackAudio.duration;
     
-    document.querySelector('#track-scrubber-bar').setAttribute('max', duration);
+    // document.querySelector('#track-scrubber-bar').setAttribute('max', duration);
   });
 }
 
@@ -101,7 +102,12 @@ function applyCurrentTimeChangeEventListener()
 
     let updatedTime = currentTrack.trackAudio.currentTime;
 
-    document.getElementById('track-scrubber-bar').value = updatedTime;
+    let progressBar = document.querySelector('#scrubber-bar-progress');
+
+    progressBar.style.width = `${(updatedTime / currentTrack.trackAudio.duration) * 100}%`;
+
+
+    // document.getElementById('track-scrubber-bar').value = updatedTime;
   });
 }
 
@@ -114,17 +120,27 @@ function applyEndedEventListener()
   });
 }
 
+// TODO: Update this function
 // Applies an event handler to the #track-scrubber-bar to update the play position of the currentTrack
-function applyTrackScrubberEventListener()
+function applyScrubberEventListener()
 {
-  let trackScrubber = document.querySelector('#track-scrubber-bar');
+  let trackScrubber = document.querySelector('#scrubber-thumb');
 
-  trackScrubber.addEventListener('input', e => {
+  trackScrubber.addEventListener('click', e => {
     // TODO: Add the logic (call a separate function) to update the currentTime attribute of the currentTrack
     // TODO: Figure out a way to prevent the audio from sounding like it is scrubbing (the scratchy audio) when the track scrubber is slid around
-    currentTrack.trackAudio.pause();
-    currentTrack.trackAudio.currentTime = e.target.value;
-    currentTrack.trackAudio.play();
+
+
+    console.log('HERE');
+
+    let progressBar = document.querySelector('#scrubber-bar-progress');
+
+    progressBar.style.width = '100%';
+
+    // This code is functional
+    // currentTrack.trackAudio.pause();
+    // currentTrack.trackAudio.currentTime = e.target.value;
+    // currentTrack.trackAudio.play();
   });
 }
 
