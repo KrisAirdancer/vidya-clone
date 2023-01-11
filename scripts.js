@@ -105,6 +105,15 @@ function applyCurrentTimeChangeEventListener()
   });
 }
 
+// Applies an event listener to the currentTrack HTMLAudioElement that triggers when a track finishes playing
+function applyEndedEventListener()
+{
+  currentTrack.trackAudio.addEventListener("ended", () => {
+
+    playNextTrack();
+  });
+}
+
 // Applies an event handler to the #track-scrubber-bar to update the play position of the currentTrack
 function applyTrackScrubberEventListener()
 {
@@ -195,6 +204,7 @@ function setCurrentTrack(trackID)
   }
   applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
+  applyEndedEventListener();
 
   updateTrackInfoInHeader(currentTrack.trackID);
 
@@ -251,6 +261,7 @@ function playNextTrack()
   }
   applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
+  applyEndedEventListener();
 
   updateTrackInfoInHeader(currentTrack.trackID);
   
@@ -283,6 +294,7 @@ function playPreviousTrack()
   }
   applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
+  applyEndedEventListener();
 
   updateTrackInfoInHeader(currentTrack.trackID);
 
