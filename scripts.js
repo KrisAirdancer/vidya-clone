@@ -88,13 +88,7 @@ function applyPreviousTrackEventHandler()
 // Applies an event listener to the currentTrack HTMLAudioElement to update the `value` (position) of the #track-scrubber-bar
 function applyCurrentTimeChangeEventListener()
 {
-  currentTrack.trackAudio.addEventListener("timeupdate", () => {
-
-    let progressBar = document.querySelector('#scrubber-bar-progress');
-    let updatedTime = currentTrack.trackAudio.currentTime;
-
-    progressBar.style.width = `${(updatedTime / currentTrack.trackAudio.duration) * 100}%`;
-  });
+  currentTrack.trackAudio.addEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
 }
 
 // Applies an event listener to the currentTrack HTMLAudioElement that triggers when a track finishes playing
@@ -116,6 +110,7 @@ function applyScrubberEventListener()
     // TODO: Add the logic (call a separate function) to update the currentTime attribute of the currentTrack
     // TODO: Figure out a way to prevent the audio from sounding like it is scrubbing (the scratchy audio) when the track scrubber is slid around
 
+    currentTrack.trackAudio.removeEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
     document.addEventListener('mousemove', moveScrubberThumb);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
   });
 }
@@ -125,6 +120,7 @@ function applyRemoveScrubberEventListener()
   document.addEventListener('mouseup', e => {
     document.removeEventListener('mousemove', moveScrubberThumb);
     setCurrentTime();
+    currentTrack.trackAudio.addEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
   });
 }
 
@@ -362,3 +358,14 @@ function setCurrentTime()
     currentTrack.trackAudio.currentTime = newCurrentTime;
   }
 }
+
+function updateCurrentTimeAndScrubberThumb()
+{
+  let progressBar = document.querySelector('#scrubber-bar-progress');
+  let updatedTime = currentTrack.trackAudio.currentTime;
+
+  progressBar.style.width = `${(updatedTime / currentTrack.trackAudio.duration) * 100}%`;
+}
+
+// Set position of scrubber thumb on mousedown
+// Set currentTime on mouseup
