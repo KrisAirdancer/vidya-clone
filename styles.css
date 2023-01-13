@@ -149,6 +149,7 @@ nav ul {
     align-items: stretch;
     justify-content: space-between;
     height: var(--scrubber-height);
+    cursor: pointer;
 }
 
 #scrubber-group:hover #scrubber-thumb {
