@@ -100,21 +100,21 @@ function applyEndedEventListener()
   });
 }
 
-// TODO: Update this function
 // Applies an event handler to the #track-scrubber-bar to update the play position of the currentTrack
 function applyScrubberEventListener()
 {
-  let scrubberThumb = document.querySelector('#scrubber-thumb');
+  let scrubberThumb = document.querySelector('#scrubber-body');
 
   scrubberThumb.addEventListener('mousedown', e => {
-    // TODO: Add the logic (call a separate function) to update the currentTime attribute of the currentTrack
-    // TODO: Figure out a way to prevent the audio from sounding like it is scrubbing (the scratchy audio) when the track scrubber is slid around
+
+    moveScrubberThumb(e); // This allows the user to click somewhere on the scrubber bar to scrub through the track
 
     currentTrack.trackAudio.removeEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
     document.addEventListener('mousemove', moveScrubberThumb);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
   });
 }
 
+// Removes the event listener for mousemove events to prevent the scrubber thumb from following the users mouse after mouseup
 function applyRemoveScrubberEventListener()
 {
   document.addEventListener('mouseup', e => {
@@ -337,7 +337,6 @@ function moveScrubberThumb(event)
 
   let right = progressBar.getBoundingClientRect().right;
   let left = progressBar.getBoundingClientRect().left;
-  console.log('clientX: ' + event.clientX + ', left: ' + left + ', right: ' + right);
 
   document.querySelector('#scrubber-bar-progress').style.width = `${((event.clientX - left) / (right - left)) * 100}%`;
 }
@@ -346,11 +345,9 @@ function moveScrubberThumb(event)
 function setCurrentTime()
 {
   let position = document.querySelector('#scrubber-bar-progress').style.width;
-  console.log(position);
-  console.log(parseFloat(position)); // JavaScript apparently doesn't even need us to cut the % sign off the end of the string first!
 
   let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
-  console.log(newCurrentTime);
+
   // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (inderectly via newCurrentTime).
   // Note: This is using JavaScript's "truthy" behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
   if (newCurrentTime)
@@ -367,6 +364,3 @@ function updateCurrentTimeAndScrubberThumb()
 
   progressBar.style.width = `${(updatedTime / currentTrack.trackAudio.duration) * 100}%`;
 }
-
-// Set position of scrubber thumb on mousedown
-// Set currentTime on mouseup
