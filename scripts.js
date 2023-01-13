@@ -31,6 +31,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler();
       applyScrubberEventListener();
+      applyRemoveScrubberEventListener();
     })
     .then(() => {
       setCurrentTrack(getRandomTrackID());
@@ -84,30 +85,15 @@ function applyPreviousTrackEventHandler()
   });
 }
 
-// TODO: Update this function
-// Applies an event handler to the currentTrack HTMLAudioElement to set the `max` value of the #track-scrubber-bar
-function applyDurationLoadEventListener()
-{
-  currentTrack.trackAudio.addEventListener("loadeddata", () => {
-    let duration = currentTrack.trackAudio.duration;
-    
-    // document.querySelector('#track-scrubber-bar').setAttribute('max', duration);
-  });
-}
-
 // Applies an event listener to the currentTrack HTMLAudioElement to update the `value` (position) of the #track-scrubber-bar
 function applyCurrentTimeChangeEventListener()
 {
   currentTrack.trackAudio.addEventListener("timeupdate", () => {
 
+    let progressBar = document.querySelector('#scrubber-bar-progress');
     let updatedTime = currentTrack.trackAudio.currentTime;
 
-    let progressBar = document.querySelector('#scrubber-bar-progress');
-
     progressBar.style.width = `${(updatedTime / currentTrack.trackAudio.duration) * 100}%`;
-
-
-    // document.getElementById('track-scrubber-bar').value = updatedTime;
   });
 }
 
@@ -124,23 +110,21 @@ function applyEndedEventListener()
 // Applies an event handler to the #track-scrubber-bar to update the play position of the currentTrack
 function applyScrubberEventListener()
 {
-  let trackScrubber = document.querySelector('#scrubber-thumb');
+  let scrubberThumb = document.querySelector('#scrubber-thumb');
 
-  trackScrubber.addEventListener('click', e => {
+  scrubberThumb.addEventListener('mousedown', e => {
     // TODO: Add the logic (call a separate function) to update the currentTime attribute of the currentTrack
     // TODO: Figure out a way to prevent the audio from sounding like it is scrubbing (the scratchy audio) when the track scrubber is slid around
 
+    document.addEventListener('mousemove', moveScrubberThumb);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
+  });
+}
 
-    console.log('HERE');
-
-    let progressBar = document.querySelector('#scrubber-bar-progress');
-
-    progressBar.style.width = '100%';
-
-    // This code is functional
-    // currentTrack.trackAudio.pause();
-    // currentTrack.trackAudio.currentTime = e.target.value;
-    // currentTrack.trackAudio.play();
+function applyRemoveScrubberEventListener()
+{
+  document.addEventListener('mouseup', e => {
+    document.removeEventListener('mousemove', moveScrubberThumb);
+    setCurrentTime();
   });
 }
 
@@ -218,7 +202,6 @@ function setCurrentTrack(trackID)
     trackURL: trackURL,
     trackAudio: new Audio(trackURL)
   }
-  applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
   applyEndedEventListener();
 
@@ -275,7 +258,6 @@ function playNextTrack()
       trackAudio: new Audio(newTrack.trackURL)
     }
   }
-  applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
   applyEndedEventListener();
 
@@ -308,7 +290,6 @@ function playPreviousTrack()
 
     currentTrack.trackAudio.play();
   }
-  applyDurationLoadEventListener();
   applyCurrentTimeChangeEventListener();
   applyEndedEventListener();
 
@@ -351,4 +332,33 @@ function updateTrackInfoInHeader(trackID)
   
   let trackInfoDiv = document.querySelector('#track-info');
   trackInfoDiv.textContent = `${trackData.trackName} — ${trackData.trackGame}`;
+}
+
+// Repositions the scrubber thumb element along the scrubber bar
+function moveScrubberThumb(event)
+{
+  let progressBar = document.querySelector('#scrubber-bar-background');
+
+  let right = progressBar.getBoundingClientRect().right;
+  let left = progressBar.getBoundingClientRect().left;
+  // console.log('clientX: ' + event.clientX + ', left: ' + left + ', right: ' + right);
+
+  document.querySelector('#scrubber-bar-progress').style.width = `${((event.clientX - left) / (right - left)) * 100}%`;
+}
+
+// Sets the currentTime attribute of the currentTrack
+function setCurrentTime()
+{
+  let position = document.querySelector('#scrubber-bar-progress').style.width;
+  console.log(position);
+  console.log(parseFloat(position)); // JavaScript apparently doesn't even need us to cut the % sign off the end of the string first!
+
+  let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
+  console.log(newCurrentTime);
+  // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (inderectly via newCurrentTime).
+  // Note: This is using JavaScript's "truthy" behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
+  if (newCurrentTime)
+  {
+    currentTrack.trackAudio.currentTime = newCurrentTime;
+  }
 }

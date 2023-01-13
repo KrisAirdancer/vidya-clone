@@ -145,6 +145,10 @@ nav ul {
     height: var(--scrubber-height);
 }
 
+#scrubber-group:hover #scrubber-thumb {
+    background-color: var(--site-light-blue)
+}
+
 #scrubber-body {
     display: flex;
     align-items: center;
@@ -168,7 +172,7 @@ nav ul {
     position: relative;
     background-color: var(--site-orange);
     height: 100%;
-    width: 50%;
+    width: 0%;
 }
 
 #scrubber-thumb {
