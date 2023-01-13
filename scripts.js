@@ -337,7 +337,7 @@ function moveScrubberThumb(event)
 
   let right = progressBar.getBoundingClientRect().right;
   let left = progressBar.getBoundingClientRect().left;
-  // console.log('clientX: ' + event.clientX + ', left: ' + left + ', right: ' + right);
+  console.log('clientX: ' + event.clientX + ', left: ' + left + ', right: ' + right);
 
   document.querySelector('#scrubber-bar-progress').style.width = `${((event.clientX - left) / (right - left)) * 100}%`;
 }
@@ -359,6 +359,7 @@ function setCurrentTime()
   }
 }
 
+// Updates the currentTrack.trackAudio.currentTime and the position of the scrubber thumb on the scrubber bar
 function updateCurrentTimeAndScrubberThumb()
 {
   let progressBar = document.querySelector('#scrubber-bar-progress');
