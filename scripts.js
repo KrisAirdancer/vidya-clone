@@ -383,6 +383,7 @@ function updateScrubberTimeStamps()
 
 // Converts the given number of seconds into HH:MM:SS format.
 // format - defaults to HH:MM:SS; 1 for SS:MM
+// Source: https://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
 function toFormattedTimeString(totalSeconds, format)
 {
   let hours = Math.floor(totalSeconds / 3600);
