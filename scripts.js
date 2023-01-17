@@ -346,7 +346,7 @@ function updateTrackInfoInHeader(trackID)
   let trackData = tracksMap.get(trackID);
   
   let trackInfoDiv = document.querySelector('#track-info');
-  trackInfoDiv.textContent = `${trackData.trackName} — ${trackData.trackGame}`;
+  trackInfoDiv.innerHTML = `<strong>${trackData.trackName}</strong> — ${trackData.trackGame}`;
 }
 
 // Repositions the scrubber thumb element along the scrubber bar when the user interacts with it
