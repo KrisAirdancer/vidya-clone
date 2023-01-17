@@ -131,6 +131,8 @@ function applyRemoveScrubberEventListener()
 // Sets and stores the tracks master list from the given data (from the fetch call above)
 function loadTracksMasterList(tracksData)
 {
+  // console.log('AT: populateTracksMap()');
+
   let sortedTracks = tracksData.sort((a, b) => {
 
     if (`${a.trackGame} - ${a.trackName}` < `${b.trackGame} - ${b.trackName}`) {
@@ -148,6 +150,8 @@ function loadTracksMasterList(tracksData)
 // Populates the tracksMap
 function populateTracksMap()
 {
+  // console.log('AT: populateTracksMap()');
+
   masterTracksList.forEach(track => {
 
     tracksMap.set(track.trackID, track);
@@ -157,6 +161,8 @@ function populateTracksMap()
 // Generates the HTML list of tracks
 function generateTracksListHTML()
 {
+  // console.log('AT: generateTracksListHTML()');
+
   // TODO: Need to change the playlist file that is used based on the user's selection (per the playlist dropdown)
       // Can likely just grab the currenly selected playlist from the <select> tag using a QuerySelector
 
@@ -181,6 +187,7 @@ function generateTracksListHTML()
 // Sets currentTrack to the track with ID trackURL
 function setCurrentTrack(trackID)
 {
+  // console.log('AT: setCurrentTrack()');
 
   if (currentTrack.trackID !== undefined)
   {
@@ -209,6 +216,8 @@ function setCurrentTrack(trackID)
 // Toggles the state of the currently track between playing and paused
 function playPauseCurrentTrack()
 {
+  // console.log('AT: playPauseCurrentTrack()');
+
   if (currentTrack.trackAudio.paused)
   {
     currentTrack.trackAudio.play();
@@ -222,6 +231,8 @@ function playPauseCurrentTrack()
 // Plays the next track
 function playNextTrack()
 {
+  // console.log('AT: playNextTrack()');
+
   currentTrack.trackAudio.pause();
   previousStack.push({
     trackID: currentTrack.trackID,
@@ -268,6 +279,8 @@ function playNextTrack()
 // Plays the previous track
 function playPreviousTrack()
 {
+  // console.log('AT: playPreviousTrack()');
+
   if (previousStack.length !== 0) // If previousStack is not empty
   {
     currentTrack.trackAudio.pause();
@@ -298,6 +311,8 @@ function playPreviousTrack()
 // Plays a random track from the currently selected playlist
 function playRandomTrack()
 {
+  // console.log('AT: playRandomTrack()');
+
   // TODO: Add logic to select a track only from the currently selected playlist and not from the entire library
 
   let trackID = getRandomTrackID();
@@ -310,6 +325,8 @@ function playRandomTrack()
 // Randomly generate a track ID from the list of available tracks
 function getRandomTrackID()
 {
+  // console.log('AT: getRandomTrackID()');
+
   let trackIDs = [];
 
   tracksMap.forEach(entry => {
@@ -324,6 +341,8 @@ function getRandomTrackID()
 // Updates the track info text displayed in the site header
 function updateTrackInfoInHeader(trackID)
 {
+  // console.log('AT: updateTrackInfoInHeader()');
+
   let trackData = tracksMap.get(trackID);
   
   let trackInfoDiv = document.querySelector('#track-info');
@@ -333,6 +352,8 @@ function updateTrackInfoInHeader(trackID)
 // Repositions the scrubber thumb element along the scrubber bar when the user interacts with it
 function moveScrubberThumbOnUserInput(event)
 {
+  // console.log('AT: moveScrubberThumbOnUserInput()');
+  
   let progressBar = document.querySelector('#scrubber-bar-background');
 
   let right = progressBar.getBoundingClientRect().right;
@@ -342,12 +363,15 @@ function moveScrubberThumbOnUserInput(event)
   if (updatedPosition <= 100)
   {
     document.querySelector('#scrubber-bar-progress').style.width = `${updatedPosition}%`;
+    updateScrubberTimeStamps();
   }
 }
 
 // Sets the currentTime attribute of the currentTrack
 function setCurrentTime()
 {
+  // console.log('AT: setCurrentTime()');
+
   let position = document.querySelector('#scrubber-bar-progress').style.width;
 
   let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
@@ -363,6 +387,8 @@ function setCurrentTime()
 // Repositions the scrubber thumb element along the scrubber bar as the track plays
 function updateScrubberThumbPosition()
 {
+  // console.log('AT: updateScrubberThumbPosition()');
+
   let progressBar = document.querySelector('#scrubber-bar-progress');
   let updatedTime = currentTrack.trackAudio.currentTime;
 
@@ -374,10 +400,13 @@ function updateScrubberThumbPosition()
 // Updates the text in the time stamps that flank the track scrubber bar
 function updateScrubberTimeStamps()
 {
-  let timePlayed = currentTrack.trackAudio.currentTime;
-  let timeRemaining = currentTrack.trackAudio.duration - currentTrack.trackAudio.currentTime;
+  // console.log('AT: updateScrubberTimeStamps()');
 
-  document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed, 1);
+  let position = document.querySelector('#scrubber-bar-progress').style.width;
+  let timePlayed = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
+  let timeRemaining = currentTrack.trackAudio.duration - timePlayed;
+
+  document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed.toString(), 1);
   document.querySelector('#left-timestamp').textContent = toFormattedTimeString(timeRemaining, 1);
 }
 
