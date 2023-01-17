@@ -338,7 +338,11 @@ function moveScrubberThumb(event)
   let right = progressBar.getBoundingClientRect().right;
   let left = progressBar.getBoundingClientRect().left;
 
-  document.querySelector('#scrubber-bar-progress').style.width = `${((event.clientX - left) / (right - left)) * 100}%`;
+  let updatedPosition = ((event.clientX - left) / (right - left)) * 100;
+  if (updatedPosition <= 100)
+  {
+    document.querySelector('#scrubber-bar-progress').style.width = `${updatedPosition}%`;
+  }
 }
 
 // Sets the currentTime attribute of the currentTrack
