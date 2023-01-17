@@ -88,7 +88,7 @@ function applyPreviousTrackEventHandler()
 // Applies an event listener to the currentTrack HTMLAudioElement to update the `value` (position) of the #track-scrubber-bar
 function applyCurrentTimeChangeEventListener()
 {
-  currentTrack.trackAudio.addEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
+  currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
 }
 
 // Applies an event listener to the currentTrack HTMLAudioElement that triggers when a track finishes playing
@@ -107,10 +107,10 @@ function applyScrubberEventListener()
 
   scrubberThumb.addEventListener('mousedown', e => {
 
-    moveScrubberThumb(e); // This allows the user to click somewhere on the scrubber bar to scrub through the track
+    moveScrubberThumbOnUserInput(e); // This allows the user to click somewhere on the scrubber bar to scrub through the track
 
-    currentTrack.trackAudio.removeEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
-    document.addEventListener('mousemove', moveScrubberThumb);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
+    currentTrack.trackAudio.removeEventListener('timeupdate', updateScrubberThumbPosition);
+    document.addEventListener('mousemove', moveScrubberThumbOnUserInput);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
   });
 }
 
@@ -118,9 +118,9 @@ function applyScrubberEventListener()
 function applyRemoveScrubberEventListener()
 {
   document.addEventListener('mouseup', e => {
-    document.removeEventListener('mousemove', moveScrubberThumb);
+    document.removeEventListener('mousemove', moveScrubberThumbOnUserInput);
     setCurrentTime();
-    currentTrack.trackAudio.addEventListener('timeupdate', updateCurrentTimeAndScrubberThumb);
+    currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
   });
 }
 
@@ -330,8 +330,8 @@ function updateTrackInfoInHeader(trackID)
   trackInfoDiv.textContent = `${trackData.trackName} — ${trackData.trackGame}`;
 }
 
-// Repositions the scrubber thumb element along the scrubber bar
-function moveScrubberThumb(event)
+// Repositions the scrubber thumb element along the scrubber bar when the user interacts with it
+function moveScrubberThumbOnUserInput(event)
 {
   let progressBar = document.querySelector('#scrubber-bar-background');
 
@@ -360,11 +360,45 @@ function setCurrentTime()
   }
 }
 
-// Updates the currentTrack.trackAudio.currentTime and the position of the scrubber thumb on the scrubber bar
-function updateCurrentTimeAndScrubberThumb()
+// Repositions the scrubber thumb element along the scrubber bar as the track plays
+function updateScrubberThumbPosition()
 {
   let progressBar = document.querySelector('#scrubber-bar-progress');
   let updatedTime = currentTrack.trackAudio.currentTime;
 
   progressBar.style.width = `${(updatedTime / currentTrack.trackAudio.duration) * 100}%`;
+
+  updateScrubberTimeStamps();
+}
+
+// Updates the text in the time stamps that flank the track scrubber bar
+function updateScrubberTimeStamps()
+{
+  let timePlayed = currentTrack.trackAudio.currentTime;
+  let timeRemaining = currentTrack.trackAudio.duration - currentTrack.trackAudio.currentTime;
+
+  document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed, 1);
+  document.querySelector('#left-timestamp').textContent = toFormattedTimeString(timeRemaining, 1);
+}
+
+// Converts the given number of seconds into HH:MM:SS format.
+// format - defaults to HH:MM:SS; 1 for SS:MM
+function toFormattedTimeString(totalSeconds, format)
+{
+  let hours = Math.floor(totalSeconds / 3600);
+  let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+  let seconds = Math.floor(totalSeconds - (hours * 3600) - (minutes * 60));
+
+  if (hours < 10) { hours = '0' + hours; }
+  if (minutes < 10) { minutes = '0' + minutes; }
+  if (seconds < 10) { seconds = '0' + seconds; }
+
+  if (format === 1)
+  {
+    return `${minutes}:${seconds}`;
+  }
+  else
+  {
+  return `${hours}:${minutes}:${seconds}`;
+  }
 }
