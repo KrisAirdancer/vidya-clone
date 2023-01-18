@@ -406,8 +406,11 @@ function updateScrubberTimeStamps()
   let timePlayed = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
   let timeRemaining = currentTrack.trackAudio.duration - timePlayed;
 
-  document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed.toString(), 1);
-  document.querySelector('#left-timestamp').textContent = toFormattedTimeString(timeRemaining, 1);
+  if (timePlayed)
+  {
+    document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed.toString(), 1);
+    document.querySelector('#left-timestamp').textContent = toFormattedTimeString(timeRemaining, 1);
+  }
 }
 
 // Converts the given number of seconds into HH:MM:SS format.
