@@ -187,15 +187,16 @@ function generateTracksListHTML()
 // Sets currentTrack to the track with ID trackURL
 function setCurrentTrack(trackID)
 {
-  // console.log('AT: setCurrentTrack()');
+  console.log('AT: setCurrentTrack()');
 
-  if (currentTrack.trackID !== undefined)
-  {
-    previousStack.push({
-      trackID: currentTrack.trackID,
-      trackURL: currentTrack.trackURL
-    });
-  }
+  // TODO: I think this is dead code. If there are no bugs with it commented out, delete it.
+  // if (currentTrack.trackID !== undefined)
+  // {
+  //   previousStack.push({
+  //     trackID: currentTrack.trackID,
+  //     trackURL: currentTrack.trackURL
+  //   });
+  // }
   nextStack = [];
 
   let trackURL = tracksMap.get(trackID).trackURL;
@@ -400,12 +401,13 @@ function updateScrubberThumbPosition()
 // Updates the text in the time stamps that flank the track scrubber bar
 function updateScrubberTimeStamps()
 {
-  // console.log('AT: updateScrubberTimeStamps()');
+  console.log('AT: updateScrubberTimeStamps()');
 
   let position = document.querySelector('#scrubber-bar-progress').style.width;
   let timePlayed = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
   let timeRemaining = currentTrack.trackAudio.duration - timePlayed;
-
+  
+  console.log(`timePlayed: ${timePlayed}`);
   if (timePlayed)
   {
     document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed.toString(), 1);
