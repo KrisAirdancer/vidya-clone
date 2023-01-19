@@ -409,7 +409,7 @@ function updateScrubberTimeStamps()
   if (timePlayed)
   {
     document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed.toString(), 1);
-    document.querySelector('#left-timestamp').textContent = toFormattedTimeString(timeRemaining, 1);
+    document.querySelector('#left-timestamp').textContent = `-${toFormattedTimeString(timeRemaining, 1)}`;
   }
 }
 
