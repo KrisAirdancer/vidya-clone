@@ -28,6 +28,7 @@
     --control-box-height: 5rem;
     --control-box-width: 9.3rem;
     --site-font-family: Helvetica, Arial, sans-serif;
+    --timestamp-width: 50px;
 }
 
 html {
@@ -195,15 +196,22 @@ nav ul {
 
 /* TODO: The font in the labels (divs) is not centered vertically. Fix this. */
 .scrubber-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     margin: 0;
     padding: 0.3rem;
     color: var(--site-orange);
     border: 2px solid var(--nav-button-border);
-    height: var(--scrubber-height);
     font-family: var(--site-font-family);
     font-size: 0.8rem;
+    height: var(--scrubber-height);
+    min-height: var(--scrubber-height);
+    max-height: var(--scrubber-height);
+    min-width: var(--timestamp-width);
+    max-width: var(--timestamp-width);
 }
 
 /**** TrackList *****/
