@@ -7,6 +7,8 @@ let currentTrack = {
   trackURL: undefined,
   trackAudio: new Audio()
 }
+let chosenTracks = new Set();
+let exiledTracks = new Set();
 
 /***************
  * Run Scripts *
@@ -25,15 +27,21 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
     .then(() => { // ***** Generate tracksHTML from playlist file
       generateTracksListHTML();
     })
-    .then(() => { // ***** Apply event handlers/listeners *****
+    .then(() => { // Apply event handlers/listeners
       applyTracksListEventHandler();
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
-      applyPreviousTrackEventHandler();
+      applyPreviousTrackEventHandler(); // TODO: Some of the Listners are called Handlers and vice versa in my function names - update the function names to use consistant naming
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
+      applyChosenButtonEventListener();
+      applyExiledButtonEventListener();
     })
-    .then(() => {
+    .then(() => { // Load data from local storage
+      loadChosenTracksFromLocalStorage();
+      loadExiledTracksFromLocalStorage();
+    })
+    .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
       // currentTrack.trackAudio.play(); // Need to resolve the "user didn't interact with the DOM first error before I can start playing audio right when the page loads"
     });
@@ -121,6 +129,28 @@ function applyRemoveScrubberEventListener()
     document.removeEventListener('mousemove', moveScrubberThumbOnUserInput);
     setCurrentTime();
     currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
+  });
+}
+
+function applyChosenButtonEventListener()
+{
+  let chosenBtn = document.querySelector('#btn_chosen');
+
+  chosenBtn.addEventListener('click', e => {
+    
+    addTrackToChosen(currentTrack.trackID);
+    saveChosenTracksToLocalStorage();
+  });
+}
+
+function applyExiledButtonEventListener()
+{
+  let exiledBtn = document.querySelector('#btn_exiled');
+
+  exiledBtn.addEventListener('click', e => {
+    
+    addTrackToExiled(currentTrack.trackID);
+    saveExiledTracksToLocalStorage();
   });
 }
 
@@ -477,4 +507,58 @@ function removeCurrentTrackHighlighting()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
   currentTrackLi.classList.remove('currentTrack');
+}
+
+// Adds the currently playing track to the chosenTracks set
+function addTrackToChosen(trackID)
+{
+  if (trackID)
+  {
+    chosenTracks.add(trackID);
+    exiledTracks.delete(trackID);
+  }
+}
+
+// Saves the chosenTracks Set to the browser's local storage
+function saveChosenTracksToLocalStorage()
+{
+  let chosenTracksStr = Array.from(chosenTracks);
+  localStorage.setItem('chosen', chosenTracksStr);
+}
+
+// Gets the list of chosen tracks from local storage and loads them into the chosenTracks Set
+function loadChosenTracksFromLocalStorage()
+{
+  if (localStorage.getItem('chosen'))
+  {
+    let chosenTracksStr = localStorage.getItem('chosen');
+    chosenTracks = new Set(chosenTracksStr.split(','));
+  }
+}
+
+// Adds the currently playing track to the exiledTracks Set
+function addTrackToExiled(trackID)
+{
+  if (trackID)
+  {
+    exiledTracks.add(trackID);
+    chosenTracks.delete(trackID);
+  }
+}
+
+// Saves the exiledTracks Set track to the browser's local storage
+function saveExiledTracksToLocalStorage()
+{
+  let exiledTracksStr = Array.from(exiledTracks);
+  localStorage.setItem('exiled', exiledTracksStr);
+}
+
+// Gets the list of exiled tracks from local storage and loads them into the chosenTracks Set
+function loadExiledTracksFromLocalStorage()
+{
+  if (localStorage.getItem('exiled'))
+  {
+    let exiledTracksStr = localStorage.getItem('exiled');
+    exiledTracks = new Set(exiledTracksStr.split(','));
+  }
 }
