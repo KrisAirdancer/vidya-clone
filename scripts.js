@@ -189,14 +189,16 @@ function setCurrentTrack(trackID)
 {
   console.log('AT: setCurrentTrack()');
 
-  // TODO: I think this is dead code. If there are no bugs with it commented out, delete it.
-  // if (currentTrack.trackID !== undefined)
-  // {
-  //   previousStack.push({
-  //     trackID: currentTrack.trackID,
-  //     trackURL: currentTrack.trackURL
-  //   });
-  // }
+  // TODO: This whole if block might be dead code... If so, remove it.
+  if (currentTrack.trackID !== undefined)
+  {
+    removeCurrentTrackHighlighting();
+    // TODO: I think this is dead code. If there are no bugs with it commented out, delete it.
+    // previousStack.push({
+    //   trackID: currentTrack.trackID,
+    //   trackURL: currentTrack.trackURL
+    // });
+  }
   nextStack = [];
 
   let trackURL = tracksMap.get(trackID).trackURL;
@@ -210,6 +212,9 @@ function setCurrentTrack(trackID)
   applyEndedEventListener();
 
   updateTrackInfoInHeader(currentTrack.trackID);
+
+  highlightCurrentTrack();
+  scrollCurrentTrackToTop();
 
   console.log(currentTrack);
 }
@@ -233,6 +238,8 @@ function playPauseCurrentTrack()
 function playNextTrack()
 {
   // console.log('AT: playNextTrack()');
+
+  removeCurrentTrackHighlighting();
 
   currentTrack.trackAudio.pause();
   previousStack.push({
@@ -273,6 +280,9 @@ function playNextTrack()
   
   currentTrack.trackAudio.play();
 
+  scrollCurrentTrackToTop();
+  highlightCurrentTrack();
+  
   console.log(currentTrack.trackID);
   console.log(currentTrack);
 }
@@ -281,6 +291,8 @@ function playNextTrack()
 function playPreviousTrack()
 {
   // console.log('AT: playPreviousTrack()');
+
+  removeCurrentTrackHighlighting();
 
   if (previousStack.length !== 0) // If previousStack is not empty
   {
@@ -305,6 +317,9 @@ function playPreviousTrack()
 
   updateTrackInfoInHeader(currentTrack.trackID);
 
+  scrollCurrentTrackToTop();
+  highlightCurrentTrack();
+
   console.log(currentTrack.trackID);
   console.log(currentTrack);
 }
@@ -316,11 +331,16 @@ function playRandomTrack()
 
   // TODO: Add logic to select a track only from the currently selected playlist and not from the entire library
 
+  removeCurrentTrackHighlighting();
+
   let trackID = getRandomTrackID();
 
   currentTrack.trackAudio.pause();
   setCurrentTrack(trackID);
   currentTrack.trackAudio.play();
+
+  scrollCurrentTrackToTop();
+  highlightCurrentTrack();
 }
 
 // Randomly generate a track ID from the list of available tracks
@@ -401,13 +421,12 @@ function updateScrubberThumbPosition()
 // Updates the text in the time stamps that flank the track scrubber bar
 function updateScrubberTimeStamps()
 {
-  console.log('AT: updateScrubberTimeStamps()');
+  // console.log('AT: updateScrubberTimeStamps()');
 
   let position = document.querySelector('#scrubber-bar-progress').style.width;
   let timePlayed = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
   let timeRemaining = currentTrack.trackAudio.duration - timePlayed;
   
-  console.log(`timePlayed: ${timePlayed}`);
   if (timePlayed)
   {
     document.querySelector('#right-timestamp').textContent = toFormattedTimeString(timePlayed.toString(), 1);
@@ -436,4 +455,26 @@ function toFormattedTimeString(totalSeconds, format)
   {
   return `${hours}:${minutes}:${seconds}`;
   }
+}
+
+// Scrolls the current track's li to the top of the #tracks-list ul
+function scrollCurrentTrackToTop()
+{
+  // Scroll the current track to the top of the page
+  let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
+  currentTrackLi.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+}
+
+// Applies the .currentTrack class to the currenlty playing track's li element
+function highlightCurrentTrack()
+{
+  let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
+  currentTrackLi.classList.add('currentTrack');
+}
+
+// Removes the .currentTrack class from the currently playing track's li element
+function removeCurrentTrackHighlighting()
+{
+  let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
+  currentTrackLi.classList.remove('currentTrack');
 }

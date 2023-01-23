@@ -230,6 +230,11 @@ nav ul {
     font-size: 0.75rem;
 }
 
+.currentTrack {
+    background-color: var(--site-orange);
+    color: var(--site-blue);
+}
+
 /***** Control Box *****/
 
 .control-box {
