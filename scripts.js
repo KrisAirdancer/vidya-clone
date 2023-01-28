@@ -11,6 +11,8 @@ let chosenTracks = new Set();
 let exiledTracks = new Set();
 let mouseUpEnabled = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 
+// List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
+
 /***************
  * Run Scripts *
  ***************/
@@ -216,6 +218,8 @@ function generateTracksListHTML()
 
   // TODO: Need to change the playlist file that is used based on the user's selection (per the playlist dropdown)
       // Can likely just grab the currenly selected playlist from the <select> tag using a QuerySelector
+      // Note: Make sure to update the underlying data structures based on the tracks in the chosen playlist so that the track selection logic continues to work - this will likely need to be updated in loadTracksMasterList()
+      // Note: Don't take tracks out of the tracksMasterList. Instead, update the tracksMap to reflect the selected playlist.
 
   // Generate tracksHTML
   
@@ -225,14 +229,12 @@ function generateTracksListHTML()
   
     if (chosenTracks.has(track.trackID))
     {
-      console.log('THERE');
       tracksHTML.push(
           `<li id="${track.trackID}" class="track-info chosenTrack">${track.trackGame} — ${track.trackName}</li>`
       );
     }
     else if (exiledTracks.has(track.trackID))
     {
-      console.log('THERE');
       tracksHTML.push(
           `<li id="${track.trackID}" class="track-info exiledTrack">${track.trackGame} — ${track.trackName}</li>`
       );
@@ -311,10 +313,13 @@ function playNextTrack()
   removeCurrentTrackHighlighting();
 
   currentTrack.trackAudio.pause();
-  previousStack.push({
-    trackID: currentTrack.trackID,
-    trackURL: currentTrack.trackURL
-  });
+  if (!exiledTracks.has(currentTrack.trackID))
+  {
+    previousStack.push({
+      trackID: currentTrack.trackID,
+      trackURL: currentTrack.trackURL
+    });
+  }
   
   if(nextStack.length !== 0) // There are tracks in the nextTracks history
   {
@@ -329,8 +334,9 @@ function playNextTrack()
   {
     let trackID = getRandomTrackID();
 
-    // Ensure that the current track is not returned
-    while (trackID === currentTrack.trackID)
+    // TODO: If a user exiles all of the tracks, they will end up in a forever loop here - add logic to prevent this (maybe notify the user and prevent any tracks from playing until they un-exile at least one track?)
+    // Ensure that the current track is not replayed and that the track has not been exiled
+    while (trackID === currentTrack.trackID || exiledTracks.has(trackID) || trackID === null || trackID === undefined)
     {
       trackID = getRandomTrackID();
     }
@@ -393,10 +399,11 @@ function playPreviousTrack()
   console.log(currentTrack);
 }
 
+// TODO: This function appears to be unused! Either use it somewhere or delete it.
 // Plays a random track from the currently selected playlist
 function playRandomTrack()
 {
-  // console.log('AT: playRandomTrack()');
+  console.log('AT: playRandomTrack()');
 
   // TODO: Add logic to select a track only from the currently selected playlist and not from the entire library
 
@@ -600,6 +607,16 @@ function addTrackToExiled(trackID)
   {
     exiledTracks.add(trackID);
     chosenTracks.delete(trackID);
+
+    previousStack.forEach(track => {
+      if (track.trackID === trackID) {
+        while (previousStack.indexOf(trackID) !== -1)
+        {
+          let trackIndex = previousStack.indexOf(trackID);
+          previousStack.splice(trackIndex, 1);
+        }
+      }
+    });
   }
 }
 
