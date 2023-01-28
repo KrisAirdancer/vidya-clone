@@ -573,13 +573,6 @@ function addTrackToChosen(trackID)
   {
     chosenTracks.add(trackID);
     exiledTracks.delete(trackID);
-
-    // console.log(trackID);
-    // // Apply proper styling to HTML element
-    // let track = document.getElementById(`${trackID}`);
-    // console.log(track);
-    // track.classList.add('chosenTrack');
-    // track.classList.remove('exiledTrack');
   }
 }
 
@@ -607,12 +600,6 @@ function addTrackToExiled(trackID)
   {
     exiledTracks.add(trackID);
     chosenTracks.delete(trackID);
-
-    // console.log(trackID);
-    // // Apply proper styling to HTML element
-    // let track = document.getElementById(`${trackID}`);
-    // track.classList.add('exiledTrack');
-    // track.classList.remove('chosenTrack');
   }
 }
 
