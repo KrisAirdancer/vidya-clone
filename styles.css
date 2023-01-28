@@ -15,6 +15,7 @@
 /* Track hover text color: #122D4A */
 
 :root {
+    /* TODO: Rename these variables to give them better names - remove any that aren't used */
     --site-blue: #122D4A;
     --site-orange: #FFA366;
     --site-light-blue: #94BAFF;
@@ -29,6 +30,12 @@
     --control-box-width: 9.3rem;
     --site-font-family: Helvetica, Arial, sans-serif;
     --timestamp-width: 50px;
+    --chosen-track-border: #243B0E;
+    --chosen-track-background: #2D4A12;
+    --chosen-track-text-color: #BFE490;
+    --exiled-track-border: #3B0E24;
+    --exiled-track-background: #4A122D;
+    --exiled-track-text-color: #E79DC0;
 }
 
 html {
@@ -233,6 +240,18 @@ nav ul {
 .currentTrack {
     background-color: var(--site-orange);
     color: var(--site-blue);
+}
+
+.chosenTrack {
+    border-color: var(--chosen-track-border);
+    background-color: var(--chosen-track-background);
+    color: var(--chosen-track-text-color);
+}
+
+.exiledTrack {
+    border-color: var(--exiled-track-border);
+    background-color: var(--exiled-track-background);
+    color: var(--exiled-track-text-color);
 }
 
 /***** Control Box *****/

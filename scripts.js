@@ -57,7 +57,7 @@ function applyTracksListEventHandler()
   let tracksListGroup = document.querySelector('#tracksList-group');
   
   tracksListGroup.addEventListener('click', e => {
-    console.log('AT: applyTracksListEventHandler()');
+    // console.log('AT: applyTracksListEventHandler()');
 
     currentTrack.trackAudio.pause();
     setCurrentTrack(e.target.id);
@@ -71,7 +71,7 @@ function applyPlayPauseEventHandler()
   let playPauseBtn = document.querySelector('#play-pause-btn');
 
   playPauseBtn.addEventListener('click', e => {
-    console.log('AT: applyPlayPauseEventHandler()');
+    // console.log('AT: applyPlayPauseEventHandler()');
 
     playPauseCurrentTrack();
   });
@@ -83,7 +83,7 @@ function applyNextTrackEventHandler()
   let nextTrackBtn = document.querySelector('#next-track-btn');
   
   nextTrackBtn.addEventListener('click', e => {
-    console.log('AT: applyNextTrackEventHandler()');
+    // console.log('AT: applyNextTrackEventHandler()');
 
     playNextTrack();
   });
@@ -95,7 +95,7 @@ function applyPreviousTrackEventHandler()
   let nextTrackBtn = document.querySelector('#previous-track-btn');
   
   nextTrackBtn.addEventListener('click', e => {
-    console.log('AT: applyPreviousTrackEventHandler()');
+    // console.log('AT: applyPreviousTrackEventHandler()');
 
     playPreviousTrack();
   });
@@ -111,7 +111,7 @@ function applyCurrentTimeChangeEventListener()
 function applyEndedEventListener()
 {
   currentTrack.trackAudio.addEventListener("ended", () => {
-    console.log('AT: applyEndedEventListener()');
+    // console.log('AT: applyEndedEventListener()');
 
     playNextTrack();
   });
@@ -123,7 +123,7 @@ function applyScrubberEventListener()
   let scrubberThumb = document.querySelector('#scrubber-body');
 
   scrubberThumb.addEventListener('mousedown', e => {
-    console.log('AT: applyScrubberEventListener()');
+    // console.log('AT: applyScrubberEventListener()');
 
     mouseUpEnabled = true;
 
@@ -138,7 +138,7 @@ function applyScrubberEventListener()
 function applyRemoveScrubberEventListener()
 {
   document.addEventListener('mouseup', e => {
-    console.log('AT: applyRemoveScrubberEventListener()');
+    // console.log('AT: applyRemoveScrubberEventListener()');
 
     if (mouseUpEnabled)
     {
@@ -156,7 +156,7 @@ function applyChosenButtonEventListener()
   let chosenBtn = document.querySelector('#btn_chosen');
 
   chosenBtn.addEventListener('click', e => {
-    console.log('AT: applyChosenButtonEventListener()');
+    // console.log('AT: applyChosenButtonEventListener()');
 
     addTrackToChosen(currentTrack.trackID);
     saveChosenTracksToLocalStorage();
@@ -168,7 +168,7 @@ function applyExiledButtonEventListener()
   let exiledBtn = document.querySelector('#btn_exiled');
 
   exiledBtn.addEventListener('click', e => {
-    console.log('AT: applyExiledButtonEventListener()');
+    // console.log('AT: applyExiledButtonEventListener()');
     
     addTrackToExiled(currentTrack.trackID);
     saveExiledTracksToLocalStorage();
@@ -223,9 +223,27 @@ function generateTracksListHTML()
 
   masterTracksList.forEach(track => {
   
-    tracksHTML.push(
-        `<li id="${track.trackID}" class="track-info">${track.trackGame} — ${track.trackName}</li>`
-    );
+    if (chosenTracks.has(track.trackID))
+    {
+      console.log('THERE');
+      tracksHTML.push(
+          `<li id="${track.trackID}" class="track-info chosenTrack">${track.trackGame} — ${track.trackName}</li>`
+      );
+    }
+    else if (exiledTracks.has(track.trackID))
+    {
+      console.log('THERE');
+      tracksHTML.push(
+          `<li id="${track.trackID}" class="track-info exiledTrack">${track.trackGame} — ${track.trackName}</li>`
+      );
+    }
+    else
+    {
+      tracksHTML.push(
+          `<li id="${track.trackID}" class="track-info">${track.trackGame} — ${track.trackName}</li>`
+      );
+    }
+
   });
   
   // Inject tracks HTML into DOM
@@ -521,6 +539,15 @@ function highlightCurrentTrack()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
   currentTrackLi.classList.add('currentTrack');
+
+  if (chosenTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.remove('chosenTrack');
+  }
+  if (exiledTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.remove('exiledTrack');
+  }
 }
 
 // Removes the .currentTrack class from the currently playing track's li element
@@ -528,6 +555,15 @@ function removeCurrentTrackHighlighting()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
   currentTrackLi.classList.remove('currentTrack');
+
+  if (chosenTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.add('chosenTrack');
+  }
+  if (exiledTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.add('exiledTrack');
+  }
 }
 
 // Adds the currently playing track to the chosenTracks set
@@ -537,6 +573,13 @@ function addTrackToChosen(trackID)
   {
     chosenTracks.add(trackID);
     exiledTracks.delete(trackID);
+
+    // console.log(trackID);
+    // // Apply proper styling to HTML element
+    // let track = document.getElementById(`${trackID}`);
+    // console.log(track);
+    // track.classList.add('chosenTrack');
+    // track.classList.remove('exiledTrack');
   }
 }
 
@@ -564,6 +607,12 @@ function addTrackToExiled(trackID)
   {
     exiledTracks.add(trackID);
     chosenTracks.delete(trackID);
+
+    // console.log(trackID);
+    // // Apply proper styling to HTML element
+    // let track = document.getElementById(`${trackID}`);
+    // track.classList.add('exiledTrack');
+    // track.classList.remove('chosenTrack');
   }
 }
 
