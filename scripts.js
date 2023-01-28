@@ -9,6 +9,7 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
+let mouseUpEnabled = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 
 /***************
  * Run Scripts *
@@ -24,6 +25,10 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       loadTracksMasterList(tracksData);
       populateTracksMap();
     })
+    .then(() => { // Load data from local storage
+      loadChosenTracksFromLocalStorage();
+      loadExiledTracksFromLocalStorage();
+    })
     .then(() => { // ***** Generate tracksHTML from playlist file
       generateTracksListHTML();
     })
@@ -36,10 +41,6 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyRemoveScrubberEventListener();
       applyChosenButtonEventListener();
       applyExiledButtonEventListener();
-    })
-    .then(() => { // Load data from local storage
-      loadChosenTracksFromLocalStorage();
-      loadExiledTracksFromLocalStorage();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -56,6 +57,7 @@ function applyTracksListEventHandler()
   let tracksListGroup = document.querySelector('#tracksList-group');
   
   tracksListGroup.addEventListener('click', e => {
+    console.log('AT: applyTracksListEventHandler()');
 
     currentTrack.trackAudio.pause();
     setCurrentTrack(e.target.id);
@@ -69,6 +71,8 @@ function applyPlayPauseEventHandler()
   let playPauseBtn = document.querySelector('#play-pause-btn');
 
   playPauseBtn.addEventListener('click', e => {
+    console.log('AT: applyPlayPauseEventHandler()');
+
     playPauseCurrentTrack();
   });
 }
@@ -79,6 +83,8 @@ function applyNextTrackEventHandler()
   let nextTrackBtn = document.querySelector('#next-track-btn');
   
   nextTrackBtn.addEventListener('click', e => {
+    console.log('AT: applyNextTrackEventHandler()');
+
     playNextTrack();
   });
 }
@@ -89,6 +95,8 @@ function applyPreviousTrackEventHandler()
   let nextTrackBtn = document.querySelector('#previous-track-btn');
   
   nextTrackBtn.addEventListener('click', e => {
+    console.log('AT: applyPreviousTrackEventHandler()');
+
     playPreviousTrack();
   });
 }
@@ -103,6 +111,7 @@ function applyCurrentTimeChangeEventListener()
 function applyEndedEventListener()
 {
   currentTrack.trackAudio.addEventListener("ended", () => {
+    console.log('AT: applyEndedEventListener()');
 
     playNextTrack();
   });
@@ -114,6 +123,9 @@ function applyScrubberEventListener()
   let scrubberThumb = document.querySelector('#scrubber-body');
 
   scrubberThumb.addEventListener('mousedown', e => {
+    console.log('AT: applyScrubberEventListener()');
+
+    mouseUpEnabled = true;
 
     moveScrubberThumbOnUserInput(e); // This allows the user to click somewhere on the scrubber bar to scrub through the track
 
@@ -126,9 +138,16 @@ function applyScrubberEventListener()
 function applyRemoveScrubberEventListener()
 {
   document.addEventListener('mouseup', e => {
-    document.removeEventListener('mousemove', moveScrubberThumbOnUserInput);
-    setCurrentTime();
-    currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
+    console.log('AT: applyRemoveScrubberEventListener()');
+
+    if (mouseUpEnabled)
+    {
+      console.log('HERE');
+      document.removeEventListener('mousemove', moveScrubberThumbOnUserInput);
+      setCurrentTime();
+      currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
+      mouseUpEnabled = false;
+    }
   });
 }
 
@@ -137,7 +156,8 @@ function applyChosenButtonEventListener()
   let chosenBtn = document.querySelector('#btn_chosen');
 
   chosenBtn.addEventListener('click', e => {
-    
+    console.log('AT: applyChosenButtonEventListener()');
+
     addTrackToChosen(currentTrack.trackID);
     saveChosenTracksToLocalStorage();
   });
@@ -148,6 +168,7 @@ function applyExiledButtonEventListener()
   let exiledBtn = document.querySelector('#btn_exiled');
 
   exiledBtn.addEventListener('click', e => {
+    console.log('AT: applyExiledButtonEventListener()');
     
     addTrackToExiled(currentTrack.trackID);
     saveExiledTracksToLocalStorage();
