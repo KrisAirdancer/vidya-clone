@@ -38,7 +38,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       applyTracksListEventHandler();
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
-      applyPreviousTrackEventHandler(); // TODO: Some of the Listners are called Handlers and vice versa in my function names - update the function names to use consistant naming
+      applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
       applyChosenButtonEventListener();
@@ -160,8 +160,16 @@ function applyChosenButtonEventListener()
   chosenBtn.addEventListener('click', e => {
     // console.log('AT: applyChosenButtonEventListener()');
 
-    addTrackToChosen(currentTrack.trackID);
-    saveChosenTracksToLocalStorage();
+    if (chosenTracks.has(currentTrack.trackID))
+    {
+      removeTrackFromChosen(currentTrack.trackID);
+      saveChosenTracksToLocalStorage();
+    }
+    else
+    {
+      addTrackToChosen(currentTrack.trackID);
+      saveChosenTracksToLocalStorage();
+    }
   });
 }
 
@@ -171,9 +179,17 @@ function applyExiledButtonEventListener()
 
   exiledBtn.addEventListener('click', e => {
     // console.log('AT: applyExiledButtonEventListener()');
+
+    if (exiledTracks.has(currentTrack.trackID))
+    {
+      removeTrackFromExiled(currentTrack.trackID);
+      saveExiledTracksToLocalStorage();
+    }
+    else{
+      addTrackToExiled(currentTrack.trackID);
+      saveExiledTracksToLocalStorage();
+    }
     
-    addTrackToExiled(currentTrack.trackID);
-    saveExiledTracksToLocalStorage();
   });
 }
 
@@ -324,7 +340,7 @@ function playNextTrack()
   if(nextStack.length !== 0) // There are tracks in the nextTracks history
   {
     let newTrack = nextStack.pop();
-    currentTrack = {
+    currentTrack = { // TODO: Anywhere this is done, it could be replaced with a function that takes in the trackID and sets the current track. I think the reason my setCurrentTrack() function didn't end up being useful is that I tried to pack too much functionality into setCurrentTrack();
       trackID: newTrack.trackID,
       trackURL: newTrack.trackURL,
       trackAudio: new Audio(newTrack.trackURL)
@@ -541,7 +557,7 @@ function scrollCurrentTrackToTop()
   currentTrackLi.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
-// Applies the .currentTrack class to the currenlty playing track's li element
+// Applies the .currentTrack class to the currently playing track's li element
 function highlightCurrentTrack()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
@@ -583,6 +599,15 @@ function addTrackToChosen(trackID)
   }
 }
 
+// Removes the currently playing track from the chosenTracks Set()
+function removeTrackFromChosen(trackID)
+{
+  if (trackID)
+  {
+    chosenTracks.delete(trackID);
+  }
+}
+
 // Saves the chosenTracks Set to the browser's local storage
 function saveChosenTracksToLocalStorage()
 {
@@ -617,6 +642,15 @@ function addTrackToExiled(trackID)
         }
       }
     });
+  }
+}
+
+// Removes the currently playing track from the exiledTracks set
+function removeTrackFromExiled(trackID)
+{
+  if (trackID)
+  {
+    exiledTracks.delete(trackID);
   }
 }
 
