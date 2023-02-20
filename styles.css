@@ -97,6 +97,43 @@ nav ul {
     font-family: var(--site-font-family);
 }
 
+#navbar-righthand-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: center;
+}
+
+/***** Volume Slider *****/
+
+#volumeBar-li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+}
+
+#volumeBar-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+
+    height: 0.95rem;
+    width: 6.5rem;
+    background-color: #000000cc;
+    border: 1px solid var(--nav-button-border);
+    cursor: pointer;
+
+    margin: 0px 0px 0px 0px; /*top right bottom left*/
+}
+
+#volumeBar-slider {
+    height: 0.5rem;
+    width: 50%;
+    background-color: var(--site-orange);
+}
+
 /**** Tracks List *****/
 
 #tracks-list {
@@ -328,5 +365,9 @@ nav ul {
 
 #nav-playlist-selector {
     align-self: flex-end;
+}
+
+#nav-playlist-selector option {
+    background-color: var(--site-blue);
 }
 
