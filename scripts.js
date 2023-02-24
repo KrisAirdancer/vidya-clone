@@ -9,7 +9,8 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
-let mouseUpEnabled = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
+let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
+let mouseUpEnabled_volumeBarBody = false;
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -36,13 +37,19 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
     })
     .then(() => { // Apply event handlers/listeners
       applyTracksListEventHandler();
+      // Control Box
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
+      // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
+      // Navbar Buttons
       applyChosenButtonEventListener();
       applyExiledButtonEventListener();
+      // Volume Slider
+      applyVolumeBarBodyEventListener();
+      applyRemoveVolumeBarBodyEventListener();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -127,7 +134,7 @@ function applyScrubberEventListener()
   scrubberThumb.addEventListener('mousedown', e => {
     // console.log('AT: applyScrubberEventListener()');
 
-    mouseUpEnabled = true;
+    mouseUpEnabled_trackSlider = true;
 
     moveScrubberThumbOnUserInput(e); // This allows the user to click somewhere on the scrubber bar to scrub through the track
 
@@ -136,23 +143,23 @@ function applyScrubberEventListener()
   });
 }
 
-// Removes the event listener for mousemove events to prevent the scrubber thumb from following the users mouse after mouseup
+// Removes the event listener for mousemove events to prevent the scrubber thumb from following the user's mouse after mouseup
 function applyRemoveScrubberEventListener()
 {
   document.addEventListener('mouseup', e => {
     // console.log('AT: applyRemoveScrubberEventListener()');
 
-    if (mouseUpEnabled)
+    if (mouseUpEnabled_trackSlider)
     {
-      console.log('HERE');
       document.removeEventListener('mousemove', moveScrubberThumbOnUserInput);
       setCurrentTime();
       currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
-      mouseUpEnabled = false;
+      mouseUpEnabled_trackSlider = false;
     }
   });
 }
 
+// Add an event listener to the Chosen button to respond to a user clicking on it
 function applyChosenButtonEventListener()
 {
   let chosenBtn = document.querySelector('#btn_chosen');
@@ -173,6 +180,7 @@ function applyChosenButtonEventListener()
   });
 }
 
+// Adds an event listener to the Exiled button to respond to a user clicking on it
 function applyExiledButtonEventListener()
 {
   let exiledBtn = document.querySelector('#btn_exiled');
@@ -190,6 +198,35 @@ function applyExiledButtonEventListener()
       saveExiledTracksToLocalStorage();
     }
     
+  });
+}
+
+// Applies an event listener to the #volumeBar-body to update the position of the volume bar slider
+function applyVolumeBarBodyEventListener()
+{
+  let volumeBarBody = document.querySelector('#volumeBar-body');
+
+  volumeBarBody.addEventListener('mousedown', e => {
+
+    mouseUpEnabled_volumeBarBody = true;
+
+    moveVolumeBarSliderOnUserInput(e);
+    document.addEventListener('mousemove', moveVolumeBarSliderOnUserInput);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
+  });
+}
+
+// Removes the volumeBarBody event listener to prevent the volume slider from following the user's mouse after mouseup
+function applyRemoveVolumeBarBodyEventListener()
+{
+  document.addEventListener('mouseup', e => {
+    // console.log('AT: applyRemoveVolumeBarBodyEventListener()');
+
+    if (mouseUpEnabled_volumeBarBody)
+    {
+      document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
+      // TODO: This is where I should make a call to a function to update the volume of the track
+      mouseUpEnabled_volumeBarBody = false;
+    }
   });
 }
 
@@ -668,5 +705,22 @@ function loadExiledTracksFromLocalStorage()
   {
     let exiledTracksStr = localStorage.getItem('exiled');
     exiledTracks = new Set(exiledTracksStr.split(','));
+  }
+}
+
+// Repositions the scrubber bar slider along the volume bar body when the user interacts with the volume bar slider
+function moveVolumeBarSliderOnUserInput(event)
+{
+  // console.log('AT: moveScrubberThumbOnUserInput()');
+  
+  let volumeBarSlider = document.querySelector('#volumeBar-body');
+
+  let right = volumeBarSlider.getBoundingClientRect().right;
+  let left = volumeBarSlider.getBoundingClientRect().left;
+
+  let updatedPosition = ((event.clientX - left) / (right - left)) * 100;
+  if (updatedPosition <= 100)
+  {
+    document.querySelector('#volumeBar-slider').style.width = `${updatedPosition}%`;
   }
 }
