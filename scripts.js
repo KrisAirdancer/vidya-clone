@@ -9,6 +9,7 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
+let volumeLevel = 1.0; // Denotes a percentage: 100%
 let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 let mouseUpEnabled_volumeBarBody = false;
 
@@ -224,7 +225,7 @@ function applyRemoveVolumeBarBodyEventListener()
     if (mouseUpEnabled_volumeBarBody)
     {
       document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
-      // TODO: This is where I should make a call to a function to update the volume of the track
+      updateVolumeLevel(); // TODO: May need to pass something into this function such as the current position of the slider - although, I should be able to just pull that info from the DOM in the updateVolume() function anyway.
       mouseUpEnabled_volumeBarBody = false;
     }
   });
@@ -339,6 +340,7 @@ function setCurrentTrack(trackID)
 
   highlightCurrentTrack();
   scrollCurrentTrackToTop();
+  setCurrentTrackVolume();
 
   console.log(currentTrack);
 }
@@ -407,9 +409,11 @@ function playNextTrack()
   updateTrackInfoInHeader(currentTrack.trackID);
   
   currentTrack.trackAudio.play();
-
+  
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
+
+  setCurrentTrackVolume();
   
   console.log(currentTrack.trackID);
   console.log(currentTrack);
@@ -444,9 +448,11 @@ function playPreviousTrack()
   applyEndedEventListener();
 
   updateTrackInfoInHeader(currentTrack.trackID);
-
+  
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
+
+  setCurrentTrackVolume();
 
   console.log(currentTrack.trackID);
   console.log(currentTrack);
@@ -470,6 +476,8 @@ function playRandomTrack()
 
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
+
+  setCurrentTrackVolume();
 }
 
 // Randomly generate a track ID from the list of available tracks
@@ -723,4 +731,22 @@ function moveVolumeBarSliderOnUserInput(event)
   {
     document.querySelector('#volumeBar-slider').style.width = `${updatedPosition}%`;
   }
+}
+
+// Updates the volumeLevel global variable based on the position of the volumeBar-slider
+function updateVolumeLevel()
+{
+  // console.log('AT: updateVolume()');
+  // TODO: There is a small bug somewhere that is preventing the volume from being set to zero. The lowest that it can currently go is 1.
+
+  let volumeBarSliderPosition = document.querySelector('#volumeBar-slider').style.width;
+  volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
+
+  setCurrentTrackVolume();
+}
+
+// Sets the volume level of the currently playing track Audio object
+function setCurrentTrackVolume()
+{
+  currentTrack.trackAudio.volume = volumeLevel;
 }
