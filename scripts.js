@@ -13,6 +13,7 @@ let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
 let volumeLevel; // Denotes a percentage: 100%
 let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 let mouseUpEnabled_volumeBarBody = false;
+let volumeSliderVisible = true; // TODO: Default should be `false`. Currently `true` for testing.
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -24,7 +25,7 @@ let mouseUpEnabled_volumeBarBody = false;
 
 let reader = new FileReader();
 
-fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list *****
+fetch('playlists/all-tracks.json') // Load and sort master tracks list
     .then(response => response.json())
     .then(tracksData => {
       loadTracksMasterList(tracksData);
@@ -34,7 +35,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       loadChosenTracksFromLocalStorage();
       loadExiledTracksFromLocalStorage();
     })
-    .then(() => { // ***** Generate tracksHTML from playlist file
+    .then(() => { // Generate tracksHTML from playlist file
       generateTracksListHTML();
     })
     .then(() => { // Apply event handlers/listeners
@@ -49,7 +50,8 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       // Navbar Buttons
       applyChosenButtonEventListener();
       applyExiledButtonEventListener();
-      // Volume Slider
+      // Volume Slider (plus volume slider setup)
+      applyVolumeButtonEventListener();
       applyVolumeBarBodyEventListener();
       applyRemoveVolumeBarBodyEventListener();
       setVolumeBarSliderPositionOnSiteLoad();
@@ -231,6 +233,18 @@ function applyRemoveVolumeBarBodyEventListener()
       mouseUpEnabled_volumeBarBody = false;
     }
   });
+}
+
+function applyVolumeButtonEventListener()
+{
+  console.log('AT: applyVolumeButtonEventListener()');
+
+  let volumeBtn = document.querySelector('#btn_volume');
+
+  volumeBtn.addEventListener('click', e => {
+    showHideVolumeSlider();
+  });
+  
 }
 
 /*************
@@ -739,7 +753,6 @@ function moveVolumeBarSliderOnUserInput(event)
 // updatedPosition - a float representing the position of the slider along a range of 0 to 100
 function setVolumeBarSliderPosition(updatedPosition)
 {
-  console.log('slider position: ' + updatedPosition);
   document.querySelector('#volumeBar-slider').style.width = `${updatedPosition}%`;
 }
 
@@ -780,7 +793,6 @@ function loadVolumeFromLocalStorage()
 function setVolumeBarSliderPositionOnSiteLoad()
 {
   loadedVolumeLevel = loadVolumeFromLocalStorage();
-  console.log('loadedVolumeLevel: ' + loadedVolumeLevel);
   if (loadedVolumeLevel)
   {
     volumeLevel = loadedVolumeLevel;
@@ -790,4 +802,27 @@ function setVolumeBarSliderPositionOnSiteLoad()
     volumeLevel = DEFAULT_VOLUME_LEVEL;
   }
   setVolumeBarSliderPosition(volumeLevel * 100);
+}
+
+function showHideVolumeSlider()
+{
+  console.log('AT: showHideVolumeSlider()');
+
+  let volumeBar = document.querySelector('#volumeBar-body');
+  console.log(volumeBar);
+
+  if (volumeSliderVisible)
+  {
+    console.log('volumeSliderVisible: ' + volumeSliderVisible + ', hiding slider');
+    volumeSliderVisible = !volumeSliderVisible;
+
+    volumeBar.style.setProperty('width', '0rem');
+  }
+  else
+  {
+    console.log('volumeSliderVisible: ' + volumeSliderVisible + ', displaying slider');
+    volumeSliderVisible = !volumeSliderVisible;
+
+    volumeBar.style.setProperty('width', '6.5rem');
+  }
 }
