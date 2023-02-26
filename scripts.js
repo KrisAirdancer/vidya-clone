@@ -752,6 +752,7 @@ function setCurrentTrackVolume()
   currentTrack.trackAudio.volume = volumeLevel;
 }
 
+// Saves the current value of the volumeLevel variable to browser's local storage
 function saveVolumeToLocalStorage()
 {
   localStorage.setItem('volumeLevel', volumeLevel);
