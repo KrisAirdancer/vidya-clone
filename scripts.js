@@ -806,23 +806,22 @@ function setVolumeBarSliderPositionOnSiteLoad()
 
 function showHideVolumeSlider()
 {
-  console.log('AT: showHideVolumeSlider()');
+  // console.log('AT: showHideVolumeSlider()');
 
   let volumeBar = document.querySelector('#volumeBar-body');
-  console.log(volumeBar);
 
   if (volumeSliderVisible)
   {
-    console.log('volumeSliderVisible: ' + volumeSliderVisible + ', hiding slider');
     volumeSliderVisible = !volumeSliderVisible;
 
     volumeBar.style.setProperty('width', '0rem');
+    volumeBar.style.setProperty('border', 'none');
   }
   else
   {
-    console.log('volumeSliderVisible: ' + volumeSliderVisible + ', displaying slider');
     volumeSliderVisible = !volumeSliderVisible;
-
+    
     volumeBar.style.setProperty('width', '6.5rem');
+    volumeBar.style.setProperty('border', '1px solid #636363');
   }
 }
