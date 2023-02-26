@@ -743,10 +743,16 @@ function updateVolumeLevel()
   volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
 
   setCurrentTrackVolume();
+  saveVolumeToLocalStorage();
 }
 
 // Sets the volume level of the currently playing track Audio object
 function setCurrentTrackVolume()
 {
   currentTrack.trackAudio.volume = volumeLevel;
+}
+
+function saveVolumeToLocalStorage()
+{
+  localStorage.setItem('volumeLevel', volumeLevel);
 }
