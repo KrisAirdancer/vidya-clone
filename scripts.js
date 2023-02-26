@@ -9,7 +9,8 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
-let volumeLevel = 1.0; // Denotes a percentage: 100%
+let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
+let volumeLevel; // Denotes a percentage: 100%
 let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 let mouseUpEnabled_volumeBarBody = false;
 
@@ -51,6 +52,7 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       // Volume Slider
       applyVolumeBarBodyEventListener();
       applyRemoveVolumeBarBodyEventListener();
+      setVolumeBarSliderPositionOnSiteLoad();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -729,8 +731,16 @@ function moveVolumeBarSliderOnUserInput(event)
   let updatedPosition = ((event.clientX - left) / (right - left)) * 100;
   if (updatedPosition <= 100)
   {
-    document.querySelector('#volumeBar-slider').style.width = `${updatedPosition}%`;
+    setVolumeBarSliderPosition(updatedPosition);
   }
+}
+
+// Updates the width (position) of the volume bar slider on the UI
+// updatedPosition - a float representing the position of the slider along a range of 0 to 100
+function setVolumeBarSliderPosition(updatedPosition)
+{
+  console.log('slider position: ' + updatedPosition);
+  document.querySelector('#volumeBar-slider').style.width = `${updatedPosition}%`;
 }
 
 // Updates the volumeLevel global variable based on the position of the volumeBar-slider
@@ -756,4 +766,28 @@ function setCurrentTrackVolume()
 function saveVolumeToLocalStorage()
 {
   localStorage.setItem('volumeLevel', volumeLevel);
+}
+
+// Loads the volume level from local storage
+// return - the volume level value retrieved from local storage
+function loadVolumeFromLocalStorage()
+{
+  return localStorage.getItem('volumeLevel');
+}
+
+// Sets the position of the volume bar slider to match the volume level stored in local storage
+// or sets it to the DEFAULT_VOLUME_LEVEL position if no volume level is stored in local storage.
+function setVolumeBarSliderPositionOnSiteLoad()
+{
+  loadedVolumeLevel = loadVolumeFromLocalStorage();
+  console.log('loadedVolumeLevel: ' + loadedVolumeLevel);
+  if (loadedVolumeLevel)
+  {
+    volumeLevel = loadedVolumeLevel;
+  }
+  else
+  {
+    volumeLevel = DEFAULT_VOLUME_LEVEL;
+  }
+  setVolumeBarSliderPosition(volumeLevel * 100);
 }
