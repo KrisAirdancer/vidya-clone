@@ -40,10 +40,11 @@ fetch('playlists/all-tracks.json') // Load and sort master tracks list
     })
     .then(() => { // Apply event handlers/listeners
       applyTracksListEventHandler();
-      // Control Box
+      // Controls Box
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
+      applyControlsBoxDraggableEventListener();
       // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
@@ -245,6 +246,22 @@ function applyVolumeButtonEventListener()
     showHideVolumeSlider();
   });
   
+}
+
+function applyControlsBoxDraggableEventListener()
+{
+  console.log('AT: applyControlsBoxDraggableEventListener()');
+
+  let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlsBoxTopBar.addEventListener('mousedown', e => {
+    window.addEventListener('mousemove', repositionControlsBox);
+  });
+
+  window.addEventListener('mouseup', e => {
+    console.log('WINDOW MOUSE UP');
+    window.removeEventListener('mousemove', repositionControlsBox);
+  });
 }
 
 /*************
@@ -822,4 +839,14 @@ function showHideVolumeSlider()
     
     volumeBar.classList.remove('volumeBar-visible');
   }
+}
+
+function repositionControlsBox(e) // e is passed in implicitly by the event handlers that call this function
+{
+  // console.log('AT: repositionControlsBox()');
+
+  let controlsBox = document.querySelector('#control-box-flex-container');
+
+  controlsBox.style.top = e.pageY + 'px';
+  controlsBox.style.left = e.pageX + 'px';
 }

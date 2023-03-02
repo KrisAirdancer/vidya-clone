@@ -329,12 +329,15 @@ nav ul {
     
     position: absolute;
     bottom: 5rem;
-    left: calc(50% - (var(--control-box-width) / 2));
+    left: calc(50%); /* 50% of the width of the screen/window?*/
+
     height: var(--control-box-height);
     width: var(--control-box-width);
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     border: 0.5px solid var(--top-level-border);
     font-family: var(--site-font-family);
+
+    transform: translate(-50%, -10%); /* (x, y) */
 }
 
 /* TODO: The border on the control box and its buttons will need to have the same fade effect as the original Vidya player (same as the navbar) */
