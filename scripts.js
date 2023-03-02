@@ -9,7 +9,11 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
-let mouseUpEnabled = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
+let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
+let volumeLevel; // Denotes a percentage: 100%
+let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
+let mouseUpEnabled_volumeBarBody = false;
+let volumeSliderVisible = false;
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -21,7 +25,7 @@ let mouseUpEnabled = false; // TODO: This flag is being used to prevent the scru
 
 let reader = new FileReader();
 
-fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list *****
+fetch('playlists/all-tracks.json') // Load and sort master tracks list
     .then(response => response.json())
     .then(tracksData => {
       loadTracksMasterList(tracksData);
@@ -31,18 +35,26 @@ fetch('playlists/all-tracks.json') // ***** Load and sort master tracks list ***
       loadChosenTracksFromLocalStorage();
       loadExiledTracksFromLocalStorage();
     })
-    .then(() => { // ***** Generate tracksHTML from playlist file
+    .then(() => { // Generate tracksHTML from playlist file
       generateTracksListHTML();
     })
     .then(() => { // Apply event handlers/listeners
       applyTracksListEventHandler();
+      // Control Box
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
+      // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
+      // Navbar Buttons
       applyChosenButtonEventListener();
       applyExiledButtonEventListener();
+      // Volume Slider (plus volume slider setup)
+      applyVolumeButtonEventListener();
+      applyVolumeBarBodyEventListener();
+      applyRemoveVolumeBarBodyEventListener();
+      setVolumeBarSliderPositionOnSiteLoad();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -127,7 +139,7 @@ function applyScrubberEventListener()
   scrubberThumb.addEventListener('mousedown', e => {
     // console.log('AT: applyScrubberEventListener()');
 
-    mouseUpEnabled = true;
+    mouseUpEnabled_trackSlider = true;
 
     moveScrubberThumbOnUserInput(e); // This allows the user to click somewhere on the scrubber bar to scrub through the track
 
@@ -136,23 +148,23 @@ function applyScrubberEventListener()
   });
 }
 
-// Removes the event listener for mousemove events to prevent the scrubber thumb from following the users mouse after mouseup
+// Removes the event listener for mousemove events to prevent the scrubber thumb from following the user's mouse after mouseup
 function applyRemoveScrubberEventListener()
 {
   document.addEventListener('mouseup', e => {
     // console.log('AT: applyRemoveScrubberEventListener()');
 
-    if (mouseUpEnabled)
+    if (mouseUpEnabled_trackSlider)
     {
-      console.log('HERE');
       document.removeEventListener('mousemove', moveScrubberThumbOnUserInput);
       setCurrentTime();
       currentTrack.trackAudio.addEventListener('timeupdate', updateScrubberThumbPosition);
-      mouseUpEnabled = false;
+      mouseUpEnabled_trackSlider = false;
     }
   });
 }
 
+// Add an event listener to the Chosen button to respond to a user clicking on it
 function applyChosenButtonEventListener()
 {
   let chosenBtn = document.querySelector('#btn_chosen');
@@ -173,6 +185,7 @@ function applyChosenButtonEventListener()
   });
 }
 
+// Adds an event listener to the Exiled button to respond to a user clicking on it
 function applyExiledButtonEventListener()
 {
   let exiledBtn = document.querySelector('#btn_exiled');
@@ -191,6 +204,47 @@ function applyExiledButtonEventListener()
     }
     
   });
+}
+
+// Applies an event listener to the #volumeBar-body to update the position of the volume bar slider
+function applyVolumeBarBodyEventListener()
+{
+  let volumeBarBody = document.querySelector('#volumeBar-body');
+
+  volumeBarBody.addEventListener('mousedown', e => {
+
+    mouseUpEnabled_volumeBarBody = true;
+
+    moveVolumeBarSliderOnUserInput(e);
+    document.addEventListener('mousemove', moveVolumeBarSliderOnUserInput);  // Select the entire document - Note: The function is automatically passed the event from the event listener. This is the same as moveScrubberThumb(e)
+  });
+}
+
+// Removes the volumeBarBody event listener to prevent the volume slider from following the user's mouse after mouseup
+function applyRemoveVolumeBarBodyEventListener()
+{
+  document.addEventListener('mouseup', e => {
+    // console.log('AT: applyRemoveVolumeBarBodyEventListener()');
+
+    if (mouseUpEnabled_volumeBarBody)
+    {
+      document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
+      updateVolumeLevel(); // TODO: May need to pass something into this function such as the current position of the slider - although, I should be able to just pull that info from the DOM in the updateVolume() function anyway.
+      mouseUpEnabled_volumeBarBody = false;
+    }
+  });
+}
+
+function applyVolumeButtonEventListener()
+{
+  console.log('AT: applyVolumeButtonEventListener()');
+
+  let volumeBtn = document.querySelector('#btn_volume');
+
+  volumeBtn.addEventListener('click', e => {
+    showHideVolumeSlider();
+  });
+  
 }
 
 /*************
@@ -302,6 +356,7 @@ function setCurrentTrack(trackID)
 
   highlightCurrentTrack();
   scrollCurrentTrackToTop();
+  setCurrentTrackVolume();
 
   console.log(currentTrack);
 }
@@ -370,9 +425,11 @@ function playNextTrack()
   updateTrackInfoInHeader(currentTrack.trackID);
   
   currentTrack.trackAudio.play();
-
+  
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
+
+  setCurrentTrackVolume();
   
   console.log(currentTrack.trackID);
   console.log(currentTrack);
@@ -407,9 +464,11 @@ function playPreviousTrack()
   applyEndedEventListener();
 
   updateTrackInfoInHeader(currentTrack.trackID);
-
+  
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
+
+  setCurrentTrackVolume();
 
   console.log(currentTrack.trackID);
   console.log(currentTrack);
@@ -433,6 +492,8 @@ function playRandomTrack()
 
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
+
+  setCurrentTrackVolume();
 }
 
 // Randomly generate a track ID from the list of available tracks
@@ -668,5 +729,97 @@ function loadExiledTracksFromLocalStorage()
   {
     let exiledTracksStr = localStorage.getItem('exiled');
     exiledTracks = new Set(exiledTracksStr.split(','));
+  }
+}
+
+// Repositions the scrubber bar slider along the volume bar body when the user interacts with the volume bar slider
+function moveVolumeBarSliderOnUserInput(event)
+{
+  // console.log('AT: moveScrubberThumbOnUserInput()');
+  
+  let volumeBarSlider = document.querySelector('#volumeBar-body');
+
+  let right = volumeBarSlider.getBoundingClientRect().right;
+  let left = volumeBarSlider.getBoundingClientRect().left;
+
+  let updatedPosition = ((event.clientX - left) / (right - left)) * 100;
+  if (updatedPosition <= 100)
+  {
+    setVolumeBarSliderPosition(updatedPosition);
+  }
+}
+
+// Updates the width (position) of the volume bar slider on the UI
+// updatedPosition - a float representing the position of the slider along a range of 0 to 100
+function setVolumeBarSliderPosition(updatedPosition)
+{
+  document.querySelector('#volumeBar-slider').style.width = `${updatedPosition}%`;
+}
+
+// Updates the volumeLevel global variable based on the position of the volumeBar-slider
+function updateVolumeLevel()
+{
+  // console.log('AT: updateVolume()');
+  // TODO: There is a small bug somewhere that is preventing the volume from being set to zero. The lowest that it can currently go is 1.
+
+  let volumeBarSliderPosition = document.querySelector('#volumeBar-slider').style.width;
+  volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
+
+  setCurrentTrackVolume();
+  saveVolumeToLocalStorage();
+}
+
+// Sets the volume level of the currently playing track Audio object
+function setCurrentTrackVolume()
+{
+  currentTrack.trackAudio.volume = volumeLevel;
+}
+
+// Saves the current value of the volumeLevel variable to browser's local storage
+function saveVolumeToLocalStorage()
+{
+  localStorage.setItem('volumeLevel', volumeLevel);
+}
+
+// Loads the volume level from local storage
+// return - the volume level value retrieved from local storage
+function loadVolumeFromLocalStorage()
+{
+  return localStorage.getItem('volumeLevel');
+}
+
+// Sets the position of the volume bar slider to match the volume level stored in local storage
+// or sets it to the DEFAULT_VOLUME_LEVEL position if no volume level is stored in local storage.
+function setVolumeBarSliderPositionOnSiteLoad()
+{
+  loadedVolumeLevel = loadVolumeFromLocalStorage();
+  if (loadedVolumeLevel)
+  {
+    volumeLevel = loadedVolumeLevel;
+  }
+  else
+  {
+    volumeLevel = DEFAULT_VOLUME_LEVEL;
+  }
+  setVolumeBarSliderPosition(volumeLevel * 100);
+}
+
+// Shows/hides the volumeBar by applying or removing the volumeBar-visible class
+function showHideVolumeSlider()
+{
+  // console.log('AT: showHideVolumeSlider()');
+
+  let volumeBar = document.querySelector('#volumeBar-body');
+  if (!volumeSliderVisible)
+  {
+      volumeSliderVisible = !volumeSliderVisible;
+    
+      volumeBar.classList.add('volumeBar-visible');
+  }
+  else
+  {
+    volumeSliderVisible = !volumeSliderVisible;
+    
+    volumeBar.classList.remove('volumeBar-visible');
   }
 }

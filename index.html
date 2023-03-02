@@ -14,21 +14,27 @@
     <nav class="nav-flex-container">
 
       <!-- TODO: Update the options in the dropdown to match the options that are actually available -->
-      <select id="nav-playlist-selector">
-        <option value="playlist_vip">VIP</option>
-        <option value="playlist_source" selected>Source</option>
-      </select>
+      <div id="navbar-select-div">
+        <select id="nav-playlist-selector">
+          <option value="playlist_vip">VIP</option>
+          <option value="playlist_source" selected>Source</option>
+        </select>
+      </div>
 
       <div id="track-info"></div>
 
-      <ul>
+      <ul id="navbar-righthand-buttons">
         <li>
           <button id="btn_chosen" class="nav-button">C</button>
         </li>
         <li>
           <button id="btn_exiled" class="nav-button">E</button>
         </li>
-        <li>
+        <li id="volumeBar-li">
+          <div id="volumeBar-body">
+            <div id="volumeBar-slider"></div>
+          </div>
+
           <button id="btn_volume" class="nav-button">V</button>
         </li>
       </ul>

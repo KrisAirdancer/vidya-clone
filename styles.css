@@ -36,6 +36,8 @@
     --exiled-track-border: #3B0E24;
     --exiled-track-background: #4A122D;
     --exiled-track-text-color: #E79DC0;
+    --volumeBar-slider-width: 6.5rem;
+    --navbar-button-width: 2rem;
 }
 
 html {
@@ -82,19 +84,85 @@ nav ul {
 
 .nav-button {
     height: 1.35rem;
-    width: 2rem;
+    width: var(--navbar-button-width);
     font-size: 0.75rem;
     text-align: center;
     color: var(--site-orange);
     border: 1px solid var(--nav-button-border);
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     cursor: pointer;
+
+    z-index: 1;
 }
 
 #nav-playlist-selector {
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: 1px solid var(--site-orange);
     font-family: var(--site-font-family);
+    align-self: flex-end;
+    margin-top: 2.9rem; /* To shift the selector dropdown to the bottom of the navbar */
+    margin-right: 4.4rem; /* To shift the selector dropdown to the left of the navbar */
+}
+
+#navbar-righthand-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: center;
+    padding: 0px 0px 0px 0px; /*top right bottom left*/
+    flex-basis: calc(var(--volumeBar-slider-width) + var(--navbar-button-width)); /* Volume slider width + button width */
+}
+
+#navbar-select-div {
+    display: flex;
+    flex-direction: column;
+    width: calc(var(--volumeBar-slider-width) + var(--navbar-button-width)); /* To set the container for the select dropdown to the same width as the righthand buttons container */
+}
+
+/***** Volume Slider *****/
+
+#volumeBar-li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    margin: 0px;
+    padding: 0px;
+}
+
+#volumeBar-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+
+    height: 0.95rem;
+    width: 0;
+    background-color: #000000cc;
+    border: 1px solid var(--nav-button-border);
+    cursor: pointer;
+
+    margin: 0px 0px 0px 0px; /*top right bottom left*/
+    padding: 0px;
+
+    position: absolute;
+    right: 0rem;
+
+    transition-property: width, right;
+    transition-duration: 0.5s, 0.55s;
+}
+
+.volumeBar-visible {
+    width: var(--volumeBar-slider-width) !important; /* !important overrides other instances of the same property */
+    right: 2.2rem !important;
+}
+
+#volumeBar-slider {
+    height: 0.5rem;
+    width: 50%;
+    background-color: var(--site-orange);
+    margin: 0px;
+    padding: 0px;
 }
 
 /**** Tracks List *****/
@@ -328,5 +396,9 @@ nav ul {
 
 #nav-playlist-selector {
     align-self: flex-end;
+}
+
+#nav-playlist-selector option {
+    background-color: var(--site-blue);
 }
 
