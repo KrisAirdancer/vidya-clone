@@ -91,6 +91,8 @@ nav ul {
     border: 1px solid var(--nav-button-border);
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     cursor: pointer;
+
+    z-index: 1;
 }
 
 #nav-playlist-selector {
@@ -114,10 +116,6 @@ nav ul {
 #navbar-select-div {
     display: flex;
     flex-direction: column;
-    /* padding-top: 2.9rem; */
-    /* padding-right: 1rem; */
-    /* margin-bottom: auto; */
-    /* margin-top: auto; */
     width: calc(var(--volumeBar-slider-width) + var(--navbar-button-width)); /* To set the container for the select dropdown to the same width as the righthand buttons container */
 }
 
@@ -139,13 +137,24 @@ nav ul {
     align-items: center;
 
     height: 0.95rem;
-    width: var(--volumeBar-slider-width);
+    width: 0;
     background-color: #000000cc;
     border: 1px solid var(--nav-button-border);
     cursor: pointer;
 
     margin: 0px 0px 0px 0px; /*top right bottom left*/
     padding: 0px;
+
+    position: absolute;
+    right: 0rem;
+
+    transition-property: width, right;
+    transition-duration: 0.5s, 0.55s;
+}
+
+.volumeBar-visible {
+    width: var(--volumeBar-slider-width) !important; /* !important overrides other instances of the same property */
+    right: 2.2rem !important;
 }
 
 #volumeBar-slider {
