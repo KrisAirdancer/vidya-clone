@@ -40,10 +40,11 @@ fetch('playlists/all-tracks.json') // Load and sort master tracks list
     })
     .then(() => { // Apply event handlers/listeners
       applyTracksListEventHandler();
-      // Control Box
+      // Controls Box
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
+      applyControlsBoxDraggableEventListener();
       // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
@@ -235,9 +236,10 @@ function applyRemoveVolumeBarBodyEventListener()
   });
 }
 
+// Applies event listeners to handle the logic to show/hide the volume slider bar
 function applyVolumeButtonEventListener()
 {
-  console.log('AT: applyVolumeButtonEventListener()');
+  // console.log('AT: applyVolumeButtonEventListener()');
 
   let volumeBtn = document.querySelector('#btn_volume');
 
@@ -245,6 +247,22 @@ function applyVolumeButtonEventListener()
     showHideVolumeSlider();
   });
   
+}
+
+// Applies event listeners to control the dragging of the controls box
+function applyControlsBoxDraggableEventListener()
+{
+  // console.log('AT: applyControlsBoxDraggableEventListener()');
+
+  let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlsBoxTopBar.addEventListener('mousedown', e => {
+    window.addEventListener('mousemove', repositionControlsBox);
+  });
+
+  window.addEventListener('mouseup', e => {
+    window.removeEventListener('mousemove', repositionControlsBox);
+  });
 }
 
 /*************
@@ -821,5 +839,28 @@ function showHideVolumeSlider()
     volumeSliderVisible = !volumeSliderVisible;
     
     volumeBar.classList.remove('volumeBar-visible');
+  }
+}
+
+// Sets the position of the controls box to the location of the mouse pointer (box centers relative to the middle-center of its topBar)
+function repositionControlsBox(e) // e is passed in implicitly by the event handlers that call this function
+{
+  // console.log('AT: repositionControlsBox()');
+
+  let controlsBox = document.querySelector('#control-box-flex-container');
+  let controlsBoxWidth = controlsBox.offsetWidth;
+  let controlsBoxHeight = controlsBox.offsetHeight;
+  
+  // Left boundary = left edge of screen - half the width of the controls box. Right boundary = right edge of screen - half the width of the controls box.
+  if (e.pageX >= (0 + (controlsBoxWidth / 2)) && e.pageX <= (window.innerWidth - (controlsBoxWidth / 2)))
+  {
+    controlsBox.style.left = e.pageX + 'px';
+  }
+
+  // Top boundary = top of screen - 10% of the height of the controls box. Bottom boundary = bottom of screen - 90% of the height of the controls box.
+  // 10% and 90% b/c the cursor sits 10% of the way down from the top of the controls box and is the point from which the controls box's location is measured.
+  if (e.pageY >= (0 + (controlsBoxHeight * 0.1)) && e.pageY <= (window.innerHeight - (controlsBoxHeight * 0.9)))
+  {
+    controlsBox.style.top = e.pageY + 'px';
   }
 }
