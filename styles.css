@@ -148,10 +148,10 @@ nav ul {
     padding: 0px;
 
     position: absolute;
-    right: 0rem;
+    right: 2rem;
 
-    transition-property: width, right;
-    transition-duration: 0.5s, 0.55s;
+    transition-property: width;
+    transition-duration: 0.2s;
 }
 
 .volumeBar-visible {
