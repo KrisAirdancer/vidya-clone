@@ -856,6 +856,8 @@ function repositionControlsBox(e) // e is passed in implicitly by the event hand
     controlsBox.style.left = e.pageX + 'px';
   }
 
+  // Top boundary = top of screen - 10% of the height of the controls box. Bottom boundary = bottom of screen - 90% of the height of the controls box.
+  // 10% and 90% b/c the cursor sits 10% of the way down from the top of the controls box and is the point from which the controls box's location is measured.
   if (e.pageY >= (0 + (controlsBoxHeight * 0.1)) && e.pageY <= (window.innerHeight - (controlsBoxHeight * 0.9)))
   {
     controlsBox.style.top = e.pageY + 'px';
