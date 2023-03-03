@@ -236,9 +236,10 @@ function applyRemoveVolumeBarBodyEventListener()
   });
 }
 
+// Applies event listeners to handle the logic to show/hide the volume slider bar
 function applyVolumeButtonEventListener()
 {
-  console.log('AT: applyVolumeButtonEventListener()');
+  // console.log('AT: applyVolumeButtonEventListener()');
 
   let volumeBtn = document.querySelector('#btn_volume');
 
@@ -248,7 +249,7 @@ function applyVolumeButtonEventListener()
   
 }
 
-// 
+// Applies event listeners to control the dragging of the controls box
 function applyControlsBoxDraggableEventListener()
 {
   // console.log('AT: applyControlsBoxDraggableEventListener()');
