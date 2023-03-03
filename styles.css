@@ -58,6 +58,8 @@ body {
     background: var(--site-blue);
     /* Hides the scrollbar that runs up next to the navbar */
     overflow-y: hidden;
+    /* Hides the scrollbar that runs along the bottom - generally triggered when the controls box is slid all the way to the sides of the screen */
+    overflow-x: hidden;
 }
 
 /**** Navbar *****/

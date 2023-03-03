@@ -248,9 +248,10 @@ function applyVolumeButtonEventListener()
   
 }
 
+// 
 function applyControlsBoxDraggableEventListener()
 {
-  console.log('AT: applyControlsBoxDraggableEventListener()');
+  // console.log('AT: applyControlsBoxDraggableEventListener()');
 
   let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
 
@@ -259,7 +260,6 @@ function applyControlsBoxDraggableEventListener()
   });
 
   window.addEventListener('mouseup', e => {
-    console.log('WINDOW MOUSE UP');
     window.removeEventListener('mousemove', repositionControlsBox);
   });
 }
@@ -841,12 +841,23 @@ function showHideVolumeSlider()
   }
 }
 
+// Sets the position of the controls box to the location of the mouse pointer (box centers relative to the middle-center of its topBar)
 function repositionControlsBox(e) // e is passed in implicitly by the event handlers that call this function
 {
   // console.log('AT: repositionControlsBox()');
 
   let controlsBox = document.querySelector('#control-box-flex-container');
+  let controlsBoxWidth = controlsBox.offsetWidth;
+  let controlsBoxHeight = controlsBox.offsetHeight;
+  
+  // Left boundary = left edge of screen - half the width of the controls box. Right boundary = right edge of screen - half the width of the controls box.
+  if (e.pageX >= (0 + (controlsBoxWidth / 2)) && e.pageX <= (window.innerWidth - (controlsBoxWidth / 2)))
+  {
+    controlsBox.style.left = e.pageX + 'px';
+  }
 
-  controlsBox.style.top = e.pageY + 'px';
-  controlsBox.style.left = e.pageX + 'px';
+  if (e.pageY >= (0 + (controlsBoxHeight * 0.1)) && e.pageY <= (window.innerHeight - (controlsBoxHeight * 0.9)))
+  {
+    controlsBox.style.top = e.pageY + 'px';
+  }
 }
