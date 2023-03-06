@@ -38,6 +38,9 @@
     --exiled-track-text-color: #E79DC0;
     --volumeBar-slider-width: 6.5rem;
     --navbar-button-width: 2rem;
+    --navbar-button-height: 1.35rem;
+    --siteMenu-button-width: 1.75rem;
+    --siteMenu-button-height: 1.3rem;
 }
 
 html {
@@ -102,7 +105,7 @@ nav ul {
 }
 
 .nav-button {
-    height: 1.35rem;
+    height: var(--navbar-button-height);
     width: var(--navbar-button-width);
     font-size: 0.75rem;
     text-align: center;
@@ -343,6 +346,31 @@ nav ul {
 
 /***** Site Menu *****/
 
+#siteMenu-button {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    right: 1.2rem;
+
+    height: var(--siteMenu-button-height);
+    width: var(--siteMenu-button-width);
+
+    background-color: rgba(0,0,0,0.8);
+    color: var(--site-orange);
+    border: 1px solid #546A87;
+
+    font-family: var(--site-font-family);
+    font-size: 0.85rem;
+    font-size: 0.75rem;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    z-index: 1;
+}
+
 #siteMenu {
     position: fixed;
     bottom: 0;
@@ -365,7 +393,7 @@ nav ul {
     margin: 0.15rem;
 }
 
-#siteMenu-navButtons {
+#siteMenu-navButtons-group {
     list-style: none;
 
     display: flex;
@@ -379,8 +407,8 @@ nav ul {
 .siteMenu-navButton {
     display: flex;
 
-    height: 1.35rem;
-    width: var(--navbar-button-width);
+    height: var(--siteMenu-button-height);
+    width: var(--siteMenu-button-width);
 
     font-size: 0.75rem;
     align-items: center;
@@ -389,6 +417,9 @@ nav ul {
     color: var(--site-orange);
     background-color: rgba(0,0,0,0.8);
     border: 1px solid #546A87;
+
+    padding: 0;
+    margin: 0 0 0 0.5rem;
 
     cursor: pointer;
 }
