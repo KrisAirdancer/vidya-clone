@@ -77,6 +77,7 @@ nav {
     color: var(--site-orange);
     padding: 0.15rem 0.1rem 0.15rem 0.1rem; /* top right bottom left */
     border: 1px solid var(--top-level-border);
+    font-family: var(--site-font-family);
 }
 
 nav ul {
@@ -322,6 +323,63 @@ nav ul {
     border-color: var(--exiled-track-border);
     background-color: var(--exiled-track-background);
     color: var(--exiled-track-text-color);
+}
+
+/***** Site Menu *****/
+
+#siteMenu {
+    position: fixed;
+    bottom: 0;
+    right: 1.2rem;
+
+    height: 20rem; /* 50% of height */
+    width: 17.8rem; /* 30% of height */
+    background-color: rgba(0,0,0,0.8);
+    color: var(--site-orange);
+    border: 1px solid #546A87;
+
+    padding: 0;
+    margin: 0;
+
+    font-family: var(--site-font-family);
+    font-size: 0.9rem;
+}
+
+#siteMenu p {
+    margin: 0;
+}
+
+#siteMenu-navButtons {
+    list-style: none;
+
+    display: flex;
+    position: fixed;
+    bottom: 0;
+
+    padding: 0;
+    margin: 0;
+}
+
+.siteMenu-navButton {
+    display: flex;
+
+    height: 1.35rem;
+    width: var(--navbar-button-width);
+
+    font-size: 0.75rem;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--site-orange);
+    background-color: rgba(0,0,0,0.8);
+    border: 1px solid #546A87;
+
+    cursor: pointer;
+}
+
+.siteMenu-tab {
+    padding: 0;
+    margin: 0.5rem;
 }
 
 /***** Control Box *****/
