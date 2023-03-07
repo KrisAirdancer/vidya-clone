@@ -346,7 +346,7 @@ nav ul {
 
 /***** Site Menu *****/
 
-#siteMenu-button {
+#siteMenu-showHideButton {
     display: flex;
     position: fixed;
     bottom: 0;
@@ -374,7 +374,7 @@ nav ul {
 
 #siteMenu {
     position: fixed;
-    bottom: 0;
+    top: 40.6rem;
     right: 1.2rem;
 
     height: 20rem; /* 50% of height */
@@ -388,6 +388,9 @@ nav ul {
 
     font-family: var(--site-font-family);
     font-size: 0.85rem;
+
+    transition-property: top;
+    transition-duration: 0.3s;
 }
 
 #siteMenu p {
@@ -399,10 +402,13 @@ nav ul {
 
     display: flex;
     position: fixed;
-    bottom: 0;
+    top: 40.6rem;
 
     padding: 0;
     margin: 0;
+
+    transition-property: top;
+    transition-duration: 0.3s;
 }
 
 .siteMenu-navButton {
@@ -428,6 +434,14 @@ nav ul {
 .siteMenu-page {
     padding: 0;
     margin: 0.4rem;
+}
+
+.siteMenu-menuVisible {
+    top: 20.45rem !important;
+}
+
+.siteMenu-buttonsVisible {
+    top: 39.15rem !important;
 }
 
 /***** Control Box *****/

@@ -14,6 +14,7 @@ let volumeLevel; // Denotes a percentage: 100%
 let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 let mouseUpEnabled_volumeBarBody = false;
 let volumeSliderVisible = false;
+let siteMenuVisible = false;
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -56,6 +57,8 @@ fetch('playlists/all-tracks.json') // Load and sort master tracks list
       applyVolumeBarBodyEventListener();
       applyRemoveVolumeBarBodyEventListener();
       setVolumeBarSliderPositionOnSiteLoad();
+      // Site Menu
+      applySiteMenuButtonEventListener();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -263,6 +266,16 @@ function applyControlsBoxDraggableEventListener()
   window.addEventListener('mouseup', e => {
     window.removeEventListener('mousemove', repositionControlsBox);
   });
+}
+
+// Applies an event listener to the site menu button to make it clickable
+function applySiteMenuButtonEventListener()
+{
+  // console.log('AT: applySiteMenuButtonEventListener()');
+
+  let siteMenuButton = document.querySelector('#siteMenu-showHideButton');
+  
+  siteMenuButton.addEventListener('click', showHideSiteMenu);
 }
 
 /*************
@@ -862,5 +875,28 @@ function repositionControlsBox(e) // e is passed in implicitly by the event hand
   if (e.pageY >= (0 + (controlsBoxHeight * 0.1)) && e.pageY <= (window.innerHeight - (controlsBoxHeight * 0.9)))
   {
     controlsBox.style.top = e.pageY + 'px';
+  }
+}
+
+// Shows/hides the site menu and site menu buttons by adding/removing visibility classes
+function showHideSiteMenu()
+{
+  // console.log('AT: showHideSiteMenu()');
+
+  let siteMenu = document.querySelector('#siteMenu');
+  let siteMenuButtonsGroup = document.querySelector('#siteMenu-navButtons-group');
+  if (!siteMenuVisible)
+  {
+    siteMenuVisible = !siteMenuVisible;
+
+    siteMenu.classList.add('siteMenu-menuVisible');
+    siteMenuButtonsGroup.classList.add('siteMenu-buttonsVisible');
+  }
+  else
+  {
+    siteMenuVisible = !siteMenuVisible;
+
+    siteMenu.classList.remove('siteMenu-menuVisible');
+    siteMenuButtonsGroup.classList.remove('siteMenu-buttonsVisible');
   }
 }
