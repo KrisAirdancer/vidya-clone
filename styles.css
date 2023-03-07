@@ -397,6 +397,14 @@ nav ul {
     margin: 0.15rem;
 }
 
+#siteMenu input {
+    width: 3.0rem;
+
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--site-orange);
+    border: 1px solid #546A87;
+}
+
 #siteMenu-navButtons-group {
     list-style: none;
 
@@ -442,6 +450,25 @@ nav ul {
 
 .siteMenu-buttonsVisible {
     top: 39.15rem !important;
+}
+
+.siteMenu-importExport-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 1rem;
+    width: 6rem;
+    
+    color: var(--site-orange);
+    background-color: rgba(0,0,0,0.8);
+    border: 1px solid #546A87;
+
+    font-family: var(--site-font-family);
+    font-size: 0.85rem;
+    
+    margin: 0.2rem 0 0 0;
+    padding: 0;
 }
 
 /***** Control Box *****/
