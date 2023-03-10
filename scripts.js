@@ -980,18 +980,21 @@ function setConfigMenuPageVisible()
   }
 }
 
-// TODO: Implement function
-// TODO: Docs
+// Delivers the list of chosen tracks to the user via an on-screen prompt
 function exportChosen()
 {
-  console.log('AT: exportChosen()');
+  // console.log('AT: exportChosen()');
+
+  prompt('Copy this:', Array.from(chosenTracks).join(', '));
 }
 
-// TODO: Implement function
-// TODO: Docs
+// Delivers the list of exiled tracks to the user via an on-screen prompt
 function exportExiled()
 {
-  console.log('AT: exportExiled()');
+  // console.log('AT: exportExiled()');
+
+  prompt('Copy this:', Array.from(exiledTracks).join(', '));
+
 }
 
 // TODO: Implement function
