@@ -456,9 +456,11 @@ nav ul {
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: center;
+    justify-self: center;
 
     height: 1rem;
-    width: 6rem;
+    width: 8rem;
     
     color: var(--site-orange);
     background-color: rgba(0,0,0,0.8);
@@ -467,8 +469,22 @@ nav ul {
     font-family: var(--site-font-family);
     font-size: 0.85rem;
     
-    margin: 0.2rem 0 0 0;
+    margin: 0.4rem 0 0 0;
     padding: 0;
+}
+
+#siteMenu-config-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+/* These two styles add a bit of spacing between the upper group of elements and the bottom group of elements in the site menu. */
+#siteMenu-resetChosen-button {
+    margin-top: 0.9rem !important;
+}
+
+#siteMenu-importChosen-button {
+    margin-top: 0.9rem;
 }
 
 /***** Control Box *****/
