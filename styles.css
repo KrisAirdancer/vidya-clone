@@ -374,10 +374,10 @@ nav ul {
 
 #siteMenu {
     position: fixed;
-    top: 40.6rem;
+    bottom: 0;
     right: 1.2rem;
 
-    height: 20rem; /* 50% of height */
+    height: 0;
     width: 18rem; /* 30% of height */
     background-color: rgba(0,0,0,0.8);
     color: var(--site-orange);
@@ -389,8 +389,7 @@ nav ul {
     font-family: var(--site-font-family);
     font-size: 0.85rem;
 
-    transition-property: top;
-    transition-duration: 0.3s;
+    transition: height 0.3s;
 }
 
 #siteMenu p {
@@ -410,13 +409,14 @@ nav ul {
 
     display: flex;
     position: fixed;
-    top: 40.6rem;
+    bottom: 0;
+
+    height: 0;
 
     padding: 0;
     margin: 0;
 
-    transition-property: top;
-    transition-duration: 0.3s;
+    transition: height 0.3s;
 }
 
 .siteMenu-navButton {
@@ -445,11 +445,11 @@ nav ul {
 }
 
 .siteMenu-menuVisible {
-    top: 20.45rem !important;
+    height: 20rem !important;
 }
 
 .siteMenu-buttonsVisible {
-    top: 39.15rem !important;
+    height: var(--siteMenu-button-height) !important;
 }
 
 .siteMenu-importExportButtons {
