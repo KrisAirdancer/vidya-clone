@@ -288,11 +288,11 @@ function applyEventListenersToSiteMenuButtons()
 
   // Information Button
   let infoButton = document.querySelector('#siteMenu-infoButton');
-  infoButton.addEventListener('click', toggleInfoMenuPageVisibility);
+  infoButton.addEventListener('click', setInfoMenuPageVisible);
   
   // Configuration Button
   let configButton = document.querySelector('#siteMenu-configButton');
-  configButton.addEventListener('click', toggleConfigMenuPageVisibility);
+  configButton.addEventListener('click', setConfigMenuPageVisible);
   
   // Export Chosen Button
   let exportChosenButton = document.querySelector('#siteMenu-exportChosenButton');
@@ -945,46 +945,38 @@ function showHideSiteMenu()
 }
 
 // Toggles the visibility of the info page in the siteMenu
-function toggleInfoMenuPageVisibility()
+function setInfoMenuPageVisible()
 {
   console.log('AT: displayInfoMenuPage()');
 
+  let configPage = document.querySelector('#siteMenu-configPage');
   let infoPage = document.querySelector('#siteMenu-infoPage');
-
+  
   if (!infoPageVisible)
   {
     infoPageVisible = !infoPageVisible;
-
+    configPageVisible = !configPageVisible;
+    
     infoPage.classList.add('pageVisible');
-    toggleConfigMenuPageVisibility();
-  }
-  else
-  {
-    infoPageVisible = !infoPageVisible;
-
-    infoPage.classList.remove('pageVisible');
+    configPage.classList.remove('pageVisible');
   }
 }
 
 // Toggles the visibility of the configuration page in the siteMenu
-function toggleConfigMenuPageVisibility()
+function setConfigMenuPageVisible()
 {
   console.log('AT: displayConfigMenuPage()');
 
   let configPage = document.querySelector('#siteMenu-configPage');
+  let infoPage = document.querySelector('#siteMenu-infoPage');
 
   if (!configPageVisible)
   {
+    infoPageVisible = !infoPageVisible;
     configPageVisible = !configPageVisible;
 
     configPage.classList.add('pageVisible');
-    toggleInfoMenuPageVisibility();
-  }
-  else
-  {
-    configPageVisible = !configPageVisible;
-
-    configPage.classList.remove('pageVisible');
+    infoPage.classList.remove('pageVisible');
   }
 }
 
