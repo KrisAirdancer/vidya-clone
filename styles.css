@@ -503,6 +503,8 @@ nav ul {
     font-family: var(--site-font-family);
 
     transform: translate(-50%, -10%); /* (x, y) */
+
+    z-index: 1;
 }
 
 /* TODO: The border on the control box and its buttons will need to have the same fade effect as the original Vidya player (same as the navbar) */
