@@ -15,6 +15,8 @@ let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prev
 let mouseUpEnabled_volumeBarBody = false;
 let volumeSliderVisible = false;
 let siteMenuVisible = false;
+let infoPageVisible = true; // The siteMenu's info page is the default page (visible by default)
+let configPageVisible = false;
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -286,11 +288,11 @@ function applyEventListenersToSiteMenuButtons()
 
   // Information Button
   let infoButton = document.querySelector('#siteMenu-infoButton');
-  infoButton.addEventListener('click', displayInfoMenuPage);
+  infoButton.addEventListener('click', toggleInfoMenuPageVisibility);
   
   // Configuration Button
   let configButton = document.querySelector('#siteMenu-configButton');
-  configButton.addEventListener('click', displayConfigMenuPage);
+  configButton.addEventListener('click', toggleConfigMenuPageVisibility);
   
   // Export Chosen Button
   let exportChosenButton = document.querySelector('#siteMenu-exportChosenButton');
@@ -942,18 +944,48 @@ function showHideSiteMenu()
   }
 }
 
-// TODO: Implement function
-// TODO: Docs
-function displayInfoMenuPage()
+// Toggles the visibility of the info page in the siteMenu
+function toggleInfoMenuPageVisibility()
 {
   console.log('AT: displayInfoMenuPage()');
+
+  let infoPage = document.querySelector('#siteMenu-infoPage');
+
+  if (!infoPageVisible)
+  {
+    infoPageVisible = !infoPageVisible;
+
+    infoPage.classList.add('pageVisible');
+    toggleConfigMenuPageVisibility();
+  }
+  else
+  {
+    infoPageVisible = !infoPageVisible;
+
+    infoPage.classList.remove('pageVisible');
+  }
 }
 
-// TODO: Implement function
-// TODO: Docs
-function displayConfigMenuPage()
+// Toggles the visibility of the configuration page in the siteMenu
+function toggleConfigMenuPageVisibility()
 {
   console.log('AT: displayConfigMenuPage()');
+
+  let configPage = document.querySelector('#siteMenu-configPage');
+
+  if (!configPageVisible)
+  {
+    configPageVisible = !configPageVisible;
+
+    configPage.classList.add('pageVisible');
+    toggleInfoMenuPageVisibility();
+  }
+  else
+  {
+    configPageVisible = !configPageVisible;
+
+    configPage.classList.remove('pageVisible');
+  }
 }
 
 // TODO: Implement function

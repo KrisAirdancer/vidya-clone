@@ -440,8 +440,10 @@ nav ul {
 }
 
 .siteMenu-page {
-    padding: 0;
-    margin: 0.4rem;
+    display: none;
+
+    /* padding: 0;
+    margin: 0.4rem; */
 }
 
 .siteMenu-menuVisible {
@@ -450,6 +452,13 @@ nav ul {
 
 .siteMenu-buttonsVisible {
     height: var(--siteMenu-button-height) !important;
+}
+
+.pageVisible {
+    display: block;
+
+    padding: 0;
+    margin: 0.4rem;
 }
 
 .siteMenu-importExportButtons {
