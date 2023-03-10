@@ -452,7 +452,7 @@ nav ul {
     top: 39.15rem !important;
 }
 
-.siteMenu-importExport-buttons {
+.siteMenu-importExportButtons {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -471,6 +471,8 @@ nav ul {
     
     margin: 0.4rem 0 0 0;
     padding: 0;
+
+    cursor: pointer;
 }
 
 #siteMenu-config-group {
@@ -479,11 +481,11 @@ nav ul {
 }
 
 /* These two styles add a bit of spacing between the upper group of elements and the bottom group of elements in the site menu. */
-#siteMenu-resetChosen-button {
+#siteMenu-resetChosenButton {
     margin-top: 0.9rem !important;
 }
 
-#siteMenu-importChosen-button {
+#siteMenu-importChosenButton {
     margin-top: 0.9rem;
 }
 

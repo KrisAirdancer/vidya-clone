@@ -59,6 +59,7 @@ fetch('playlists/all-tracks.json') // Load and sort master tracks list
       setVolumeBarSliderPositionOnSiteLoad();
       // Site Menu
       applySiteMenuButtonEventListener();
+      applyEventListenersToSiteMenuButtons();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -268,7 +269,7 @@ function applyControlsBoxDraggableEventListener()
   });
 }
 
-// Applies an event listener to the site menu button to make it clickable
+// Applies an event listener to the site menu button (the button that opens/closes the menu) to make it clickable
 function applySiteMenuButtonEventListener()
 {
   // console.log('AT: applySiteMenuButtonEventListener()');
@@ -276,6 +277,44 @@ function applySiteMenuButtonEventListener()
   let siteMenuButton = document.querySelector('#siteMenu-showHideButton');
   
   siteMenuButton.addEventListener('click', showHideSiteMenu);
+}
+
+// Applies event listeners to all of the buttons within the site menu (excluding the button that opens/closes the menu)
+function applyEventListenersToSiteMenuButtons()
+{
+  console.log('AT: applyEventListenersToSiteMenuButtons()');
+
+  // Information Button
+  let infoButton = document.querySelector('#siteMenu-infoButton');
+  infoButton.addEventListener('click', displayInfoMenuPage);
+  
+  // Configuration Button
+  let configButton = document.querySelector('#siteMenu-configButton');
+  configButton.addEventListener('click', displayConfigMenuPage);
+  
+  // Export Chosen Button
+  let exportChosenButton = document.querySelector('#siteMenu-exportChosenButton');
+  exportChosenButton.addEventListener('click', exportChosen);
+  
+  // Export Exiled Button
+  let exportExiledButton = document.querySelector('#siteMenu-exportExiledButton');
+  exportExiledButton.addEventListener('click', exportExiled);
+  
+  // Import Chosen Button
+  let importChosenButton = document.querySelector('#siteMenu-importChosenButton');
+  importChosenButton.addEventListener('click', importChosen);
+  
+  // Import Exiled Button
+  let importExiledButton = document.querySelector('#siteMenu-importExiledButton');
+  importExiledButton.addEventListener('click', importExiled);
+  
+  // Reset Chosen Button
+  let resetChosenButton = document.querySelector('#siteMenu-resetChosenButton');
+  resetChosenButton.addEventListener('click', resetChosen);
+  
+  // Reset Exiled Button
+  let resetExiledButton = document.querySelector('#siteMenu-resetExiledButton');
+  resetExiledButton.addEventListener('click', resetExiled);
 }
 
 /*************
@@ -878,6 +917,8 @@ function repositionControlsBox(e) // e is passed in implicitly by the event hand
   }
 }
 
+/***** Site Menu Functions */
+
 // Shows/hides the site menu and site menu buttons by adding/removing visibility classes
 function showHideSiteMenu()
 {
@@ -899,4 +940,60 @@ function showHideSiteMenu()
     siteMenu.classList.remove('siteMenu-menuVisible');
     siteMenuButtonsGroup.classList.remove('siteMenu-buttonsVisible');
   }
+}
+
+// TODO: Implement function
+// TODO: Docs
+function displayInfoMenuPage()
+{
+  console.log('AT: displayInfoMenuPage()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function displayConfigMenuPage()
+{
+  console.log('AT: displayConfigMenuPage()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function exportChosen()
+{
+  console.log('AT: exportChosen()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function exportExiled()
+{
+  console.log('AT: exportExiled()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function importChosen()
+{
+  console.log('AT: importChosen()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function importExiled()
+{
+  console.log('AT: importExiled()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function resetChosen()
+{
+  console.log('AT: resetChosen()');
+}
+
+// TODO: Implement function
+// TODO: Docs
+function resetExiled()
+{
+  console.log('AT: resetExiled()');
 }
