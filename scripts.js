@@ -284,7 +284,7 @@ function applySiteMenuButtonEventListener()
 // Applies event listeners to all of the buttons within the site menu (excluding the button that opens/closes the menu)
 function applyEventListenersToSiteMenuButtons()
 {
-  console.log('AT: applyEventListenersToSiteMenuButtons()');
+  // console.log('AT: applyEventListenersToSiteMenuButtons()');
 
   // Information Button
   let infoButton = document.querySelector('#siteMenu-infoButton');
@@ -947,7 +947,7 @@ function showHideSiteMenu()
 // Toggles the visibility of the info page in the siteMenu
 function setInfoMenuPageVisible()
 {
-  console.log('AT: displayInfoMenuPage()');
+  // console.log('AT: displayInfoMenuPage()');
 
   let configPage = document.querySelector('#siteMenu-configPage');
   let infoPage = document.querySelector('#siteMenu-infoPage');
@@ -965,7 +965,7 @@ function setInfoMenuPageVisible()
 // Toggles the visibility of the configuration page in the siteMenu
 function setConfigMenuPageVisible()
 {
-  console.log('AT: displayConfigMenuPage()');
+  // console.log('AT: displayConfigMenuPage()');
 
   let configPage = document.querySelector('#siteMenu-configPage');
   let infoPage = document.querySelector('#siteMenu-infoPage');
