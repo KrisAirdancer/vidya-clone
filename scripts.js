@@ -985,7 +985,7 @@ function exportChosen()
 {
   // console.log('AT: exportChosen()');
 
-  prompt('Copy this:', Array.from(chosenTracks).join(', '));
+  prompt('Export Chosen tracks.\nCopy this:', Array.from(chosenTracks).join(','));
 }
 
 // Delivers the list of exiled tracks to the user via an on-screen prompt
@@ -993,34 +993,88 @@ function exportExiled()
 {
   // console.log('AT: exportExiled()');
 
-  prompt('Copy this:', Array.from(exiledTracks).join(', '));
+  prompt('Export Exiled tracks.\nCopy this:', Array.from(exiledTracks).join(','));
 
 }
 
-// TODO: Implement function
-// TODO: Docs
+// Requests (via a on-screen prompt) the chosen track IDs from the user then stores them in the application state and local storage
 function importChosen()
 {
-  console.log('AT: importChosen()');
+  // console.log('AT: importChosen()');
+
+  let importedTracks = prompt('Import Chosen tracks.\nPaste here:');
+  if (importedTracks === null) { return; } // User canceled import or error occurred
+  if (importedTracks === '') { return; } // If no tracks imported, keep the current state
+  importedTracks = importedTracks.split(',');
+  console.log(importedTracks);
+
+  chosenTracks.clear();
+
+  importedTracks.forEach(trackID => {
+    chosenTracks.add(trackID);
+  });
+
+  // TODO: What if some of the imported chosen tracks are currently exiled in the program state? Maybe call addTrackToChosenList() for each track instead of .add()
+  saveChosenTracksToLocalStorage();
+  generateTracksListHTML();
+  let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+  setCurrentTrack(minTrackID);
+  scrollCurrentTrackToTop();
 }
 
-// TODO: Implement function
-// TODO: Docs
+// Requests (via a on-screen prompt) the exiled track IDs from the user then stores them in the application state and local storage
 function importExiled()
 {
-  console.log('AT: importExiled()');
+  // console.log('AT: importExiled()');
+
+  let exiledString = prompt('Import Exiled tracks.\nPaste here:');
+  if (exiledString === null) { return; } // User canceled import or error occurred
+  if (exiledString === '') { return; } // If no tracks imported, keep the current state
+  exiledString = exiledString.split(',');
+
+  exiledTracks.clear();
+
+  exiledString.forEach(trackID => {
+    exiledTracks.add(trackID);
+  });
+
+  saveExiledTracksToLocalStorage();
+  generateTracksListHTML();
+  let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+  setCurrentTrack(minTrackID);
+  scrollCurrentTrackToTop();
 }
 
-// TODO: Implement function
-// TODO: Docs
+// Clears all Chosen tracks from the program state and local storage
 function resetChosen()
 {
-  console.log('AT: resetChosen()');
+  // console.log('AT: resetChosen()');
+
+  if (confirm('Reset Chosen tracks.\nAre you sure about that?'))
+  {
+    chosenTracks.clear();
+
+    saveChosenTracksToLocalStorage();
+    generateTracksListHTML();
+    let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+    setCurrentTrack(minTrackID);
+    scrollCurrentTrackToTop();
+  }
 }
 
-// TODO: Implement function
-// TODO: Docs
+// Clears all Exiled tracks from the program state and local storage
 function resetExiled()
 {
-  console.log('AT: resetExiled()');
+  // console.log('AT: resetExiled()');
+
+  if (confirm('Reset Exiled tracks.\nAre you sure about that?'))
+  {
+    exiledTracks.clear();
+
+    saveExiledTracksToLocalStorage();
+    generateTracksListHTML();
+    let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+    setCurrentTrack(minTrackID);
+    scrollCurrentTrackToTop();
+  }
 }
