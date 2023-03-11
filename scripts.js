@@ -758,6 +758,7 @@ function loadChosenTracksFromLocalStorage()
   }
 }
 
+// TODO: This function does more than it should. It should be broken out into two functions: one to add the track to exiled and one to update the previousStack.
 // Adds the currently playing track to the exiledTracks Set
 function addTrackToExiled(trackID)
 {
@@ -997,7 +998,7 @@ function exportExiled()
 
 }
 
-// Requests (via a on-screen prompt) the chosen track IDs from the user then stores them in the application state and local storage
+// Requests (via an on-screen prompt) the chosen track IDs from the user then stores them in the application state and local storage
 function importChosen()
 {
   // console.log('AT: importChosen()');
@@ -1006,23 +1007,28 @@ function importChosen()
   if (importedTracks === null) { return; } // User canceled import or error occurred
   if (importedTracks === '') { return; } // If no tracks imported, keep the current state
   importedTracks = importedTracks.split(',');
-  console.log(importedTracks);
 
   chosenTracks.clear();
 
   importedTracks.forEach(trackID => {
-    chosenTracks.add(trackID);
+    if (trackID)
+    {
+      chosenTracks.add(trackID);
+      exiledTracks.delete(trackID);
+    }
   });
 
-  // TODO: What if some of the imported chosen tracks are currently exiled in the program state? Maybe call addTrackToChosenList() for each track instead of .add()
+  currentTrack.trackAudio.pause(); // Have to pause the track or it will continue playing even after the currentTrack has changed
   saveChosenTracksToLocalStorage();
+  saveExiledTracksToLocalStorage();
   generateTracksListHTML();
   let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
   setCurrentTrack(minTrackID);
   scrollCurrentTrackToTop();
+  currentTrack.trackAudio.play();
 }
 
-// Requests (via a on-screen prompt) the exiled track IDs from the user then stores them in the application state and local storage
+// Requests (via an on-screen prompt) the exiled track IDs from the user then stores them in the application state and local storage
 function importExiled()
 {
   // console.log('AT: importExiled()');
@@ -1035,14 +1041,21 @@ function importExiled()
   exiledTracks.clear();
 
   exiledString.forEach(trackID => {
-    exiledTracks.add(trackID);
+    if (trackID)
+    {
+      exiledTracks.add(trackID);
+      chosenTracks.delete(trackID);
+    }
   });
 
+  currentTrack.trackAudio.pause(); // Have to pause the track or it will continue playing even after the currentTrack has changed
   saveExiledTracksToLocalStorage();
+  saveChosenTracksToLocalStorage();
   generateTracksListHTML();
   let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
   setCurrentTrack(minTrackID);
   scrollCurrentTrackToTop();
+  currentTrack.trackAudio.play();
 }
 
 // Clears all Chosen tracks from the program state and local storage
