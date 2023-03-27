@@ -86,9 +86,9 @@
   <div id="siteMenu">
 
     <div id="siteMenu-infoPage" class="siteMenu-page pageVisible">
-      <p>43 Tracks</p>
+      <p><span id="siteMenu-totalTracksNumber"></span> Tracks</p>
       <p>Last Update: Mon March 6 2023</p>
-      <p><a href="TODO">Changelog</a></p>
+      <p><a href="http://localhost:5500/changelog.txt">Changelog</a></p>
       <hr>
       <p>All Tracks © & ℗ Their Respective Owners</p>
       <hr>
@@ -107,9 +107,9 @@
       <p><input type="number" value="25" name="input_chosenOdds" id="chosenOddsInput">% chance of playing Chosen tracks</p>
       <br>
       <div id="siteMenu-config-group">
-        <p>Total Chosen: 10</p>
+        <p>Total Chosen: <span id="siteMenu-totalChosenNumber"></span></p>
         <div id="siteMenu-exportChosenButton" class="siteMenu-importExportButtons">Export Chosen</div>
-        <p>Total Blocked: 4</p>
+        <p>Total Blocked: <span id="siteMenu-totalExiledNumber"></span></p>
         <div id="siteMenu-exportExiledButton" class="siteMenu-importExportButtons">Export Exiled</div>
         <div id="siteMenu-importChosenButton" class="siteMenu-importExportButtons">Import Chosen</div>
         <div id="siteMenu-resetChosenButton" class="siteMenu-importExportButtons">Reset Chosen</div>

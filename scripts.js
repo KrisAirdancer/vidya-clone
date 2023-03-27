@@ -1,5 +1,7 @@
-let masterTracksList = {};
-let tracksMap = new Map();
+let tracksMasterListURI = 'playlists/tracks-master-list.json';
+// TODO: Why do I have the masterTracksList object and the tracksMap? They seem to be serving the same purpose. Look through the code to figure out if I need both and consolidate if possible.
+let masterTracksList = {}; // All tracks from the "tracks-master-list.json" file into an object for easy reference/use (does not contain audio data)
+let tracksMap = new Map(); // Generates a Map of all tracks currently in the system so that they are easily accessible (does not contain audio data)
 let previousStack = [];
 let nextStack = [];
 let currentTrack = {
@@ -28,7 +30,7 @@ let configPageVisible = false;
 
 let reader = new FileReader();
 
-fetch('playlists/all-tracks.json') // Load and sort master tracks list
+fetch(tracksMasterListURI) // Load and sort master tracks list
     .then(response => response.json())
     .then(tracksData => {
       loadTracksMasterList(tracksData);
@@ -62,6 +64,9 @@ fetch('playlists/all-tracks.json') // Load and sort master tracks list
       // Site Menu
       applySiteMenuButtonEventListener();
       applyEventListenersToSiteMenuButtons();
+      setTotalChosenNumberInMenu();
+      setTotalExiledNumberInMenu();
+      setTracksCountInMenu();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -729,6 +734,9 @@ function addTrackToChosen(trackID)
   {
     chosenTracks.add(trackID);
     exiledTracks.delete(trackID);
+
+    setTotalChosenNumberInMenu();
+    setTotalExiledNumberInMenu();
   }
 }
 
@@ -738,6 +746,8 @@ function removeTrackFromChosen(trackID)
   if (trackID)
   {
     chosenTracks.delete(trackID);
+
+    setTotalChosenNumberInMenu();
   }
 }
 
@@ -759,6 +769,7 @@ function loadChosenTracksFromLocalStorage()
 }
 
 // TODO: This function does more than it should. It should be broken out into two functions: one to add the track to exiled and one to update the previousStack.
+  // I should also note that this function should be identical to addTrackToChosen() excepting that it should modify the exiled lists instead of the chosen lists, and it currently looks very different from addTrackToChosen(). That means we have a problem.
 // Adds the currently playing track to the exiledTracks Set
 function addTrackToExiled(trackID)
 {
@@ -767,15 +778,8 @@ function addTrackToExiled(trackID)
     exiledTracks.add(trackID);
     chosenTracks.delete(trackID);
 
-    previousStack.forEach(track => {
-      if (track.trackID === trackID) {
-        while (previousStack.indexOf(trackID) !== -1)
-        {
-          let trackIndex = previousStack.indexOf(trackID);
-          previousStack.splice(trackIndex, 1);
-        }
-      }
-    });
+    setTotalExiledNumberInMenu();
+    setTotalChosenNumberInMenu();
   }
 }
 
@@ -785,6 +789,8 @@ function removeTrackFromExiled(trackID)
   if (trackID)
   {
     exiledTracks.delete(trackID);
+
+    setTotalExiledNumberInMenu();
   }
 }
 
@@ -1090,4 +1096,28 @@ function resetExiled()
     setCurrentTrack(minTrackID);
     scrollCurrentTrackToTop();
   }
+}
+
+// Sets the "Total Chosen" value in the site menu to the current chosen tracks count
+function setTotalChosenNumberInMenu()
+{
+  let chosenNumberTag = document.querySelector('#siteMenu-totalChosenNumber');
+
+  chosenNumberTag.textContent = chosenTracks.size;
+}
+
+// Sets the "Total Exiled" value in the site menu to the current exiled tracks count
+function setTotalExiledNumberInMenu()
+{
+  let exiledNumberTag = document.querySelector('#siteMenu-totalExiledNumber');
+
+  exiledNumberTag.textContent = exiledTracks.size;
+}
+
+// Sets the "Tracks" count number in the site menu to the total number of tracks in the system
+function setTracksCountInMenu()
+{
+  let tracksCountNumberTag = document.querySelector('#siteMenu-totalTracksNumber');
+
+  tracksCountNumberTag.textContent = tracksMap.size;
 }
