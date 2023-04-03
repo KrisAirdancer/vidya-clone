@@ -405,7 +405,7 @@ function generateTracksListHTML()
 // Sets currentTrack to the track with ID trackURL
 function setCurrentTrack(trackID)
 {
-  console.log('AT: setCurrentTrack()');
+  // console.log('AT: setCurrentTrack()');
 
   // TODO: This whole if block might be dead code... If so, remove it.
   if (currentTrack.trackID !== undefined)
@@ -435,7 +435,7 @@ function setCurrentTrack(trackID)
   scrollCurrentTrackToTop();
   setCurrentTrackVolume();
 
-  console.log(currentTrack);
+  // console.log(currentTrack);
 }
 
 // Toggles the state of the currently track between playing and paused
@@ -456,7 +456,7 @@ function playPauseCurrentTrack()
 // Plays the next track
 function playNextTrack()
 {
-  // console.log('AT: playNextTrack()');
+  console.log('AT: playNextTrack()');
 
   removeCurrentTrackHighlighting();
 
@@ -508,8 +508,8 @@ function playNextTrack()
 
   setCurrentTrackVolume();
   
-  console.log(currentTrack.trackID);
-  console.log(currentTrack);
+  // console.log(currentTrack.trackID);
+  // console.log(currentTrack);
 }
 
 // Plays the previous track
@@ -551,7 +551,7 @@ function playPreviousTrack()
   console.log(currentTrack);
 }
 
-// TODO: This function appears to be unused! Either use it somewhere or delete it.
+// TODO: This function appears to be unused! Either use it somewhere or delete it. It looks like this function was replaced by getRandomTrackID() - instead of calling a function to play the next track, I am calling a function to generate a track ID. I think I did this because I needed to be able to play tracks under different conditions in different places. Double check this and refactor if it doesn't make sense to do that anymore (or if that isn't the case).
 // Plays a random track from the currently selected playlist
 function playRandomTrack()
 {
@@ -576,15 +576,19 @@ function playRandomTrack()
 // Randomly generate a track ID from the list of available tracks
 function getRandomTrackID()
 {
-  // console.log('AT: getRandomTrackID()');
+  console.log('AT: getRandomTrackID()');
 
   let trackIDs = [];
 
+  // TODO: Why am I pushing everything into a separate list. If I need it in a certain format, it should be stored that way ahead of time. Especially for something that happens often like generating a track ID. This makes selecting a new track O(N)! It should be O(1)! Fix this.
   tracksMap.forEach(entry => {
     trackIDs.push(entry.trackID);
   });
   
   let trackID = trackIDs[Math.round(Math.random() * (trackIDs.length - 0) - 0)]; // Math.random() * (max - min) + min
+  // Need to replace the above logic with logic to account for chosen probability in track selection
+    // General Idea: Generate a random number from 1 to 100. Then, if that number is less than or equal to the current value of the chosen probability, randomly select a track from the chosen list; otherwise, select a track from the master list but that is NOT in the chosen list.
+      // This will require re-selecting a track if a chosen track is selected. Because of this, it might be better to keep three lists: chosen, exiled, and general. When a track is added to chosen or exiled, it is removed from general. And so on. This way, I can just randomly select a track from the correct list (general or chosen) based on what I need.
 
   return trackID;
 }
