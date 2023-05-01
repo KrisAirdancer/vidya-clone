@@ -581,9 +581,7 @@ function playPreviousTrack()
 // Plays a random track from the currently selected playlist
 function playRandomTrack()
 {
-  console.log('AT: playRandomTrack()');
-
-  // TODO: Add logic to select a track only from the currently selected playlist and not from the entire library
+  // console.log('AT: playRandomTrack()');
 
   removeCurrentTrackHighlighting();
 
