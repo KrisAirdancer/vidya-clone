@@ -211,11 +211,6 @@ nav ul {
 
 /**** Tracks List *****/
 
-#tracks-list {
-    margin: 0;
-    padding: 0;
-}
-
 .track-info {
     list-style: none;
     padding: 5px 2px 5px 10px; /* top right bottom left */
@@ -231,8 +226,6 @@ nav ul {
     color: var(--site-blue);
 }
 
-/**** Site Scrollbar *****/
-
 #tracks-list {
     position: fixed;
     top: 6.0rem; /* TODO: This is here to keep the tracks list from running over top of the navbar and scrubber. Restrucutre the project so that the navbar, tracks list, and scrubber are in a flex container so I don't have to do hacky things like this. */
@@ -241,12 +234,17 @@ nav ul {
     max-height: 100%;
     overflow-y: scroll; /* Displays a scrollbar on the tracks-list ul element */
 
+    margin: 0;
+    padding: 0;
+
     transition: top var(--navTransitionTime);
 }
 
 .tracksListHidden {
     top: var(--scrubber-height) !important;
 }
+
+/**** Site Scrollbar *****/
 
 #tracks-list::-webkit-scrollbar {
     width: auto;
