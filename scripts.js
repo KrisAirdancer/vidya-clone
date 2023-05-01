@@ -18,6 +18,7 @@ let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prev
 let mouseUpEnabled_volumeBarBody = false;
 let volumeSliderVisible = false;
 let siteMenuVisible = false;
+let headerVisible = true;
 let infoPageVisible = true; // The siteMenu's info page is the default page (visible by default)
 let configPageVisible = false;
 let chosenOdds = 25;
@@ -55,6 +56,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
       applyControlsBoxDraggableEventListener();
       applyEventListenerToReplyButton();
+      applyEventListenerToHeaderCollapseButton();
       // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
@@ -78,7 +80,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
-      // currentTrack.trackAudio.play(); // Need to resolve the "user didn't interact with the DOM first error before I can start playing audio right when the page loads"
+      // currentTrack.trackAudio.play(); // TODO: Need to resolve the "user didn't interact with the DOM first error before I can start playing audio right when the page loads"
     });
 
 /************************
@@ -370,6 +372,13 @@ function applyEventListenerToReplyButton()
   let repeatButton = document.querySelector("#repeatButton");
 
   repeatButton.addEventListener('click', toggleRepeat);
+}
+
+function applyEventListenerToHeaderCollapseButton()
+{
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
+
+  headerCollapseButton.addEventListener('click', showHideHeader);
 }
 
 /*************
@@ -1024,6 +1033,31 @@ function showHideSiteMenu()
 
     siteMenu.classList.remove('siteMenu-menuVisible');
     siteMenuButtonsGroup.classList.remove('siteMenu-buttonsVisible');
+  }
+}
+
+
+// Toggles the header between visible and hidden
+function showHideHeader()
+{
+  console.log("AT: showHideHeader()");
+
+  headerVisible = !headerVisible;
+
+  // TODO: Add logic to apply/remove headerHidden CSS class.
+
+  let navBarGroup = document.querySelector("#navbar-group");
+  let tracksList = document.querySelector("#tracks-list");
+
+  if (!headerVisible)
+  {
+    navBarGroup.classList.add('navHidden');
+    tracksList.classList.add('tracksListHidden');
+  }
+  else
+  {
+    navBarGroup.classList.remove('navHidden');
+    tracksList.classList.remove('tracksListHidden');
   }
 }
 
