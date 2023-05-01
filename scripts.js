@@ -1023,6 +1023,10 @@ function setInfoMenuPageVisible()
     
     infoPage.classList.add('pageVisible');
     configPage.classList.remove('pageVisible');
+
+    // Resize buttons
+    document.querySelector('#siteMenu-infoButton').setAttribute("style", "width:4rem");
+    document.querySelector('#siteMenu-configButton').setAttribute("style", "width:1.75rem");
   }
 }
 
@@ -1041,6 +1045,10 @@ function setConfigMenuPageVisible()
 
     configPage.classList.add('pageVisible');
     infoPage.classList.remove('pageVisible');
+
+    // Resize buttons
+    document.querySelector('#siteMenu-configButton').setAttribute("style", "width:4rem");
+    document.querySelector('#siteMenu-infoButton').setAttribute("style", "width:1.75rem");
   }
 }
 
