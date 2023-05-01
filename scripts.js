@@ -21,6 +21,7 @@ let siteMenuVisible = false;
 let infoPageVisible = true; // The siteMenu's info page is the default page (visible by default)
 let configPageVisible = false;
 let chosenOdds = 25;
+let repeat = false;
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -53,6 +54,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
       applyControlsBoxDraggableEventListener();
+      applyEventListenerToReplyButton();
       // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
@@ -114,11 +116,7 @@ function applyNextTrackEventHandler()
 {
   let nextTrackBtn = document.querySelector('#next-track-btn');
   
-  nextTrackBtn.addEventListener('click', e => {
-    // console.log('AT: applyNextTrackEventHandler()');
-
-    playNextTrack();
-  });
+  nextTrackBtn.addEventListener('click', playNextTrack);
 }
 
 // Applies an event handler to the previous track button in the controls box
@@ -145,7 +143,16 @@ function applyEndedEventListener()
   currentTrack.trackAudio.addEventListener("ended", () => {
     // console.log('AT: applyEndedEventListener()');
 
-    playNextTrack();
+    if (repeat)
+    {
+      currentTrack.trackAudio.currentTime = 0;
+      updateScrubberTimeStamps();
+      currentTrack.trackAudio.play();
+    }
+    else
+    {
+      playNextTrack();
+    }
   });
 }
 
@@ -355,6 +362,16 @@ function applyEventListenersToSiteMenuButtons()
   resetExiledButton.addEventListener('click', resetExiled);
 }
 
+// Adds an event listener to the repeat button in the controls box
+function applyEventListenerToReplyButton()
+{
+  // console.log("AT: applyEventListenerToReplayButton()");
+
+  let repeatButton = document.querySelector("#repeatButton");
+
+  repeatButton.addEventListener('click', toggleRepeat);
+}
+
 /*************
  * Functions *
  *************/
@@ -495,7 +512,7 @@ function playPauseCurrentTrack()
 // Plays the next track
 function playNextTrack()
 {
-  console.log('AT: playNextTrack()');
+  // console.log('AT: playNextTrack()');
 
   removeCurrentTrackHighlighting();
 
@@ -546,9 +563,6 @@ function playNextTrack()
   highlightCurrentTrack();
 
   setCurrentTrackVolume();
-  
-  // console.log(currentTrack.trackID);
-  // console.log(currentTrack);
 }
 
 // Plays the previous track
@@ -1217,4 +1231,12 @@ function loadChosenOddsFromLocalStorage()
 function updateChosenOddsInMenu()
 {
   document.querySelector('#chosenOddsInput').value = chosenOdds;
+}
+
+// Toggles the replay status
+function toggleRepeat()
+{
+  // console.log("AT: toggleRepeat()");
+
+  repeat = !repeat;
 }
