@@ -11,6 +11,7 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
+let neutralTracks = new Set();
 let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
 let volumeLevel; // Denotes a percentage: 100%
 let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
@@ -35,6 +36,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
     .then(tracksData => {
       loadTracksMasterList(tracksData);
       populateTracksMap();
+      populateNeutralTracks();
     })
     .then(() => { // Load data from local storage
       loadChosenTracksFromLocalStorage();
@@ -182,14 +184,12 @@ function applyChosenButtonEventListener()
   let chosenBtn = document.querySelector('#btn_chosen');
 
   chosenBtn.addEventListener('click', e => {
-    // console.log('AT: applyChosenButtonEventListener()');
-
-    if (chosenTracks.has(currentTrack.trackID))
+    if (chosenTracks.has(currentTrack.trackID)) // If current track is in chosenTracks, remove it.
     {
       removeTrackFromChosen(currentTrack.trackID);
       saveChosenTracksToLocalStorage();
     }
-    else
+    else // If current track is not in chosenTracks, add it.
     {
       addTrackToChosen(currentTrack.trackID);
       saveChosenTracksToLocalStorage();
@@ -205,12 +205,13 @@ function applyExiledButtonEventListener()
   exiledBtn.addEventListener('click', e => {
     // console.log('AT: applyExiledButtonEventListener()');
 
-    if (exiledTracks.has(currentTrack.trackID))
+    if (exiledTracks.has(currentTrack.trackID)) // If current track is in exiledTracks, remove it.
     {
       removeTrackFromExiled(currentTrack.trackID);
       saveExiledTracksToLocalStorage();
     }
-    else{
+    else // If current track is not in exiledTracks, add it.
+    {
       addTrackToExiled(currentTrack.trackID);
       saveExiledTracksToLocalStorage();
     }
@@ -327,6 +328,14 @@ function applyEventListenersToSiteMenuButtons()
 /*************
  * Functions *
  *************/
+
+// Initializes the neutralTracks set
+function populateNeutralTracks()
+{
+  masterTracksList.forEach(track => {
+    neutralTracks.add(track.trackID);
+  });
+}
 
 // Sets and stores the tracks master list from the given data (from the fetch call above)
 function loadTracksMasterList(tracksData)
@@ -590,6 +599,9 @@ function getRandomTrackID()
     // General Idea: Generate a random number from 1 to 100. Then, if that number is less than or equal to the current value of the chosen probability, randomly select a track from the chosen list; otherwise, select a track from the master list but that is NOT in the chosen list.
       // This will require re-selecting a track if a chosen track is selected. Because of this, it might be better to keep three lists: chosen, exiled, and general. When a track is added to chosen or exiled, it is removed from general. And so on. This way, I can just randomly select a track from the correct list (general or chosen) based on what I need.
 
+  // OUTLINE
+    // Need to select a track ID and set trackID equal to that new ID.
+
   return trackID;
 }
 
@@ -737,6 +749,10 @@ function addTrackToChosen(trackID)
   if (trackID)
   {
     chosenTracks.add(trackID);
+    neutralTracks.delete(trackID);
+    // TODO: This function is doing more than it claims it it. It should only add a track to chosenTracks. It should NOT remove the track from exiltedTracks.
+      // Also note that it is setting the exiled count below.
+      // Note: The reason I am doing it this way is because it keeps the logic for updating each track localized. This method takes care of everything that is needed to update the system when a track is added to chosen.
     exiledTracks.delete(trackID);
 
     setTotalChosenNumberInMenu();
@@ -750,6 +766,7 @@ function removeTrackFromChosen(trackID)
   if (trackID)
   {
     chosenTracks.delete(trackID);
+    neutralTracks.add(trackID);
 
     setTotalChosenNumberInMenu();
   }
@@ -768,7 +785,11 @@ function loadChosenTracksFromLocalStorage()
   if (localStorage.getItem('chosen'))
   {
     let chosenTracksStr = localStorage.getItem('chosen');
-    chosenTracks = new Set(chosenTracksStr.split(','));
+
+    chosenTracksStr.split(',').forEach(trackID => {
+      chosenTracks.add(trackID);
+      neutralTracks.delete(trackID);
+    });
   }
 }
 
@@ -781,6 +802,7 @@ function addTrackToExiled(trackID)
   {
     exiledTracks.add(trackID);
     chosenTracks.delete(trackID);
+    neutralTracks.delete(trackID);
 
     setTotalExiledNumberInMenu();
     setTotalChosenNumberInMenu();
@@ -793,6 +815,7 @@ function removeTrackFromExiled(trackID)
   if (trackID)
   {
     exiledTracks.delete(trackID);
+    neutralTracks.add(trackID);
 
     setTotalExiledNumberInMenu();
   }
@@ -811,7 +834,11 @@ function loadExiledTracksFromLocalStorage()
   if (localStorage.getItem('exiled'))
   {
     let exiledTracksStr = localStorage.getItem('exiled');
-    exiledTracks = new Set(exiledTracksStr.split(','));
+
+    exiledTracksStr.split(',').forEach(trackID => {
+      exiledTracks.add(trackID);
+      neutralTracks.delete(trackID);
+    });
   }
 }
 
@@ -1024,6 +1051,7 @@ function importChosen()
     if (trackID)
     {
       chosenTracks.add(trackID);
+      neutralTracks.delete(trackID);
       exiledTracks.delete(trackID);
     }
   });
@@ -1055,6 +1083,7 @@ function importExiled()
     {
       exiledTracks.add(trackID);
       chosenTracks.delete(trackID);
+      neutralTracks.delete(trackID);
     }
   });
 
@@ -1075,6 +1104,10 @@ function resetChosen()
 
   if (confirm('Reset Chosen tracks.\nAre you sure about that?'))
   {
+    chosenTracks.forEach(trackID => {
+      neutralTracks.add(trackID);
+    });
+
     chosenTracks.clear();
 
     saveChosenTracksToLocalStorage();
