@@ -772,18 +772,18 @@ function removeCurrentTrackHighlighting()
 // Adds the currently playing track to the chosenTracks set
 function addTrackToChosen(trackID)
 {
-  if (trackID)
-  {
-    chosenTracks.add(trackID);
-    neutralTracks.delete(trackID);
-    // TODO: This function is doing more than it claims it it. It should only add a track to chosenTracks. It should NOT remove the track from exiltedTracks.
-      // Also note that it is setting the exiled count below.
-      // Note: The reason I am doing it this way is because it keeps the logic for updating each track localized. This method takes care of everything that is needed to update the system when a track is added to chosen.
-    exiledTracks.delete(trackID);
+  if (!trackID) { return }
 
-    setTotalChosenNumberInMenu();
-    setTotalExiledNumberInMenu();
-  }
+  if (chosenTracks.size == tracksMap.size - 1) { return }
+
+  chosenTracks.add(trackID);
+  neutralTracks.delete(trackID);
+  exiledTracks.delete(trackID);
+
+  setTotalChosenNumberInMenu();
+  setTotalExiledNumberInMenu();
+  saveChosenTracksToLocalStorage();
+  saveExiledTracksToLocalStorage();
 }
 
 // Removes the currently playing track from the chosenTracks Set()
@@ -795,6 +795,7 @@ function removeTrackFromChosen(trackID)
     neutralTracks.add(trackID);
 
     setTotalChosenNumberInMenu();
+    saveChosenTracksToLocalStorage();
   }
 }
 
@@ -824,15 +825,18 @@ function loadChosenTracksFromLocalStorage()
 // Adds the currently playing track to the exiledTracks Set
 function addTrackToExiled(trackID)
 {
-  if (trackID)
-  {
-    exiledTracks.add(trackID);
-    chosenTracks.delete(trackID);
-    neutralTracks.delete(trackID);
+  if (!trackID) { return }
 
-    setTotalExiledNumberInMenu();
-    setTotalChosenNumberInMenu();
-  }
+  if (exiledTracks.size == tracksMap.size - 1) { return }
+
+  exiledTracks.add(trackID);
+  chosenTracks.delete(trackID);
+  neutralTracks.delete(trackID);
+
+  setTotalExiledNumberInMenu();
+  setTotalChosenNumberInMenu();
+  saveExiledTracksToLocalStorage();
+  saveChosenTracksToLocalStorage();
 }
 
 // Removes the currently playing track from the exiledTracks set
@@ -844,6 +848,7 @@ function removeTrackFromExiled(trackID)
     neutralTracks.add(trackID);
 
     setTotalExiledNumberInMenu();
+    saveExiledTracksToLocalStorage();
   }
 }
 
