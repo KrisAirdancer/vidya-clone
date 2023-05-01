@@ -209,8 +209,21 @@ function applyChosenOddsInputEventListener()
   let chosenOddsInput = document.querySelector("#chosenOddsInput");
 
   chosenOddsInput.addEventListener('change', e => {
-    localStorage.setItem('chosenOdds', chosenOddsInput.value);
-    chosenOdds = chosenOddsInput.value;
+    if (chosenOddsInput.value < 1)
+    {
+      chosenOddsInput.value = 1;
+      chosenOdds = 1;
+    }
+    else if (chosenOddsInput.value > 100)
+    {
+      chosenOddsInput.value = 100;
+      chosenOdds = 100;
+    }
+    else
+    {
+      localStorage.setItem('chosenOdds', chosenOddsInput.value);
+      chosenOdds = chosenOddsInput.value;
+    }
   });
 }
 
