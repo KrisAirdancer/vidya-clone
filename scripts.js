@@ -20,6 +20,7 @@ let volumeSliderVisible = false;
 let siteMenuVisible = false;
 let infoPageVisible = true; // The siteMenu's info page is the default page (visible by default)
 let configPageVisible = false;
+let chosenOdds = 25;
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -66,9 +67,12 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       // Site Menu
       applySiteMenuButtonEventListener();
       applyEventListenersToSiteMenuButtons();
+      applyChosenOddsInputEventListener();
       setTotalChosenNumberInMenu();
       setTotalExiledNumberInMenu();
       setTracksCountInMenu();
+      loadChosenOddsFromLocalStorage();
+      updateChosenOddsInMenu();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
@@ -194,6 +198,19 @@ function applyChosenButtonEventListener()
       addTrackToChosen(currentTrack.trackID);
       saveChosenTracksToLocalStorage();
     }
+  });
+}
+
+// Adds an event listener to the chosen odds input field in the site menu
+function applyChosenOddsInputEventListener()
+{
+  // console.log("AT: applyChosenOddsInputEventListener()");
+
+  let chosenOddsInput = document.querySelector("#chosenOddsInput");
+
+  chosenOddsInput.addEventListener('change', e => {
+    localStorage.setItem('chosenOdds', chosenOddsInput.value);
+    chosenOdds = chosenOddsInput.value;
   });
 }
 
@@ -585,22 +602,20 @@ function playRandomTrack()
 // Randomly generate a track ID from the list of available tracks
 function getRandomTrackID()
 {
-  console.log('AT: getRandomTrackID()');
+  // console.log('AT: getRandomTrackID()');
 
-  let trackIDs = [];
+  let trackID;
 
-  // TODO: Why am I pushing everything into a separate list. If I need it in a certain format, it should be stored that way ahead of time. Especially for something that happens often like generating a track ID. This makes selecting a new track O(N)! It should be O(1)! Fix this.
-  tracksMap.forEach(entry => {
-    trackIDs.push(entry.trackID);
-  });
-  
-  let trackID = trackIDs[Math.round(Math.random() * (trackIDs.length - 0) - 0)]; // Math.random() * (max - min) + min
-  // Need to replace the above logic with logic to account for chosen probability in track selection
-    // General Idea: Generate a random number from 1 to 100. Then, if that number is less than or equal to the current value of the chosen probability, randomly select a track from the chosen list; otherwise, select a track from the master list but that is NOT in the chosen list.
-      // This will require re-selecting a track if a chosen track is selected. Because of this, it might be better to keep three lists: chosen, exiled, and general. When a track is added to chosen or exiled, it is removed from general. And so on. This way, I can just randomly select a track from the correct list (general or chosen) based on what I need.
+  let randomValue = Math.floor(Math.random() * (100 - 1 + 1) + 1) // Math.floor(Math.random() * (max - min + 1) + min)
 
-  // OUTLINE
-    // Need to select a track ID and set trackID equal to that new ID.
+  if (randomValue <= chosenOdds)
+  {
+    trackID = Array.from(chosenTracks)[Math.round(Math.random() * (chosenTracks.size - 0 + 1) - 0)];
+  }
+  else
+  {
+    trackID = Array.from(neutralTracks)[Math.round(Math.random() * (neutralTracks.size - 0 + 1) - 0)];
+  }
 
   return trackID;
 }
@@ -1157,4 +1172,25 @@ function setTracksCountInMenu()
   let tracksCountNumberTag = document.querySelector('#siteMenu-totalTracksNumber');
 
   tracksCountNumberTag.textContent = tracksMap.size;
+}
+
+// Loads the chosen odds value form local storage
+function loadChosenOddsFromLocalStorage()
+{
+  let storageValue = localStorage.getItem('chosenOdds');
+
+  if (storageValue)
+  {
+    chosenOdds = storageValue;
+  }
+  else
+  {
+    chosenOdds = 25;
+  }
+}
+
+// Updates the value displayed in the chosen odds field in the site menu
+function updateChosenOddsInMenu()
+{
+  document.querySelector('#chosenOddsInput').value = chosenOdds;
 }
