@@ -500,6 +500,8 @@ function setCurrentTrack(trackID)
   scrollCurrentTrackToTop();
   setCurrentTrackVolume();
 
+  updateNavButtons();
+
   // console.log(currentTrack);
 }
 
@@ -580,6 +582,8 @@ function playNextTrack()
   highlightCurrentTrack();
 
   setCurrentTrackVolume();
+
+  updateNavButtons();
 }
 
 // Plays the previous track
@@ -617,6 +621,8 @@ function playPreviousTrack()
 
   setCurrentTrackVolume();
 
+  updateNavButtons();
+
   console.log(currentTrack.trackID);
   console.log(currentTrack);
 }
@@ -639,6 +645,8 @@ function playRandomTrack()
   highlightCurrentTrack();
 
   setCurrentTrackVolume();
+
+  updateNavButtons();
 }
 
 // Randomly generate a track ID from the list of available tracks
@@ -1290,5 +1298,37 @@ function toggleRepeat()
   {
     repeatButton.classList.remove("repeatButton-repeat");
     repeatButton.classList.add("repeatButton-noRepeat");
+  }
+}
+
+// Updates the styling of the navigation bar's buttons based on the status of the currently playing track
+function updateNavButtons()
+{
+  let chosenButton = document.querySelector("#btn_chosen");
+  let exiledButton = document.querySelector("#btn_exiled");
+
+  if (chosenTracks.has(currentTrack.trackID)) // Track is chosen
+  {
+    chosenButton.classList.add("chosenButton-broken");
+    exiledButton.classList.add("exiledButton-ban");
+    
+    chosenButton.classList.remove("chosenButton-whole");
+    exiledButton.classList.remove("exiledButton-check");
+  }
+  else if (exiledTracks.has(currentTrack.trackID)) // Track is exiled
+  {
+    chosenButton.classList.remove("chosenButton-broken");
+    exiledButton.classList.remove("exiledButton-ban");
+    
+    chosenButton.classList.add("chosenButton-whole");
+    exiledButton.classList.add("exiledButton-check");
+  }
+  else // Set to default look
+  {
+    chosenButton.classList.add("chosenButton-whole");
+    exiledButton.classList.add("exiledButton-ban");
+
+    chosenButton.classList.remove("chosenButton-broken");
+    exiledButton.classList.remove("exiledButton-check");
   }
 }

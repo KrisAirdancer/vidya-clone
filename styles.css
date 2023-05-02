@@ -157,21 +157,33 @@ nav ul {
     width: calc(var(--volumeBar-slider-width) + var(--navbar-button-width)); /* To set the container for the select dropdown to the same width as the righthand buttons container */
 }
 
-#btn_chosen {
+.chosenButton-whole {
     background: url("./assets/icons-orange/heart-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 45%;
     background-position: center center;
 }
 
-#btn_exiled {
+.chosenButton-broken {
+    background: url("./assets/icons-orange/heart-broken-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 45%;
+    background-position: center center;
+}
+
+.exiledButton-ban {
     background: url("./assets/icons-orange/ban-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 45%;
     background-position: center center;
 }
 
-#btn_volume {
-    background: url("./assets/icons-orange/volume-up-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+.exiledButton-check {
+    background: url("./assets/icons-orange/check-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 45%;
+    background-position: center center;
+}
+
+.volumeButton-up {
+    background: url("./assets/icons-orange/volume-up-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 50%;
     background-position: center center;
 }
 
