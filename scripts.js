@@ -1273,4 +1273,16 @@ function toggleRepeat()
   // console.log("AT: toggleRepeat()");
 
   repeat = !repeat;
+
+  let repeatButton = document.querySelector("#repeatButton");
+  if (repeat)
+  {
+    repeatButton.classList.remove("repeatButton-noRepeat");
+    repeatButton.classList.add("repeatButton-repeat");
+  }
+  else
+  {
+    repeatButton.classList.remove("repeatButton-repeat");
+    repeatButton.classList.add("repeatButton-noRepeat");
+  }
 }

@@ -17,7 +17,7 @@
 :root {
     /* TODO: Rename these variables to give them better names - remove any that aren't used */
     --site-blue: #122D4A;
-    --site-orange: #FFA366;
+    --site-orange: #ffa366;
     --site-light-blue: #94BAFF;
     --site-brown-orange: #7F6157;
     --nav-button-border: #636363;
@@ -228,7 +228,7 @@ nav ul {
 
 #tracks-list {
     position: fixed;
-    top: 6.0rem; /* TODO: This is here to keep the tracks list from running over top of the navbar and scrubber. Restrucutre the project so that the navbar, tracks list, and scrubber are in a flex container so I don't have to do hacky things like this. */
+    top: 6.0rem; /* TODO: This is here to keep the tracks list from running over top of the navbar and scrubber. Restructure the project so that the navbar, tracks list, and scrubber are in a flex container so I don't have to do hacky things like this. */
     bottom: 0; /* Sets the bottom bound of the container to the bottom of the screen. Otherwise, some of the screen is hidden off the bottom of the screen and cannot be scrolled to. */
     width: 100%;
     max-height: 100%;
@@ -577,6 +577,18 @@ nav ul {
 
 .control-box-element:hover {
     color: var(--site-light-blue);
+}
+
+.repeatButton-noRepeat {
+    background: url("./assets/redo-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 18%;
+    background-position: center center;
+}
+
+.repeatButton-repeat {
+    background: url("./assets/times-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 18%;
+    background-position: center center;
 }
 
 /**** Flexbox Containers *****/
