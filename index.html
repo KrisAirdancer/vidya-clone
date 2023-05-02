@@ -27,17 +27,17 @@
 
       <ul id="navbar-righthand-buttons">
         <li>
-          <button id="btn_chosen" class="nav-button">C</button>
+          <button id="btn_chosen" class="nav-button"></button>
         </li>
         <li>
-          <button id="btn_exiled" class="nav-button">E</button>
+          <button id="btn_exiled" class="nav-button"></button>
         </li>
         <li id="volumeBar-li">
           <div id="volumeBar-body">
             <div id="volumeBar-slider"></div>
           </div>
 
-          <button id="btn_volume" class="nav-button">V</button>
+          <button id="btn_volume" class="nav-button"></button>
         </li>
       </ul>
 
@@ -68,17 +68,14 @@
     <div id="controlsBox-topBar" class='control-box-first-row control-box-element'></div>
 
     <div id='control-box-row-two-flex-container' class='control-box-second-row'>
-      <!-- <button id="previous-track-btn" class='control-box-element'>&lt;&lt;</button> -->
-      <button id="previous-track-btn" class='control-box-element'><img src="./assets/previous.png" width="60%"></button>
-      <!-- <button id="play-pause-btn" class='control-box-element'>&gt;/II</button> -->
-      <button id="play-pause-btn" class='control-box-element'><img src="./assets/play.png" width="70%"></button>
-      <!-- <button id="next-track-btn" class='control-box-element'>&gt;&gt;</button> -->
-      <button id="next-track-btn" class='control-box-element'><img src="./assets/next.png" width="60%"></button>
+      <button id="previous-track-btn" class='control-box-element playPreviousButton'></button>
+      <button id="play-pause-btn" class='control-box-element playPauseButton-paused'></button>
+      <button id="next-track-btn" class='control-box-element playNextButton'></button>
     </div>
 
-    <div id='control-box-row-three-flex-container' class='control-box-row'>
+    <div id='control-box-row-three-flex-container' class='control-box-third-row'>
       <button id="repeatButton" class="control-box-element repeatButton-noRepeat" style="color: #ffa366;"></button>
-      <button id="headerCollapseButton" class='control-box-element'><img src="./assets/collapse.png" width="20%"></button> <!-- TODO: This button should hide the navbar -->
+      <button id="headerCollapseButton" class='control-box-element headerCollapseButton'></button> <!-- TODO: This button should hide the navbar -->
     </div>
   
   </div>

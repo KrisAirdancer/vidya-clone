@@ -508,13 +508,21 @@ function playPauseCurrentTrack()
 {
   // console.log('AT: playPauseCurrentTrack()');
 
+  let playPauseButton = document.querySelector("#play-pause-btn")
+
   if (currentTrack.trackAudio.paused)
   {
     currentTrack.trackAudio.play();
+
+    playPauseButton.classList.remove("playPauseButton-paused");
+    playPauseButton.classList.add("playPauseButton-playing");
   }
   else
   {
     currentTrack.trackAudio.pause();
+
+    playPauseButton.classList.remove("playPauseButton-playing");
+    playPauseButton.classList.add("playPauseButton-paused");
   }
 }
 
@@ -1040,16 +1048,12 @@ function showHideSiteMenu()
 // Toggles the header between visible and hidden
 function showHideHeader()
 {
-  console.log("AT: showHideHeader()");
-
-  headerVisible = !headerVisible;
-
-  // TODO: Add logic to apply/remove headerHidden CSS class.
-
+  // console.log("AT: showHideHeader()");
+  
   let navBarGroup = document.querySelector("#navbar-group");
   let tracksList = document.querySelector("#tracks-list");
-
-  if (!headerVisible)
+  
+  if (headerVisible)
   {
     navBarGroup.classList.add('navHidden');
     tracksList.classList.add('tracksListHidden');
@@ -1059,6 +1063,8 @@ function showHideHeader()
     navBarGroup.classList.remove('navHidden');
     tracksList.classList.remove('tracksListHidden');
   }
+
+  headerVisible = !headerVisible;
 }
 
 // Toggles the visibility of the info page in the siteMenu
