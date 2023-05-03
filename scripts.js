@@ -450,12 +450,12 @@ function applyControlBoxEventListeners()
   let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
 
   controlsBoxTopBar.addEventListener('mousedown', e => {
-    updateTopBarMessage();
-    controlsBoxTopBar.addEventListener('mousemove', updateTopBarMessage);
+    setControlsBoxDragMessage();
+    controlsBoxTopBar.addEventListener('mousemove', setControlsBoxDragMessage);
   });
   controlsBoxTopBar.addEventListener('mouseup', e => {
     clearControlBoxMessage();
-    controlsBoxTopBar.removeEventListener('mousemove', updateTopBarMessage);
+    controlsBoxTopBar.removeEventListener('mousemove', setControlsBoxDragMessage);
     controlsBoxTopBar.textContent = 'Drag me!';
   });
 }
@@ -2008,12 +2008,11 @@ function changeConfigButtonIconOnMouseOut()
 
 /***** Control Box *****/
 
+// Sets the message in the controls box top bar based on the element currently being hovered
 function updateControlBoxMessage(e)
 {
   let controlBoxTopBar = document.querySelector('#controlsBox-topBar');
   
-  console.log(e.target.id);
-
   if (e.target.id === 'play-pause-btn')
   {
     controlBoxTopBar.textContent = 'Rock it!';
@@ -2072,6 +2071,7 @@ function updateControlBoxMessage(e)
   }
 }
 
+// Clears the message in the top bar of the controls box
 function clearControlBoxMessage()
 {
   let controlBoxTopBar = document.querySelector('#controlsBox-topBar');
@@ -2079,7 +2079,8 @@ function clearControlBoxMessage()
   controlBoxTopBar.textContent = '';
 }
 
-function updateTopBarMessage()
+// Sets the message in the top bar of the controls box when the box is being dragged
+function setControlsBoxDragMessage()
 {
   let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
 
