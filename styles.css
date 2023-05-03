@@ -506,6 +506,10 @@ nav ul {
     margin: 0.15rem;
 }
 
+#siteMenu a:hover {
+    color: white;
+}
+
 #siteMenu input {
     width: 3.0rem;
 
@@ -597,9 +601,17 @@ nav ul {
     cursor: pointer;
 }
 
+.siteMenu-importExportButtons:hover {
+    color: white;
+}
+
 #siteMenu-config-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+
+#chosenOddsInput {
+    text-align: center;
 }
 
 /* These two styles add a bit of spacing between the upper group of elements and the bottom group of elements in the site menu. */
