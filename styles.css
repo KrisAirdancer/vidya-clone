@@ -496,18 +496,20 @@ nav ul {
     position: fixed;
     bottom: 0;
     right: 1.2rem;
-
+    
     height: 0;
     width: 18rem; /* 30% of height */
     background-color: rgba(0,0,0,0.8);
     color: var(--site-orange);
-    border: 1px solid #546A87;
+    border: 1px solid #546a8700;
 
     padding: 0;
     margin: 0;
 
     font-family: var(--site-font-family);
     font-size: 0.85rem;
+
+    background-clip: padding-box;
 
     transition: height 0.3s;
 }

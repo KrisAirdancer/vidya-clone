@@ -1181,8 +1181,10 @@ function showHideSiteMenu()
     siteMenu.classList.add('siteMenu-menuVisible');
     siteMenuButtonsGroup.classList.add('siteMenu-buttonsVisible');
 
+    siteMenu.style.borderColor = '#546a87';
+    
     siteVersionTag.style.height = '1rem';
-
+    
     siteVersionTag.classList.add('versionTag-visible');
     siteVersionTag.classList.remove('versionTag-hidden');
   }
@@ -1193,8 +1195,9 @@ function showHideSiteMenu()
     siteMenu.classList.remove('siteMenu-menuVisible');
     siteMenuButtonsGroup.classList.remove('siteMenu-buttonsVisible');
     
+    siteMenu.style.borderColor = '#ffffff00';
+    
     siteVersionTag.style.height = '0';
-
     siteVersionTag.classList.add('versionTag-hidden');
     siteVersionTag.classList.remove('versionTag-visible');
   }
