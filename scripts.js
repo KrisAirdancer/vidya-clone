@@ -57,6 +57,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       applyControlsBoxDraggableEventListener();
       applyEventListenerToRepeatButton();
       applyEventListenerToHeaderCollapseButton();
+      applyControlBoxEventListeners();
       // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
@@ -70,6 +71,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       setVolumeBarSliderPositionOnSiteLoad();
       updateVolumeButtonStyle();
       // Site Menu
+      applySiteMenuEventListeners();
       applySiteMenuButtonEventListener();
       applyEventListenersToSiteMenuButtons();
       applyChosenOddsInputEventListener();
@@ -390,16 +392,12 @@ function applyEventListenerToHeaderCollapseButton()
   headerCollapseButton.addEventListener('click', showHideHeader);
 }
 
+// Adds event listeners to the navigation bar buttons
 function applyNavButtonEventListeners()
 {
   let chosenButton = document.querySelector('#btn_chosen');
   let exiledButton = document.querySelector('#btn_exiled');
   let volumeButton = document.querySelector('#btn_volume');
-  let playPauseButton = document.querySelector('#play-pause-btn');
-  let repeatButton = document.querySelector('#repeatButton');
-  let headerCollapseButton = document.querySelector('#headerCollapseButton');
-  let playNextButton = document.querySelector('#next-track-btn');
-  let playPreviousButton = document.querySelector('#previous-track-btn');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -413,6 +411,18 @@ function applyNavButtonEventListeners()
 
   volumeButton.addEventListener('mouseover', changeVolumeButtonIconOnHover);
   volumeButton.addEventListener('mouseout', changeVolumeButtonIconOnMouseOut);
+}
+
+// Adds the needed event listeners to the elements of the control box
+function applyControlBoxEventListeners()
+{
+  // TODO: Add all addEventListener() calls for the control box elements to this function.
+
+  let playPauseButton = document.querySelector('#play-pause-btn');
+  let repeatButton = document.querySelector('#repeatButton');
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
+  let playNextButton = document.querySelector('#next-track-btn');
+  let playPreviousButton = document.querySelector('#previous-track-btn');
 
   playPauseButton.addEventListener('mouseover', changePlayPauseButtonIconOnHover);
   playPauseButton.addEventListener('mouseout', changePlayPauseButtonIconOnMouseOut);
@@ -428,6 +438,17 @@ function applyNavButtonEventListeners()
 
   playPreviousButton.addEventListener('mouseover', changePlayPreviousButtonIconOnHover);
   playPreviousButton.addEventListener('mouseout', changePlayPreviousButtonIconOnMouseOut);
+}
+
+// Adds event listeners to the site menu elements
+function applySiteMenuEventListeners()
+{
+  // TODO: Add all addEventListener() calls for the control box elements to this function.
+
+  let menuButton = document.querySelector('#siteMenu-showHideButton');
+
+  menuButton.addEventListener('mouseover', changeMenuButtonIconOnHover);
+  menuButton.addEventListener('mouseout', changeMenuButtonIconOnMouseOut);
 }
 
 /*************
@@ -1822,5 +1843,43 @@ function changePlayPreviousButtonIconOnMouseOut()
   {
     playPreviousButton.classList.add('playPreviousButton');
     playPreviousButton.classList.remove('playPreviousButton-blue');
+  }
+}
+
+/***** Site Menu *****/
+
+/* Menu Button */
+
+// Updates the play previous button's icon on hover
+function changeMenuButtonIconOnHover()
+{
+  let menuButton = document.querySelector("#siteMenu-showHideButton");
+
+  if (menuButton.classList.contains("menuButton"))
+  {
+    menuButton.classList.add('menuButton-white');
+    menuButton.classList.remove('menuButton');
+  }
+  else if (menuButton.classList.contains("menuButton-white"))
+  {
+    menuButton.classList.add('menuButton');
+    menuButton.classList.remove('menuButton-white');
+  }
+}
+
+// Updates the play previous button's icon on mouseout
+function changeMenuButtonIconOnMouseOut()
+{
+  let playPreviousButton = document.querySelector("#siteMenu-showHideButton");
+
+  if (playPreviousButton.classList.contains("menuButton"))
+  {
+    playPreviousButton.classList.add('menuButton-white');
+    playPreviousButton.classList.remove('menuButton');
+  }
+  else if (playPreviousButton.classList.contains("menuButton-white"))
+  {
+    playPreviousButton.classList.add('menuButton');
+    playPreviousButton.classList.remove('menuButton-white');
   }
 }

@@ -465,7 +465,7 @@ nav ul {
     height: var(--siteMenu-button-height);
     width: var(--siteMenu-button-width);
 
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.4);
     color: var(--site-orange);
     border: 1px solid #546A87;
 
@@ -540,7 +540,7 @@ nav ul {
     justify-content: center;
 
     color: var(--site-orange);
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.4);
     border: 1px solid #546A87;
 
     padding: 0;
@@ -585,7 +585,7 @@ nav ul {
     width: 8rem;
     
     color: var(--site-orange);
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.4);
     border: 1px solid #546A87;
 
     font-family: var(--site-font-family);
@@ -609,6 +609,20 @@ nav ul {
 
 #siteMenu-importChosenButton {
     margin-top: 0.9rem;
+}
+
+/* Menu Button */
+
+.menuButton {
+    background: url("./assets/icons-orange/bars-solid.png") no-repeat;
+    background-size: 50%;
+    background-position: center center;
+}
+
+.menuButton-white {
+    background: url("./assets/icons-white/bars-solid.png") no-repeat;
+    background-size: 50%;
+    background-position: center center;
 }
 
 /***** Control Box *****/
