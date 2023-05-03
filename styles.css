@@ -442,6 +442,16 @@ nav ul {
     color: var(--site-blue);
 }
 
+.currentTrack-green {
+    background-color: #BFE490;
+    color: var(--site-blue);
+}
+
+.currentTrack-red {
+    background-color: #E79DC0;
+    color: var(--site-blue);
+}
+
 .chosenTrack {
     border-color: var(--chosen-track-border);
     background-color: var(--chosen-track-background);

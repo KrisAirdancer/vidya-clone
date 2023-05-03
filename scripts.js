@@ -892,15 +892,20 @@ function scrollCurrentTrackToTop()
 function highlightCurrentTrack()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
-  currentTrackLi.classList.add('currentTrack');
-
+  
   if (chosenTracks.has(currentTrack.trackID))
   {
+    currentTrackLi.classList.add('currentTrack-green');
     currentTrackLi.classList.remove('chosenTrack');
   }
-  if (exiledTracks.has(currentTrack.trackID))
+  else if (exiledTracks.has(currentTrack.trackID))
   {
+    currentTrackLi.classList.add('currentTrack-red');
     currentTrackLi.classList.remove('exiledTrack');
+  }
+  else
+  {
+    currentTrackLi.classList.add('currentTrack');
   }
 }
 
@@ -908,15 +913,20 @@ function highlightCurrentTrack()
 function removeCurrentTrackHighlighting()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
-  currentTrackLi.classList.remove('currentTrack');
-
+  
   if (chosenTracks.has(currentTrack.trackID))
   {
     currentTrackLi.classList.add('chosenTrack');
+    currentTrackLi.classList.remove('currentTrack-green');
   }
-  if (exiledTracks.has(currentTrack.trackID))
+  else if (exiledTracks.has(currentTrack.trackID))
   {
     currentTrackLi.classList.add('exiledTrack');
+    currentTrackLi.classList.remove('currentTrack-red');
+  }
+  else
+  {
+    currentTrackLi.classList.remove('currentTrack');
   }
 }
 
@@ -1176,7 +1186,6 @@ function showHideSiteMenu()
     siteMenuButtonsGroup.classList.remove('siteMenu-buttonsVisible');
   }
 }
-
 
 // Toggles the header between visible and hidden
 function showHideHeader()
