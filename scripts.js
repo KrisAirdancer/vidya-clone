@@ -1417,6 +1417,7 @@ function updateVolumeButtonStyle()
 
 /* Chosen button */
 
+// Updates the chosen button's icon on hover
 function changeChosenButtonIconOnHover()
 {
   let chosenButton = document.querySelector("#btn_chosen");
@@ -1433,6 +1434,7 @@ function changeChosenButtonIconOnHover()
   }
 }
 
+// Updates the chosen button's icon on mouseout
 function changeChosenButtonIconOnMouseOut()
 {
   let chosenButton = document.querySelector("#btn_chosen");
@@ -1449,6 +1451,7 @@ function changeChosenButtonIconOnMouseOut()
   }
 }
 
+// Updates the chosen button's icon on click
 function toggleChosenButtonIconOnClick()
 {
   // console.log("AT: toggleChosenButtonIconOnClick()");
@@ -1479,6 +1482,7 @@ function toggleChosenButtonIconOnClick()
 
 /* Exiled button */
 
+// Updates the exiled button's icon on hover
 function changeExiledButtonIconOnHover()
 {
   let exiledButton = document.querySelector("#btn_exiled");
@@ -1495,6 +1499,7 @@ function changeExiledButtonIconOnHover()
   }
 }
 
+// Updates the exiled button's icon on mouseout
 function changeExiledButtonIconOnMouseOut()
 {
   let exiledButton = document.querySelector("#btn_exiled");
@@ -1511,6 +1516,7 @@ function changeExiledButtonIconOnMouseOut()
   }
 }
 
+// Updates the exiled button's icon on click
 function toggleExiledButtonIconOnClick()
 {
   // console.log("AT: toggleExiledButtonIconOnClick()");
@@ -1541,6 +1547,7 @@ function toggleExiledButtonIconOnClick()
 
 /* Volume button */
 
+// Updates the volume button's icon on hover
 function changeVolumeButtonIconOnHover()
 {
   let volumeButton = document.querySelector("#btn_volume");
@@ -1562,6 +1569,7 @@ function changeVolumeButtonIconOnHover()
   }
 }
 
+// Updates the volume button's icon on mouseout
 function changeVolumeButtonIconOnMouseOut()
 {
   let volumeButton = document.querySelector("#btn_volume");
@@ -1585,6 +1593,7 @@ function changeVolumeButtonIconOnMouseOut()
 
 /* Play-pause button */
 
+// Updates the play-pause button's icon on hover
 function changePlayPauseButtonIconOnHover()
 {
   let playPauseButton = document.querySelector("#play-pause-btn");
@@ -1601,6 +1610,7 @@ function changePlayPauseButtonIconOnHover()
   }
 }
 
+// Updates the play-pause button's icon on mouseout
 function changePlayPauseButtonIconOnMouseOut()
 {
   let playPauseButton = document.querySelector("#play-pause-btn");
@@ -1617,6 +1627,7 @@ function changePlayPauseButtonIconOnMouseOut()
   }
 }
 
+// Updates the play-pause button's icon on click
 function togglePlayPauseButtonIconOnClick()
 {
   let playPauseButton = document.querySelector('#play-pause-btn');
@@ -1645,6 +1656,7 @@ function togglePlayPauseButtonIconOnClick()
 
 /* Repeat button */
 
+// Updates the repeat button's icon on hover
 function changeRepeatButtonIconOnHover()
 {
   let repeatButton = document.querySelector("#repeatButton");
@@ -1661,6 +1673,7 @@ function changeRepeatButtonIconOnHover()
   }
 }
 
+// Updates the repeat button's icon on mouseout
 function changeRepeatButtonIconOnMouseOut()
 {
   let repeatButton = document.querySelector("#repeatButton");
@@ -1677,6 +1690,7 @@ function changeRepeatButtonIconOnMouseOut()
   }
 }
 
+// Updates the repeat button's icon on click
 function toggleRepeatButtonIconOnClick()
 {
   let repeatButton = document.querySelector('#repeatButton');
@@ -1705,6 +1719,7 @@ function toggleRepeatButtonIconOnClick()
 
 /* Collapse header button */
 
+// Updates the collapse header button's icon on hover
 function changeCollapseHeaderButtonIconOnHover()
 {
   let headerCollapseButton = document.querySelector("#headerCollapseButton");
@@ -1721,6 +1736,7 @@ function changeCollapseHeaderButtonIconOnHover()
   }
 }
 
+// Updates the collapse header button's icon on mouseout
 function changeCollapseHeaderButtonIconOnMouseOut()
 {
   let headerCollapseButton = document.querySelector("#headerCollapseButton");
@@ -1739,6 +1755,7 @@ function changeCollapseHeaderButtonIconOnMouseOut()
 
 /* Play next track button */
 
+// Updates the play next button's icon on hover
 function changePlayNextButtonIconOnHover()
 {
   let playNextButton = document.querySelector("#next-track-btn");
@@ -1755,6 +1772,7 @@ function changePlayNextButtonIconOnHover()
   }
 }
 
+// Updates the play next button's icon on mouseout
 function changePlayNextButtonIconOnMouseOut()
 {
   let playNextButton = document.querySelector("#next-track-btn");
@@ -1773,6 +1791,7 @@ function changePlayNextButtonIconOnMouseOut()
 
 /* Play previous track button */
 
+// Updates the play previous button's icon on hover
 function changePlayPreviousButtonIconOnHover()
 {
   let playPreviousButton = document.querySelector("#previous-track-btn");
@@ -1789,6 +1808,7 @@ function changePlayPreviousButtonIconOnHover()
   }
 }
 
+// Updates the play previous button's icon on mouseout
 function changePlayPreviousButtonIconOnMouseOut()
 {
   let playPreviousButton = document.querySelector("#previous-track-btn");
