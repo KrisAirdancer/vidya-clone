@@ -398,6 +398,8 @@ function applyNavButtonEventListeners()
   let playPauseButton = document.querySelector('#play-pause-btn');
   let repeatButton = document.querySelector('#repeatButton');
   let headerCollapseButton = document.querySelector('#headerCollapseButton');
+  let playNextButton = document.querySelector('#next-track-btn');
+  let playPreviousButton = document.querySelector('#previous-track-btn');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -420,6 +422,12 @@ function applyNavButtonEventListeners()
 
   headerCollapseButton.addEventListener('mouseover', changeCollapseHeaderButtonIconOnHover);
   headerCollapseButton.addEventListener('mouseout', changeCollapseHeaderButtonIconOnMouseOut);
+
+  playNextButton.addEventListener('mouseover', changePlayNextButtonIconOnHover);
+  playNextButton.addEventListener('mouseout', changePlayNextButtonIconOnMouseOut);
+
+  playPreviousButton.addEventListener('mouseover', changePlayPreviousButtonIconOnHover);
+  playPreviousButton.addEventListener('mouseout', changePlayPreviousButtonIconOnMouseOut);
 }
 
 /*************
@@ -1726,5 +1734,73 @@ function changeCollapseHeaderButtonIconOnMouseOut()
   {
     headerCollapseButton.classList.add('headerCollapseButton');
     headerCollapseButton.classList.remove('headerCollapseButton-blue');
+  }
+}
+
+/* Play next track button */
+
+function changePlayNextButtonIconOnHover()
+{
+  let playNextButton = document.querySelector("#next-track-btn");
+
+  if (playNextButton.classList.contains("playNextButton"))
+  {
+    playNextButton.classList.add('playNextButton-blue');
+    playNextButton.classList.remove('playNextButton');
+  }
+  else if (playNextButton.classList.contains("playNextButton-blue"))
+  {
+    playNextButton.classList.add('playNextButton');
+    playNextButton.classList.remove('playNextButton-blue');
+  }
+}
+
+function changePlayNextButtonIconOnMouseOut()
+{
+  let playNextButton = document.querySelector("#next-track-btn");
+
+  if (playNextButton.classList.contains("playNextButton"))
+  {
+    playNextButton.classList.add('playNextButton-blue');
+    playNextButton.classList.remove('playNextButton');
+  }
+  else if (playNextButton.classList.contains("playNextButton-blue"))
+  {
+    playNextButton.classList.add('playNextButton');
+    playNextButton.classList.remove('playNextButton-blue');
+  }
+}
+
+/* Play previous track button */
+
+function changePlayPreviousButtonIconOnHover()
+{
+  let playPreviousButton = document.querySelector("#previous-track-btn");
+
+  if (playPreviousButton.classList.contains("playPreviousButton"))
+  {
+    playPreviousButton.classList.add('playPreviousButton-blue');
+    playPreviousButton.classList.remove('playPreviousButton');
+  }
+  else if (playPreviousButton.classList.contains("playPreviousButton-blue"))
+  {
+    playPreviousButton.classList.add('playPreviousButton');
+    playPreviousButton.classList.remove('playPreviousButton-blue');
+  }
+}
+
+function changePlayPreviousButtonIconOnMouseOut()
+{
+  let playPreviousButton = document.querySelector("#previous-track-btn");
+
+  if (playPreviousButton.classList.contains("playPreviousButton"))
+  {
+    playPreviousButton.classList.add('playPreviousButton-blue');
+    playPreviousButton.classList.remove('playPreviousButton');
+  }
+  else if (playPreviousButton.classList.contains("playPreviousButton-blue"))
+  {
+    playPreviousButton.classList.add('playPreviousButton');
+    playPreviousButton.classList.remove('playPreviousButton-blue');
   }
 }
