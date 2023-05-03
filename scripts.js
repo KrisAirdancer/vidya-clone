@@ -389,6 +389,7 @@ function applyNavButtonEventListeners()
 {
   let chosenButton = document.querySelector('#btn_chosen');
   let exiledButton = document.querySelector('#btn_exiled');
+  let volumeButton = document.querySelector('#btn_volume');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -396,8 +397,12 @@ function applyNavButtonEventListeners()
 
   chosenButton.addEventListener('mouseover', changeChosenButtonIconOnHover);
   chosenButton.addEventListener('mouseout', changeChosenButtonIconOnMouseOut);
+
   exiledButton.addEventListener('mouseover', changeExiledButtonIconOnHover);
   exiledButton.addEventListener('mouseout', changeExiledButtonIconOnMouseOut);
+
+  volumeButton.addEventListener('mouseover', changeVolumeButtonIconOnHover);
+  volumeButton.addEventListener('mouseout', changeVolumeButtonIconOnMouseOut);
 }
 
 /*************
@@ -1456,5 +1461,47 @@ function changeExiledButtonIconOnMouseOut()
   {
     exiledButton.classList.remove('exiledButton-check-blue');
     exiledButton.classList.add('exiledButton-check');
+  }
+}
+
+function changeVolumeButtonIconOnHover()
+{
+  let volumeButton = document.querySelector("#btn_volume");
+
+  if (volumeButton.classList.contains("volumeButton-up"))
+  {
+    volumeButton.classList.add('volumeButton-up-blue');
+    volumeButton.classList.remove('volumeButton-up');
+  }
+  else if (volumeButton.classList.contains("volumeButton-down"))
+  {
+    volumeButton.classList.add('volumeButton-down-blue');
+    volumeButton.classList.remove('volumeButton-down');
+  }
+  else if (volumeButton.classList.contains('volumeButton-off'))
+  {
+    volumeButton.classList.add('volumeButton-off-blue');
+    volumeButton.classList.remove('volumeButton-off');
+  }
+}
+
+function changeVolumeButtonIconOnMouseOut()
+{
+  let volumeButton = document.querySelector("#btn_volume");
+
+  if (volumeButton.classList.contains("volumeButton-up-blue"))
+  {
+    volumeButton.classList.add('volumeButton-up');
+    volumeButton.classList.remove('volumeButton-up-blue');
+  }
+  else if (volumeButton.classList.contains("volumeButton-down-blue"))
+  {
+    volumeButton.classList.remove('volumeButton-down-blue');
+    volumeButton.classList.add('volumeButton-down');
+  }
+  else if (volumeButton.classList.contains('volumeButton-off-blue'))
+  {
+    volumeButton.classList.remove('volumeButton-off-blue');
+    volumeButton.classList.add('volumeButton-off');
   }
 }

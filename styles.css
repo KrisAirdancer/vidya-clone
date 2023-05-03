@@ -217,14 +217,32 @@ nav ul {
     background-position: center center;
 }
 
+.volumeButton-up-blue {
+    background: url("./assets/icons-blue/volume-up-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 50%;
+    background-position: center center;
+}
+
 .volumeButton-down {
     background: url("./assets/icons-orange/volume-down-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 50%;
     background-position: center center;
 }
 
+.volumeButton-down-blue {
+    background: url("./assets/icons-blue/volume-down-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 50%;
+    background-position: center center;
+}
+
 .volumeButton-off {
     background: url("./assets/icons-orange/volume-off-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 50%;
+    background-position: center center;
+}
+
+.volumeButton-off-blue {
+    background: url("./assets/icons-blue/volume-off-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 50%;
     background-position: center center;
 }
