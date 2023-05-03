@@ -638,6 +638,23 @@ nav ul {
     border: 1px solid #546A87;
 }
 
+#versionTag {
+    font-size: 0.8rem;
+
+    position: absolute;
+    bottom: 0;
+    right: 2.2rem;
+    height: 0rem;
+}
+
+.versionTag-visible {
+    transition: height 0s 0.2s;
+}
+
+.versionTag-hidden {
+    transition: height 0s 0s;
+}
+
 /* Menu Button */
 
 .menuButton {
