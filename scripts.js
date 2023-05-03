@@ -61,8 +61,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
       // Navbar Buttons
-      applyChosenButtonEventListener();
-      applyExiledButtonEventListener();
+      applyNavButtonEventListeners();
       // Volume Slider (plus volume slider setup)
       loadVolumeFromLocalStorage();
       applyVolumeButtonEventListener();
@@ -384,6 +383,18 @@ function applyEventListenerToHeaderCollapseButton()
   let headerCollapseButton = document.querySelector('#headerCollapseButton');
 
   headerCollapseButton.addEventListener('click', showHideHeader);
+}
+
+function applyNavButtonEventListeners()
+{
+  let chosenButton = document.querySelector('#btn_chosen');
+
+  // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
+  applyChosenButtonEventListener();
+  applyExiledButtonEventListener();
+
+  chosenButton.addEventListener('mouseout', changeChosenButtonIconOnMouseOut);
+  chosenButton.addEventListener('mouseover', changeChosenButtonIconOnHover);
 }
 
 /*************
@@ -1378,5 +1389,27 @@ function updateVolumeButtonStyle()
     volumeButton.classList.remove("volumeButton-down");
   
     volumeButton.classList.add("volumeButton-up");
+  }
+}
+
+function changeChosenButtonIconOnHover()
+{
+  let chosenButton = document.querySelector("#btn_chosen");
+
+  if (chosenButton.classList.contains("chosenButton-whole"))
+  {
+    chosenButton.classList.add('chosenButton-whole-blue');
+    chosenButton.classList.remove('chosenButton-whole');
+  }
+}
+
+function changeChosenButtonIconOnMouseOut()
+{
+  let chosenButton = document.querySelector("#btn_chosen");
+
+  if (chosenButton.classList.contains("chosenButton-whole-blue"))
+  {
+    chosenButton.classList.add('chosenButton-whole');
+    chosenButton.classList.remove('chosenButton-whole-blue');
   }
 }

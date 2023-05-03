@@ -163,10 +163,21 @@ nav ul {
     background-position: center center;
 }
 
+.chosenButton-whole-blue {
+    background: url("./assets/icons-blue/heart-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 45%;
+    background-position: center center;
+}
+
 .chosenButton-broken {
     background: url("./assets/icons-orange/heart-broken-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 45%;
     background-position: center center;
+}
+
+#btn_chosen:hover {
+    /* background: red; */
+    filter: hue-rotate(108);
 }
 
 .exiledButton-ban {
