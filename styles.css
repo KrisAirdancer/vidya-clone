@@ -698,6 +698,12 @@ nav ul {
     background-position: center center;
 }
 
+.headerCollapseButton-blue {
+    background: url("./assets/icons-blue/arrows-alt-v-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 18%;
+    background-position: center center;
+}
+
 /* Play-pause button */
 
 .playPauseButton-playing {

@@ -397,6 +397,7 @@ function applyNavButtonEventListeners()
   let volumeButton = document.querySelector('#btn_volume');
   let playPauseButton = document.querySelector('#play-pause-btn');
   let repeatButton = document.querySelector('#repeatButton');
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -416,6 +417,9 @@ function applyNavButtonEventListeners()
 
   repeatButton.addEventListener('mouseover', changeRepeatButtonIconOnHover);
   repeatButton.addEventListener('mouseout', changeRepeatButtonIconOnMouseOut);
+
+  headerCollapseButton.addEventListener('mouseover', changeCollapseHeaderButtonIconOnHover);
+  headerCollapseButton.addEventListener('mouseout', changeCollapseHeaderButtonIconOnMouseOut);
 }
 
 /*************
@@ -1688,5 +1692,39 @@ function toggleRepeatButtonIconOnClick()
   {
     repeatButton.classList.add("repeatButton-noRepeat-blue");
     repeatButton.classList.remove("repeatButton-repeat-blue");
+  }
+}
+
+/* Collapse header button */
+
+function changeCollapseHeaderButtonIconOnHover()
+{
+  let headerCollapseButton = document.querySelector("#headerCollapseButton");
+
+  if (headerCollapseButton.classList.contains("headerCollapseButton"))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton-blue');
+    headerCollapseButton.classList.remove('headerCollapseButton');
+  }
+  else if (headerCollapseButton.classList.contains("headerCollapseButton-blue"))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton');
+    headerCollapseButton.classList.remove('headerCollapseButton-blue');
+  }
+}
+
+function changeCollapseHeaderButtonIconOnMouseOut()
+{
+  let headerCollapseButton = document.querySelector("#headerCollapseButton");
+
+  if (headerCollapseButton.classList.contains("headerCollapseButton"))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton-blue');
+    headerCollapseButton.classList.remove('headerCollapseButton');
+  }
+  else if (headerCollapseButton.classList.contains("headerCollapseButton-blue"))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton');
+    headerCollapseButton.classList.remove('headerCollapseButton-blue');
   }
 }
