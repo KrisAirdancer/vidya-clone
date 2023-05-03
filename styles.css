@@ -92,19 +92,16 @@ hr {
     transition: top var(--navTransitionTime);
 }
 
-/* TODO: Find a way to add a gradient to the border like it is in the real thing - the bottom is slightly darker than the top. */
 nav {
-    /* position: absolute;
-    width: 100%; */
-
     height: 4rem;
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     color: var(--site-orange);
     padding: 0.15rem 0.1rem 0.15rem 0.1rem; /* top right bottom left */
-    border: 1px solid var(--top-level-border);
     font-family: var(--site-font-family);
 
-    /* transition: top 1.0s; */
+    border-image: linear-gradient(#BCC8D4, #0D1015) 10%;
+    border-width: 1px;
+    border-style: solid;
 }
 
 /* This styles the navbar to be hidden. */
@@ -126,7 +123,12 @@ nav ul {
     font-size: 0.75rem;
     text-align: center;
     color: var(--site-orange);
+    
     border: 1px solid var(--nav-button-border);
+    border-image: linear-gradient(#BCC8D4, #0D1015) 10%;
+    border-width: 1px;
+    border-style: solid;
+
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
     cursor: pointer;
 
@@ -372,7 +374,11 @@ nav ul {
     width: 100%;
     height: var(--scrubber-height);
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
-    border: 2px solid var(--nav-button-border);
+
+    border-image: linear-gradient(#BCC8D4, #0D1015) 10%;
+    border-width: 1px;
+    border-style: solid;
+
     margin: 0;
     padding: 0px 10px 0px 10px;
 }
@@ -411,7 +417,12 @@ nav ul {
     margin: 0;
     padding: 0.3rem;
     color: var(--site-orange);
-    border: 2px solid var(--nav-button-border);
+
+    border-image: linear-gradient(#BCC8D4, #0D1015) 10%;
+    border-width: 1px;
+    border-style: solid;
+
+
     font-family: var(--site-font-family);
     font-size: 0.8rem;
     height: var(--scrubber-height);
@@ -745,7 +756,11 @@ nav ul {
     color: var(--site-orange);
     width: 100%;
     background-image: linear-gradient(var(--fade-light), var(--fade-dark));
-    border: 0.5px solid var(--top-level-border);
+    
+    border-image: linear-gradient(#BCC8D4, #0D1015) 10%;
+    border-width: 1px;
+    border-style: solid;
+
     cursor: pointer;
     text-align: center;
     outline: none;
