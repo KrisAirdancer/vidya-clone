@@ -398,6 +398,7 @@ function applyNavButtonEventListeners()
   let chosenButton = document.querySelector('#btn_chosen');
   let exiledButton = document.querySelector('#btn_exiled');
   let volumeButton = document.querySelector('#btn_volume');
+  let navBar = document.querySelector('#navbar-group');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -411,6 +412,8 @@ function applyNavButtonEventListeners()
 
   volumeButton.addEventListener('mouseover', changeVolumeButtonIconOnHover);
   volumeButton.addEventListener('mouseout', changeVolumeButtonIconOnMouseOut);
+
+  navBar.addEventListener('mouseover', updateControlBoxMessage);
 }
 
 // Adds the needed event listeners to the elements of the control box
@@ -438,6 +441,23 @@ function applyControlBoxEventListeners()
 
   playPreviousButton.addEventListener('mouseover', changePlayPreviousButtonIconOnHover);
   playPreviousButton.addEventListener('mouseout', changePlayPreviousButtonIconOnMouseOut);
+
+  let controlBox = document.querySelector('#control-box-flex-container');
+
+  controlBox.addEventListener('mouseover', updateControlBoxMessage);
+  controlBox.addEventListener('mouseout', clearControlBoxMessage);
+
+  let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlsBoxTopBar.addEventListener('mousedown', e => {
+    updateTopBarMessage();
+    controlsBoxTopBar.addEventListener('mousemove', updateTopBarMessage);
+  });
+  controlsBoxTopBar.addEventListener('mouseup', e => {
+    clearControlBoxMessage();
+    controlsBoxTopBar.removeEventListener('mousemove', updateTopBarMessage);
+    controlsBoxTopBar.textContent = 'Drag me!';
+  });
 }
 
 // Adds event listeners to the site menu elements
@@ -449,14 +469,32 @@ function applySiteMenuEventListeners()
   let infoButton = document.querySelector('#siteMenu-infoButton');
   let configButton = document.querySelector('#siteMenu-configButton');
 
-  menuButton.addEventListener('mouseover', changeMenuButtonIconOnHover);
-  menuButton.addEventListener('mouseout', changeMenuButtonIconOnMouseOut);
+  menuButton.addEventListener('mouseout', e => {
+    changeMenuButtonIconOnMouseOut();
+    clearControlBoxMessage(e);
+  });
+  menuButton.addEventListener('mouseover', e => {
+    updateControlBoxMessage(e);
+    changeMenuButtonIconOnHover();
+  });
 
-  infoButton.addEventListener('mouseover', changeInfoButtonIconOnHover);
-  infoButton.addEventListener('mouseout', changeInfoButtonIconOnMouseOut);
+  infoButton.addEventListener('mouseover', e => {
+    changeInfoButtonIconOnHover();
+    updateControlBoxMessage(e);
+  });
+  infoButton.addEventListener('mouseout', e => {
+    changeInfoButtonIconOnMouseOut();
+    updateControlBoxMessage(e);
+  });
 
-  configButton.addEventListener('mouseover', changeConfigButtonIconOnHover);
-  configButton.addEventListener('mouseout', changeConfigButtonIconOnMouseOut);
+  configButton.addEventListener('mouseover', e => {
+    changeConfigButtonIconOnHover();
+    updateControlBoxMessage(e);
+  });
+  configButton.addEventListener('mouseout', e => {
+    changeConfigButtonIconOnMouseOut();
+    updateControlBoxMessage(e);
+  });
 }
 
 /*************
@@ -1966,4 +2004,84 @@ function changeConfigButtonIconOnMouseOut()
     configButton.classList.add('configButton');
     configButton.classList.remove('configButton-white');
   }
+}
+
+/***** Control Box *****/
+
+function updateControlBoxMessage(e)
+{
+  let controlBoxTopBar = document.querySelector('#controlsBox-topBar');
+  
+  console.log(e.target.id);
+
+  if (e.target.id === 'play-pause-btn')
+  {
+    controlBoxTopBar.textContent = 'Rock it!';
+  }
+  else if (e.target.id === 'next-track-btn')
+  {
+    controlBoxTopBar.textContent = 'Play random track';
+  }
+  else if (e.target.id === 'previous-track-btn')
+  {
+    controlBoxTopBar.textContent = 'Play previous track';
+  }
+  else if (e.target.id === 'repeatButton')
+  {
+    controlBoxTopBar.textContent = 'Repeat current track';
+  }
+  else if (e.target.id === 'headerCollapseButton')
+  {
+    controlBoxTopBar.textContent = 'Toggle header';
+  }
+  else if (e.target.id === 'siteMenu-showHideButton')
+  {
+    controlBoxTopBar.textContent = 'Open Menu';
+  }
+  else if (e.target.id === 'siteMenu-configButton')
+  {
+    controlBoxTopBar.textContent = 'View configuration';
+  }
+  else if (e.target.id === 'siteMenu-infoButton')
+  {
+    controlBoxTopBar.textContent = 'View information';
+  }
+  else if (e.target.id === 'controlsBox-topBar')
+  {
+    controlBoxTopBar.textContent = 'Drag me!';
+  }
+  else if (e.target.id === 'btn_chosen')
+  {
+    controlBoxTopBar.textContent = 'Add to the Chosen :)';
+  }
+  else if (e.target.id === 'btn_exiled')
+  {
+    controlBoxTopBar.textContent = 'Block from playing :(';
+  }
+  else if (e.target.id === 'btn_volume')
+  {
+    controlBoxTopBar.textContent = 'Control volume';
+  }
+  else if (e.target.id === 'nav-playlist-selector')
+  {
+    controlBoxTopBar.textContent = 'Select playlist';
+  }
+  else
+  {
+    controlBoxTopBar.textContent = '';
+  }
+}
+
+function clearControlBoxMessage()
+{
+  let controlBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlBoxTopBar.textContent = '';
+}
+
+function updateTopBarMessage()
+{
+  let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlsBoxTopBar.textContent = 'What a drag!'
 }

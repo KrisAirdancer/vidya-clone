@@ -26,8 +26,8 @@
     --fade-light-2: #94BAFF;
     --fade-dark: #0A1929;
     --scrubber-height: 1.5rem;
-    --control-box-height: 5rem;
-    --control-box-width: 9.3rem;
+    --control-box-height: 4.9rem;
+    --control-box-width: 8.9rem;
     --site-font-family: Helvetica, Arial, sans-serif;
     --timestamp-width: 50px;
     --chosen-track-border: #243B0E;
@@ -694,19 +694,22 @@ nav ul {
 .control-box-first-row {
     flex-grow: 1;
     font-size: 14px;
-    min-height: 1.1rem;
+    min-height: 1.25rem;
+    max-height: 1.25rem;
 }
 
 .control-box-second-row {
     text-align: center;
     flex-grow: 2;
     min-height: 2.1rem;
+    max-height: 2.4rem;
 }
 
 .control-box-third-row {
     text-align: center;
     flex-grow: 1;
-    min-height: 1.1rem;
+    min-height: 1.25rem;
+    max-height: 1.25rem;
 }
 
 .control-box-element {
@@ -723,29 +726,40 @@ nav ul {
     color: var(--site-light-blue);
 }
 
+#controlsBox-topBar {
+    display: flex;
+    font-size: .75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+#play-pause-btn {
+    /* min-width: 4rem; */
+}
+
 /* Repeat button */
 
 .repeatButton-noRepeat {
     background: url("./assets/icons-orange/redo-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 18%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .repeatButton-noRepeat-blue {
     background: url("./assets/icons-blue/redo-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 18%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .repeatButton-repeat {
     background: url("./assets/icons-orange/times-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 18%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .repeatButton-repeat-blue {
     background: url("./assets/icons-blue/times-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 18%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
@@ -753,13 +767,13 @@ nav ul {
 
 .headerCollapseButton {
     background: url("./assets/icons-orange/arrows-alt-v-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 18%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .headerCollapseButton-blue {
     background: url("./assets/icons-blue/arrows-alt-v-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 18%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
@@ -767,25 +781,25 @@ nav ul {
 
 .playPauseButton-playing {
     background: url("./assets/icons-orange/pause-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .playPauseButton-playing-blue {
     background: url("./assets/icons-blue/pause-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .playPauseButton-paused {
     background: url("./assets/icons-orange/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .playPauseButton-paused-blue {
     background: url("./assets/icons-blue/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
@@ -793,13 +807,13 @@ nav ul {
 
 .playNextButton {
     background: url("./assets/icons-orange/step-forward-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .playNextButton-blue {
     background: url("./assets/icons-blue/step-forward-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
@@ -807,13 +821,13 @@ nav ul {
 
 .playPreviousButton {
     background: url("./assets/icons-orange/step-backward-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
 .playPreviousButton-blue {
     background: url("./assets/icons-blue/step-backward-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 25%;
+    background-size: 0.8rem;
     background-position: center center;
 }
 
