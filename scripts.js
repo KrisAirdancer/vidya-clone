@@ -388,13 +388,16 @@ function applyEventListenerToHeaderCollapseButton()
 function applyNavButtonEventListeners()
 {
   let chosenButton = document.querySelector('#btn_chosen');
+  let exiledButton = document.querySelector('#btn_exiled');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
   applyExiledButtonEventListener();
 
-  chosenButton.addEventListener('mouseout', changeChosenButtonIconOnMouseOut);
   chosenButton.addEventListener('mouseover', changeChosenButtonIconOnHover);
+  chosenButton.addEventListener('mouseout', changeChosenButtonIconOnMouseOut);
+  exiledButton.addEventListener('mouseover', changeExiledButtonIconOnHover);
+  exiledButton.addEventListener('mouseout', changeExiledButtonIconOnMouseOut);
 }
 
 /*************
@@ -1401,6 +1404,11 @@ function changeChosenButtonIconOnHover()
     chosenButton.classList.add('chosenButton-whole-blue');
     chosenButton.classList.remove('chosenButton-whole');
   }
+  else if (chosenButton.classList.contains("chosenButton-broken"))
+  {
+    chosenButton.classList.add('chosenButton-broken-blue');
+    chosenButton.classList.remove('chosenButton-broken');
+  }
 }
 
 function changeChosenButtonIconOnMouseOut()
@@ -1411,5 +1419,42 @@ function changeChosenButtonIconOnMouseOut()
   {
     chosenButton.classList.add('chosenButton-whole');
     chosenButton.classList.remove('chosenButton-whole-blue');
+  }
+  else if (chosenButton.classList.contains("chosenButton-broken-blue"))
+  {
+    chosenButton.classList.remove('chosenButton-broken-blue');
+    chosenButton.classList.add('chosenButton-broken');
+  }
+}
+
+function changeExiledButtonIconOnHover()
+{
+  let exiledButton = document.querySelector("#btn_exiled");
+
+  if (exiledButton.classList.contains("exiledButton-ban"))
+  {
+    exiledButton.classList.add('exiledButton-ban-blue');
+    exiledButton.classList.remove('exiledButton-ban');
+  }
+  else if (exiledButton.classList.contains("exiledButton-check"))
+  {
+    exiledButton.classList.add('exiledButton-check-blue');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+}
+
+function changeExiledButtonIconOnMouseOut()
+{
+  let exiledButton = document.querySelector("#btn_exiled");
+
+  if (exiledButton.classList.contains("exiledButton-ban-blue"))
+  {
+    exiledButton.classList.add('exiledButton-ban');
+    exiledButton.classList.remove('exiledButton-ban-blue');
+  }
+  else if (exiledButton.classList.contains("exiledButton-check-blue"))
+  {
+    exiledButton.classList.remove('exiledButton-check-blue');
+    exiledButton.classList.add('exiledButton-check');
   }
 }

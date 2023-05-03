@@ -157,6 +157,8 @@ nav ul {
     width: calc(var(--volumeBar-slider-width) + var(--navbar-button-width)); /* To set the container for the select dropdown to the same width as the righthand buttons container */
 }
 
+/* Chosen button */
+
 .chosenButton-whole {
     background: url("./assets/icons-orange/heart-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 45%;
@@ -175,13 +177,22 @@ nav ul {
     background-position: center center;
 }
 
-#btn_chosen:hover {
-    /* background: red; */
-    filter: hue-rotate(108);
+.chosenButton-broken-blue {
+    background: url("./assets/icons-blue/heart-broken-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 45%;
+    background-position: center center;
 }
+
+/* Exiled button */
 
 .exiledButton-ban {
     background: url("./assets/icons-orange/ban-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 45%;
+    background-position: center center;
+}
+
+.exiledButton-ban-blue {
+    background: url("./assets/icons-blue/ban-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 45%;
     background-position: center center;
 }
@@ -191,6 +202,14 @@ nav ul {
     background-size: 45%;
     background-position: center center;
 }
+
+.exiledButton-check-blue {
+    background: url("./assets/icons-blue/check-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 45%;
+    background-position: center center;
+}
+
+/* Volume button */
 
 .volumeButton-up {
     background: url("./assets/icons-orange/volume-up-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
