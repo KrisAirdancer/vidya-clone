@@ -447,12 +447,16 @@ function applySiteMenuEventListeners()
 
   let menuButton = document.querySelector('#siteMenu-showHideButton');
   let infoButton = document.querySelector('#siteMenu-infoButton');
+  let configButton = document.querySelector('#siteMenu-configButton');
 
   menuButton.addEventListener('mouseover', changeMenuButtonIconOnHover);
   menuButton.addEventListener('mouseout', changeMenuButtonIconOnMouseOut);
 
   infoButton.addEventListener('mouseover', changeInfoButtonIconOnHover);
   infoButton.addEventListener('mouseout', changeInfoButtonIconOnMouseOut);
+
+  configButton.addEventListener('mouseover', changeConfigButtonIconOnHover);
+  configButton.addEventListener('mouseout', changeConfigButtonIconOnMouseOut);
 }
 
 /*************
@@ -1201,7 +1205,10 @@ function setConfigMenuPageVisible()
 
     // Resize buttons
     document.querySelector('#siteMenu-configButton').setAttribute("style", "width:4rem");
+    document.querySelector('#siteMenu-configButton').classList.add('lightMenuButtonBackground');
+
     document.querySelector('#siteMenu-infoButton').setAttribute("style", "width:1.75rem");
+    document.querySelector('#siteMenu-infoButton').classList.remove('lightMenuButtonBackground');
   }
 }
 
@@ -1922,5 +1929,41 @@ function changeInfoButtonIconOnMouseOut()
   {
     infoButton.classList.add('infoButton');
     infoButton.classList.remove('infoButton-white');
+  }
+}
+
+/* Menu Config Button */
+
+// Updates the icon of the site menu config button on hover
+function changeConfigButtonIconOnHover()
+{
+  let configButton = document.querySelector("#siteMenu-configButton");
+
+  if (configButton.classList.contains("configButton"))
+  {
+    configButton.classList.add('configButton-white');
+    configButton.classList.remove('configButton');
+  }
+  else if (configButton.classList.contains("configButton-white"))
+  {
+    configButton.classList.add('configButton');
+    configButton.classList.remove('configButton-white');
+  }
+}
+
+// Updates the icon of the site menu config button on mouseout
+function changeConfigButtonIconOnMouseOut()
+{
+  let configButton = document.querySelector("#siteMenu-configButton");
+
+  if (configButton.classList.contains("configButton"))
+  {
+    configButton.classList.add('configButton-white');
+    configButton.classList.remove('configButton');
+  }
+  else if (configButton.classList.contains("configButton-white"))
+  {
+    configButton.classList.add('configButton');
+    configButton.classList.remove('configButton-white');
   }
 }

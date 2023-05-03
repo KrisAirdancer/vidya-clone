@@ -613,6 +613,7 @@ nav ul {
 
 .lightMenuButtonBackground {
     background-color: #122D4A !important;
+    border: 1px solid #546A87;
 }
 
 /* Menu Button */
@@ -639,6 +640,20 @@ nav ul {
 
 .infoButton-white {
     background: url("./assets/icons-white/info-circle-solid.png") no-repeat;
+    background-size: 0.9rem;
+    background-position: center center;
+}
+
+/* Config Button */
+
+.configButton {
+    background: url("./assets/icons-orange/cog-solid.png") no-repeat;
+    background-size: 0.9rem;
+    background-position: center center;
+}
+
+.configButton-white {
+    background: url("./assets/icons-white/cog-solid.png") no-repeat;
     background-size: 0.9rem;
     background-position: center center;
 }
