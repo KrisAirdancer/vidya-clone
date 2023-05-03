@@ -187,6 +187,18 @@ nav ul {
     background-position: center center;
 }
 
+.volumeButton-down {
+    background: url("./assets/icons-orange/volume-down-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 50%;
+    background-position: center center;
+}
+
+.volumeButton-off {
+    background: url("./assets/icons-orange/volume-off-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 50%;
+    background-position: center center;
+}
+
 /***** Volume Slider *****/
 
 #volumeBar-li {

@@ -64,10 +64,12 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       applyChosenButtonEventListener();
       applyExiledButtonEventListener();
       // Volume Slider (plus volume slider setup)
+      loadVolumeFromLocalStorage();
       applyVolumeButtonEventListener();
       applyVolumeBarBodyEventListener();
       applyRemoveVolumeBarBodyEventListener();
       setVolumeBarSliderPositionOnSiteLoad();
+      updateVolumeButtonStyle();
       // Site Menu
       applySiteMenuButtonEventListener();
       applyEventListenersToSiteMenuButtons();
@@ -261,9 +263,12 @@ function applyExiledButtonEventListener()
 // Applies an event listener to the #volumeBar-body to update the position of the volume bar slider
 function applyVolumeBarBodyEventListener()
 {
+  // console.log("AT: applyVolumeBarBodyEventListener()");
+
   let volumeBarBody = document.querySelector('#volumeBar-body');
 
   volumeBarBody.addEventListener('mousedown', e => {
+    // console.log("AT: volumeBarBody Event Listener");
 
     mouseUpEnabled_volumeBarBody = true;
 
@@ -280,8 +285,8 @@ function applyRemoveVolumeBarBodyEventListener()
 
     if (mouseUpEnabled_volumeBarBody)
     {
-      document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
       updateVolumeLevel(); // TODO: May need to pass something into this function such as the current position of the slider - although, I should be able to just pull that info from the DOM in the updateVolume() function anyway.
+      document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
       mouseUpEnabled_volumeBarBody = false;
     }
   });
@@ -926,7 +931,11 @@ function moveVolumeBarSliderOnUserInput(event)
   if (updatedPosition <= 100)
   {
     setVolumeBarSliderPosition(updatedPosition);
+
+    updateVolumeLevel();
   }
+
+  updateVolumeButtonStyle();
 }
 
 // Updates the width (position) of the volume bar slider on the UI
@@ -945,8 +954,17 @@ function updateVolumeLevel()
   let volumeBarSliderPosition = document.querySelector('#volumeBar-slider').style.width;
   volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
 
+  if (volumeLevel <= 0.02)
+  {
+    volumeLevel = 0;
+  }
+
+  setVolumeBarSliderPosition(volumeLevel * 100)
+
   setCurrentTrackVolume();
   saveVolumeToLocalStorage();
+
+  updateVolumeButtonStyle();
 }
 
 // Sets the volume level of the currently playing track Audio object
@@ -1330,5 +1348,35 @@ function updateNavButtons()
 
     chosenButton.classList.remove("chosenButton-broken");
     exiledButton.classList.remove("exiledButton-check");
+  }
+}
+
+// Updates the style of the volume button based on the current volume level
+function updateVolumeButtonStyle()
+{
+  // console.log("AT: updateVolumeButtonStyle()");
+
+  let volumeButton = document.querySelector("#btn_volume");
+
+  if (volumeLevel == 0)
+  {
+    volumeButton.classList.remove("volumeButton-down");
+    volumeButton.classList.remove("volumeButton-up");
+  
+    volumeButton.classList.add("volumeButton-off");
+  }
+  else if (volumeLevel <= 0.5)
+  {
+    volumeButton.classList.remove("volumeButton-off");
+    volumeButton.classList.remove("volumeButton-up");
+
+    volumeButton.classList.add("volumeButton-down");
+  }
+  else
+  {
+    volumeButton.classList.remove("volumeButton-off");
+    volumeButton.classList.remove("volumeButton-down");
+  
+    volumeButton.classList.add("volumeButton-up");
   }
 }
