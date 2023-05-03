@@ -664,6 +664,8 @@ nav ul {
     color: var(--site-light-blue);
 }
 
+/* Repeat button */
+
 .repeatButton-noRepeat {
     background: url("./assets/icons-orange/redo-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 18%;
@@ -676,14 +678,24 @@ nav ul {
     background-position: center center;
 }
 
+/* Header collapse button */
+
 .headerCollapseButton {
     background: url("./assets/icons-orange/arrows-alt-v-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 18%;
     background-position: center center;
 }
 
+/* Play-pause button */
+
 .playPauseButton-playing {
     background: url("./assets/icons-orange/pause-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 25%;
+    background-position: center center;
+}
+
+.playPauseButton-playing-blue {
+    background: url("./assets/icons-blue/pause-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 25%;
     background-position: center center;
 }
@@ -694,11 +706,21 @@ nav ul {
     background-position: center center;
 }
 
+.playPauseButton-paused-blue {
+    background: url("./assets/icons-blue/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 25%;
+    background-position: center center;
+}
+
+/* Play next button */
+
 .playNextButton {
     background: url("./assets/icons-orange/step-forward-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 25%;
     background-position: center center;
 }
+
+/* Play previous button */
 
 .playPreviousButton {
     background: url("./assets/icons-orange/step-backward-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));

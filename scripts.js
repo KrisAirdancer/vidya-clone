@@ -208,6 +208,9 @@ function applyChosenButtonEventListener()
       addTrackToChosen(currentTrack.trackID);
       saveChosenTracksToLocalStorage();
     }
+
+    toggleChosenButtonIconOnClick();
+    toggleExiledButtonIconOnClick();
   });
 }
 
@@ -256,6 +259,8 @@ function applyExiledButtonEventListener()
       saveExiledTracksToLocalStorage();
     }
     
+    toggleExiledButtonIconOnClick();
+    toggleChosenButtonIconOnClick();
   });
 }
 
@@ -390,6 +395,7 @@ function applyNavButtonEventListeners()
   let chosenButton = document.querySelector('#btn_chosen');
   let exiledButton = document.querySelector('#btn_exiled');
   let volumeButton = document.querySelector('#btn_volume');
+  let playPauseButton = document.querySelector('#play-pause-btn');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -403,6 +409,9 @@ function applyNavButtonEventListeners()
 
   volumeButton.addEventListener('mouseover', changeVolumeButtonIconOnHover);
   volumeButton.addEventListener('mouseout', changeVolumeButtonIconOnMouseOut);
+
+  playPauseButton.addEventListener('mouseover', changePlayPauseButtonIconOnHover);
+  playPauseButton.addEventListener('mouseout', changePlayPauseButtonIconOnMouseOut);
 }
 
 /*************
@@ -540,15 +549,13 @@ function playPauseCurrentTrack()
   {
     currentTrack.trackAudio.play();
 
-    playPauseButton.classList.remove("playPauseButton-paused");
-    playPauseButton.classList.add("playPauseButton-playing");
+    togglePlayPauseButtonIconOnClick();
   }
   else
   {
     currentTrack.trackAudio.pause();
 
-    playPauseButton.classList.remove("playPauseButton-playing");
-    playPauseButton.classList.add("playPauseButton-paused");
+    togglePlayPauseButtonIconOnClick();
   }
 }
 
@@ -1400,6 +1407,10 @@ function updateVolumeButtonStyle()
   }
 }
 
+/***** Button hover styling functions *****/
+
+/* Chosen button */
+
 function changeChosenButtonIconOnHover()
 {
   let chosenButton = document.querySelector("#btn_chosen");
@@ -1432,6 +1443,36 @@ function changeChosenButtonIconOnMouseOut()
   }
 }
 
+function toggleChosenButtonIconOnClick()
+{
+  console.log("AT: toggleChosenButtonIconOnClick()");
+
+  let chosenButton = document.querySelector('#btn_chosen');
+
+  if (chosenButton.classList.contains('chosenButton-whole'))
+  {
+    chosenButton.classList.add("chosenButton-broken");
+    chosenButton.classList.remove("chosenButton-whole");
+  }
+  else if (chosenButton.classList.contains('chosenButton-whole-blue'))
+  {
+    chosenButton.classList.add("chosenButton-broken-blue");
+    chosenButton.classList.remove("chosenButton-whole-blue");
+  }
+  else if (chosenButton.classList.contains('chosenButton-broken'))
+  {
+    chosenButton.classList.add("chosenButton-whole");
+    chosenButton.classList.remove("chosenButton-broken");
+  }
+  else if (chosenButton.classList.contains('chosenButton-broken-blue'))
+  {
+    chosenButton.classList.add("chosenButton-whole-blue");
+    chosenButton.classList.remove("chosenButton-broken-blue");
+  }
+}
+
+/* Exiled button */
+
 function changeExiledButtonIconOnHover()
 {
   let exiledButton = document.querySelector("#btn_exiled");
@@ -1463,6 +1504,36 @@ function changeExiledButtonIconOnMouseOut()
     exiledButton.classList.add('exiledButton-check');
   }
 }
+
+function toggleExiledButtonIconOnClick()
+{
+  console.log("AT: toggleExiledButtonIconOnClick()");
+
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (exiledButton.classList.contains('exiledButton-ban'))
+  {
+    exiledButton.classList.add("exiledButton-check");
+    exiledButton.classList.remove("exiledButton-ban");
+  }
+  else if (exiledButton.classList.contains('exiledButton-ban-blue'))
+  {
+    exiledButton.classList.add("exiledButton-check-blue");
+    exiledButton.classList.remove("exiledButton-ban-blue");
+  }
+  else if (exiledButton.classList.contains('exiledButton-check'))
+  {
+    exiledButton.classList.add("exiledButton-ban");
+    exiledButton.classList.remove("exiledButton-check");
+  }
+  else if (exiledButton.classList.contains('exiledButton-check-blue'))
+  {
+    exiledButton.classList.add("exiledButton-ban-blue");
+    exiledButton.classList.remove("exiledButton-check-blue");
+  }
+}
+
+/* Volume button */
 
 function changeVolumeButtonIconOnHover()
 {
@@ -1503,5 +1574,65 @@ function changeVolumeButtonIconOnMouseOut()
   {
     volumeButton.classList.remove('volumeButton-off-blue');
     volumeButton.classList.add('volumeButton-off');
+  }
+}
+
+/* Play-pause button */
+
+function changePlayPauseButtonIconOnHover()
+{
+  let playPauseButton = document.querySelector("#play-pause-btn");
+
+  if (playPauseButton.classList.contains("playPauseButton-playing"))
+  {
+    playPauseButton.classList.add('playPauseButton-playing-blue');
+    playPauseButton.classList.remove('playPauseButton-playing');
+  }
+  else if (playPauseButton.classList.contains("playPauseButton-paused"))
+  {
+    playPauseButton.classList.add('playPauseButton-paused-blue');
+    playPauseButton.classList.remove('playPauseButton-paused');
+  }
+}
+
+function changePlayPauseButtonIconOnMouseOut()
+{
+  let playPauseButton = document.querySelector("#play-pause-btn");
+
+  if (playPauseButton.classList.contains("playPauseButton-playing-blue"))
+  {
+    playPauseButton.classList.add('playPauseButton-playing');
+    playPauseButton.classList.remove('playPauseButton-playing-blue');
+  }
+  else if (playPauseButton.classList.contains("playPauseButton-paused-blue"))
+  {
+    playPauseButton.classList.remove('playPauseButton-paused-blue');
+    playPauseButton.classList.add('playPauseButton-paused');
+  }
+}
+
+function togglePlayPauseButtonIconOnClick()
+{
+  let playPauseButton = document.querySelector('#play-pause-btn');
+
+  if (playPauseButton.classList.contains('playPauseButton-playing'))
+  {
+    playPauseButton.classList.add("playPauseButton-paused");
+    playPauseButton.classList.remove("playPauseButton-playing");
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-playing-blue'))
+  {
+    playPauseButton.classList.add("playPauseButton-paused-blue");
+    playPauseButton.classList.remove("playPauseButton-playing-blue");
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-paused'))
+  {
+    playPauseButton.classList.add("playPauseButton-playing");
+    playPauseButton.classList.remove("playPauseButton-paused");
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-paused-blue'))
+  {
+    playPauseButton.classList.add("playPauseButton-playing-blue");
+    playPauseButton.classList.remove("playPauseButton-paused-blue");
   }
 }
