@@ -55,7 +55,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
       applyControlsBoxDraggableEventListener();
-      applyEventListenerToReplyButton();
+      applyEventListenerToRepeatButton();
       applyEventListenerToHeaderCollapseButton();
       // Track Scrubber
       applyScrubberEventListener();
@@ -374,7 +374,7 @@ function applyEventListenersToSiteMenuButtons()
 }
 
 // Adds an event listener to the repeat button in the controls box
-function applyEventListenerToReplyButton()
+function applyEventListenerToRepeatButton()
 {
   // console.log("AT: applyEventListenerToReplayButton()");
 
@@ -396,6 +396,7 @@ function applyNavButtonEventListeners()
   let exiledButton = document.querySelector('#btn_exiled');
   let volumeButton = document.querySelector('#btn_volume');
   let playPauseButton = document.querySelector('#play-pause-btn');
+  let repeatButton = document.querySelector('#repeatButton');
 
   // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
   applyChosenButtonEventListener();
@@ -412,6 +413,9 @@ function applyNavButtonEventListeners()
 
   playPauseButton.addEventListener('mouseover', changePlayPauseButtonIconOnHover);
   playPauseButton.addEventListener('mouseout', changePlayPauseButtonIconOnMouseOut);
+
+  repeatButton.addEventListener('mouseover', changeRepeatButtonIconOnHover);
+  repeatButton.addEventListener('mouseout', changeRepeatButtonIconOnMouseOut);
 }
 
 /*************
@@ -1332,17 +1336,7 @@ function toggleRepeat()
 
   repeat = !repeat;
 
-  let repeatButton = document.querySelector("#repeatButton");
-  if (repeat)
-  {
-    repeatButton.classList.remove("repeatButton-noRepeat");
-    repeatButton.classList.add("repeatButton-repeat");
-  }
-  else
-  {
-    repeatButton.classList.remove("repeatButton-repeat");
-    repeatButton.classList.add("repeatButton-noRepeat");
-  }
+  toggleRepeatButtonIconOnClick();
 }
 
 // Updates the styling of the navigation bar's buttons based on the status of the currently playing track
@@ -1445,7 +1439,7 @@ function changeChosenButtonIconOnMouseOut()
 
 function toggleChosenButtonIconOnClick()
 {
-  console.log("AT: toggleChosenButtonIconOnClick()");
+  // console.log("AT: toggleChosenButtonIconOnClick()");
 
   let chosenButton = document.querySelector('#btn_chosen');
 
@@ -1507,7 +1501,7 @@ function changeExiledButtonIconOnMouseOut()
 
 function toggleExiledButtonIconOnClick()
 {
-  console.log("AT: toggleExiledButtonIconOnClick()");
+  // console.log("AT: toggleExiledButtonIconOnClick()");
 
   let exiledButton = document.querySelector('#btn_exiled');
 
@@ -1634,5 +1628,65 @@ function togglePlayPauseButtonIconOnClick()
   {
     playPauseButton.classList.add("playPauseButton-playing-blue");
     playPauseButton.classList.remove("playPauseButton-paused-blue");
+  }
+}
+
+/* Repeat button */
+
+function changeRepeatButtonIconOnHover()
+{
+  let repeatButton = document.querySelector("#repeatButton");
+
+  if (repeatButton.classList.contains("repeatButton-noRepeat"))
+  {
+    repeatButton.classList.add('repeatButton-noRepeat-blue');
+    repeatButton.classList.remove('repeatButton-noRepeat');
+  }
+  else if (repeatButton.classList.contains("repeatButton-repeat"))
+  {
+    repeatButton.classList.add('repeatButton-repeat-blue');
+    repeatButton.classList.remove('repeatButton-repeat');
+  }
+}
+
+function changeRepeatButtonIconOnMouseOut()
+{
+  let repeatButton = document.querySelector("#repeatButton");
+
+  if (repeatButton.classList.contains("repeatButton-noRepeat-blue"))
+  {
+    repeatButton.classList.add('repeatButton-noRepeat');
+    repeatButton.classList.remove('repeatButton-noRepeat-blue');
+  }
+  else if (repeatButton.classList.contains("repeatButton-repeat-blue"))
+  {
+    repeatButton.classList.remove('repeatButton-repeat-blue');
+    repeatButton.classList.add('repeatButton-repeat');
+  }
+}
+
+function toggleRepeatButtonIconOnClick()
+{
+  let repeatButton = document.querySelector('#repeatButton');
+
+  if (repeatButton.classList.contains('repeatButton-noRepeat'))
+  {
+    repeatButton.classList.add("repeatButton-repeat");
+    repeatButton.classList.remove("repeatButton-noRepeat");
+  }
+  else if (repeatButton.classList.contains('repeatButton-noRepeat-blue'))
+  {
+    repeatButton.classList.add("repeatButton-repeat-blue");
+    repeatButton.classList.remove("repeatButton-noRepeat-blue");
+  }
+  else if (repeatButton.classList.contains('repeatButton-repeat'))
+  {
+    repeatButton.classList.add("repeatButton-noRepeat");
+    repeatButton.classList.remove("repeatButton-repeat");
+  }
+  else if (repeatButton.classList.contains('repeatButton-repeat-blue'))
+  {
+    repeatButton.classList.add("repeatButton-noRepeat-blue");
+    repeatButton.classList.remove("repeatButton-repeat-blue");
   }
 }

@@ -672,8 +672,20 @@ nav ul {
     background-position: center center;
 }
 
+.repeatButton-noRepeat-blue {
+    background: url("./assets/icons-blue/redo-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 18%;
+    background-position: center center;
+}
+
 .repeatButton-repeat {
     background: url("./assets/icons-orange/times-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 18%;
+    background-position: center center;
+}
+
+.repeatButton-repeat-blue {
+    background: url("./assets/icons-blue/times-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 18%;
     background-position: center center;
 }
