@@ -446,9 +446,13 @@ function applySiteMenuEventListeners()
   // TODO: Add all addEventListener() calls for the control box elements to this function.
 
   let menuButton = document.querySelector('#siteMenu-showHideButton');
+  let infoButton = document.querySelector('#siteMenu-infoButton');
 
   menuButton.addEventListener('mouseover', changeMenuButtonIconOnHover);
   menuButton.addEventListener('mouseout', changeMenuButtonIconOnMouseOut);
+
+  infoButton.addEventListener('mouseover', changeInfoButtonIconOnHover);
+  infoButton.addEventListener('mouseout', changeInfoButtonIconOnMouseOut);
 }
 
 /*************
@@ -579,8 +583,6 @@ function setCurrentTrack(trackID)
 function playPauseCurrentTrack()
 {
   // console.log('AT: playPauseCurrentTrack()');
-
-  let playPauseButton = document.querySelector("#play-pause-btn")
 
   if (currentTrack.trackAudio.paused)
   {
@@ -1174,7 +1176,10 @@ function setInfoMenuPageVisible()
 
     // Resize buttons
     document.querySelector('#siteMenu-infoButton').setAttribute("style", "width:4rem");
+    document.querySelector('#siteMenu-infoButton').classList.add('lightMenuButtonBackground');
+
     document.querySelector('#siteMenu-configButton').setAttribute("style", "width:1.75rem");
+    document.querySelector('#siteMenu-configButton').classList.remove('lightMenuButtonBackground');
   }
 }
 
@@ -1850,7 +1855,7 @@ function changePlayPreviousButtonIconOnMouseOut()
 
 /* Menu Button */
 
-// Updates the play previous button's icon on hover
+// Updates the icon of the site menu show/hide button on hover
 function changeMenuButtonIconOnHover()
 {
   let menuButton = document.querySelector("#siteMenu-showHideButton");
@@ -1867,7 +1872,7 @@ function changeMenuButtonIconOnHover()
   }
 }
 
-// Updates the play previous button's icon on mouseout
+// Updates the icon of the site menu show/hide button on mouseout
 function changeMenuButtonIconOnMouseOut()
 {
   let playPreviousButton = document.querySelector("#siteMenu-showHideButton");
@@ -1881,5 +1886,41 @@ function changeMenuButtonIconOnMouseOut()
   {
     playPreviousButton.classList.add('menuButton');
     playPreviousButton.classList.remove('menuButton-white');
+  }
+}
+
+/* Menu Info Button */
+
+// Updates the icon of the site menu info button on hover
+function changeInfoButtonIconOnHover()
+{
+  let infoButton = document.querySelector("#siteMenu-infoButton");
+
+  if (infoButton.classList.contains("infoButton"))
+  {
+    infoButton.classList.add('infoButton-white');
+    infoButton.classList.remove('infoButton');
+  }
+  else if (infoButton.classList.contains("infoButton-white"))
+  {
+    infoButton.classList.add('infoButton');
+    infoButton.classList.remove('infoButton-white');
+  }
+}
+
+// Updates the icon of the site menu info button on mouseout
+function changeInfoButtonIconOnMouseOut()
+{
+  let infoButton = document.querySelector("#siteMenu-infoButton");
+
+  if (infoButton.classList.contains("infoButton"))
+  {
+    infoButton.classList.add('infoButton-white');
+    infoButton.classList.remove('infoButton');
+  }
+  else if (infoButton.classList.contains("infoButton-white"))
+  {
+    infoButton.classList.add('infoButton');
+    infoButton.classList.remove('infoButton-white');
   }
 }
