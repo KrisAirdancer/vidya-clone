@@ -1,19 +1,3 @@
-/* TODO: Border color & styling for track bars: `border 1px solid #102742` */
-/* Border gradient colors for the gradiated border: (to bottom, #C0CCD9, #090C11) */
-/* Exiled Colors
-   border-color: #3B0E24;
-   background-color: #4A122D;
-   color: #E79DC0;
-*/
-/* Chosen Colors
-   border-color: #243B0E;
-   background-color: #2D4A12;
-   color: #BFE490;
-*/
-/* Scrubber background color: #7F6157 */
-/* Track hover background-color: #94BAFF */
-/* Track hover text color: #122D4A */
-
 :root {
     /* TODO: Rename these variables to give them better names - remove any that aren't used */
     --site-blue: #122D4A;
@@ -161,6 +145,10 @@ nav ul {
     width: calc(var(--volumeBar-slider-width) + var(--navbar-button-width)); /* To set the container for the select dropdown to the same width as the righthand buttons container */
 }
 
+#track-info {
+    padding: 5px 0px 0px 0px;
+}
+
 /* Chosen button */
 
 .chosenButton-whole {
@@ -305,7 +293,7 @@ nav ul {
     color: var(--site-orange);
     border: 1px solid #0a192b; /* TODO: Move this color to :root */
     font-family: var(--site-font-family);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     cursor: pointer;
 }
 
@@ -409,7 +397,6 @@ nav ul {
     right: -4px;
 }
 
-/* TODO: The font in the labels (divs) is not centered vertically. Fix this. */
 .scrubber-label {
     display: flex;
     align-items: center;
@@ -447,7 +434,7 @@ nav ul {
     color: var(--site-orange);
     border: 1px solid #102742;
     font-family: var(--site-font-family);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
 }
 
 .currentTrack {
