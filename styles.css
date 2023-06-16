@@ -826,25 +826,25 @@ nav ul {
 /* Play-pause button */
 
 .playPauseButton-playing {
-    background: url("./assets/icons-orange/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 0.8rem;
-    background-position: center center;
-}
-
-.playPauseButton-playing-blue {
-    background: url("./assets/icons-blue/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
-    background-size: 0.8rem;
-    background-position: center center;
-}
-
-.playPauseButton-paused {
     background: url("./assets/icons-orange/pause-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 0.8rem;
     background-position: center center;
 }
 
-.playPauseButton-paused-blue {
+.playPauseButton-playing-blue {
     background: url("./assets/icons-blue/pause-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 0.8rem;
+    background-position: center center;
+}
+
+.playPauseButton-paused {
+    background: url("./assets/icons-orange/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
+    background-size: 0.8rem;
+    background-position: center center;
+}
+
+.playPauseButton-paused-blue {
+    background: url("./assets/icons-blue/play-solid.png") no-repeat, linear-gradient(var(--fade-light), var(--fade-dark));
     background-size: 0.8rem;
     background-position: center center;
 }

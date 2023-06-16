@@ -1,6 +1,6 @@
 let tracksMasterListURI = 'playlists/tracks-master-list.json';
 // TODO: Why do I have the masterTracksList object and the tracksMap? They seem to be serving the same purpose. Look through the code to figure out if I need both and consolidate if possible.
-let masterTracksList = {}; // All tracks from the "tracks-master-list.json" file into an object for easy reference/use (does not contain audio data)
+let masterTracksList = {}; // All tracks from the 'tracks-master-list.json' file into an object for easy reference/use (does not contain audio data)
 let tracksMap = new Map(); // Generates a Map of all tracks currently in the system so that they are easily accessible (does not contain audio data)
 let previousStack = [];
 let nextStack = [];
@@ -84,7 +84,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
-      // currentTrack.trackAudio.play(); // TODO: Need to resolve the "user didn't interact with the DOM first error before I can start playing audio right when the page loads"
+      // currentTrack.trackAudio.play(); // TODO: Need to resolve the 'user didn't interact with the DOM first error before I can start playing audio right when the page loads'
     });
 
 /************************
@@ -146,7 +146,7 @@ function applyCurrentTimeChangeEventListener()
 // Applies an event listener to the currentTrack HTMLAudioElement that triggers when a track finishes playing
 function applyEndedEventListener()
 {
-  currentTrack.trackAudio.addEventListener("ended", () => {
+  currentTrack.trackAudio.addEventListener('ended', () => {
     // console.log('AT: applyEndedEventListener()');
 
     if (repeat)
@@ -220,9 +220,9 @@ function applyChosenButtonEventListener()
 // Adds an event listener to the chosen odds input field in the site menu
 function applyChosenOddsInputEventListener()
 {
-  // console.log("AT: applyChosenOddsInputEventListener()");
+  // console.log('AT: applyChosenOddsInputEventListener()');
 
-  let chosenOddsInput = document.querySelector("#chosenOddsInput");
+  let chosenOddsInput = document.querySelector('#chosenOddsInput');
 
   chosenOddsInput.addEventListener('change', e => {
     if (chosenOddsInput.value < 1)
@@ -270,12 +270,12 @@ function applyExiledButtonEventListener()
 // Applies an event listener to the #volumeBar-body to update the position of the volume bar slider
 function applyVolumeBarBodyEventListener()
 {
-  // console.log("AT: applyVolumeBarBodyEventListener()");
+  // console.log('AT: applyVolumeBarBodyEventListener()');
 
   let volumeBarBody = document.querySelector('#volumeBar-body');
 
   volumeBarBody.addEventListener('mousedown', e => {
-    // console.log("AT: volumeBarBody Event Listener");
+    // console.log('AT: volumeBarBody Event Listener');
 
     mouseUpEnabled_volumeBarBody = true;
 
@@ -379,9 +379,9 @@ function applyEventListenersToSiteMenuButtons()
 // Adds an event listener to the repeat button in the controls box
 function applyEventListenerToRepeatButton()
 {
-  // console.log("AT: applyEventListenerToReplayButton()");
+  // console.log('AT: applyEventListenerToReplayButton()');
 
-  let repeatButton = document.querySelector("#repeatButton");
+  let repeatButton = document.querySelector('#repeatButton');
 
   repeatButton.addEventListener('click', toggleRepeat);
 }
@@ -559,19 +559,19 @@ function generateTracksListHTML()
     if (chosenTracks.has(track.trackID))
     {
       tracksHTML.push(
-          `<li id="${track.trackID}" class="track-info chosenTrack">${track.trackGame} — ${track.trackName}</li>`
+          `<li id='${track.trackID}' class='track-info chosenTrack'>${track.trackGame} — ${track.trackName}</li>`
       );
     }
     else if (exiledTracks.has(track.trackID))
     {
       tracksHTML.push(
-          `<li id="${track.trackID}" class="track-info exiledTrack">${track.trackGame} — ${track.trackName}</li>`
+          `<li id='${track.trackID}' class='track-info exiledTrack'>${track.trackGame} — ${track.trackName}</li>`
       );
     }
     else
     {
       tracksHTML.push(
-          `<li id="${track.trackID}" class="track-info">${track.trackGame} — ${track.trackName}</li>`
+          `<li id='${track.trackID}' class='track-info'>${track.trackGame} — ${track.trackName}</li>`
       );
     }
 
@@ -690,6 +690,13 @@ function playNextTrack()
   updateTrackInfoInHeader(currentTrack.trackID);
   
   currentTrack.trackAudio.play();
+
+  playPauseButton = document.querySelector('#play-pause-btn');
+  if (playPauseButton.classList.contains('playPauseButton-paused'))
+  {
+    playPauseButton.classList.add('playPauseButton-playing');
+    playPauseButton.classList.remove('playPauseButton-paused');
+  }
   
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
@@ -723,6 +730,13 @@ function playPreviousTrack()
     }
 
     currentTrack.trackAudio.play();
+
+    playPauseButton = document.querySelector('#play-pause-btn');
+    if (playPauseButton.classList.contains('playPauseButton-paused'))
+    {
+      playPauseButton.classList.add('playPauseButton-playing');
+      playPauseButton.classList.remove('playPauseButton-paused');
+    }
   }
   applyCurrentTimeChangeEventListener();
   applyEndedEventListener();
@@ -822,7 +836,7 @@ function setCurrentTime()
   let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
 
   // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (inderectly via newCurrentTime).
-  // Note: This is using JavaScript's "truthy" behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
+  // Note: This is using JavaScript's 'truthy' behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
   if (newCurrentTime)
   {
     currentTrack.trackAudio.currentTime = newCurrentTime;
@@ -886,7 +900,7 @@ function scrollCurrentTrackToTop()
 {
   // Scroll the current track to the top of the page
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
-  currentTrackLi.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  currentTrackLi.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
 }
 
 // Applies the .currentTrack class to the currently playing track's li element
@@ -1206,10 +1220,10 @@ function showHideSiteMenu()
 // Toggles the header between visible and hidden
 function showHideHeader()
 {
-  // console.log("AT: showHideHeader()");
+  // console.log('AT: showHideHeader()');
   
-  let navBarGroup = document.querySelector("#navbar-group");
-  let tracksList = document.querySelector("#tracks-list");
+  let navBarGroup = document.querySelector('#navbar-group');
+  let tracksList = document.querySelector('#tracks-list');
   
   if (headerVisible)
   {
@@ -1242,10 +1256,10 @@ function setInfoMenuPageVisible()
     configPage.classList.remove('pageVisible');
 
     // Resize buttons
-    document.querySelector('#siteMenu-infoButton').setAttribute("style", "width:4rem");
+    document.querySelector('#siteMenu-infoButton').setAttribute('style', 'width:4rem');
     document.querySelector('#siteMenu-infoButton').classList.add('lightMenuButtonBackground');
 
-    document.querySelector('#siteMenu-configButton').setAttribute("style", "width:1.75rem");
+    document.querySelector('#siteMenu-configButton').setAttribute('style', 'width:1.75rem');
     document.querySelector('#siteMenu-configButton').classList.remove('lightMenuButtonBackground');
   }
 }
@@ -1267,10 +1281,10 @@ function setConfigMenuPageVisible()
     infoPage.classList.remove('pageVisible');
 
     // Resize buttons
-    document.querySelector('#siteMenu-configButton').setAttribute("style", "width:4rem");
+    document.querySelector('#siteMenu-configButton').setAttribute('style', 'width:4rem');
     document.querySelector('#siteMenu-configButton').classList.add('lightMenuButtonBackground');
 
-    document.querySelector('#siteMenu-infoButton').setAttribute("style", "width:1.75rem");
+    document.querySelector('#siteMenu-infoButton').setAttribute('style', 'width:1.75rem');
     document.querySelector('#siteMenu-infoButton').classList.remove('lightMenuButtonBackground');
   }
 }
@@ -1392,7 +1406,7 @@ function resetExiled()
   }
 }
 
-// Sets the "Total Chosen" value in the site menu to the current chosen tracks count
+// Sets the 'Total Chosen' value in the site menu to the current chosen tracks count
 function setTotalChosenNumberInMenu()
 {
   let chosenNumberTag = document.querySelector('#siteMenu-totalChosenNumber');
@@ -1400,7 +1414,7 @@ function setTotalChosenNumberInMenu()
   chosenNumberTag.textContent = chosenTracks.size;
 }
 
-// Sets the "Total Exiled" value in the site menu to the current exiled tracks count
+// Sets the 'Total Exiled' value in the site menu to the current exiled tracks count
 function setTotalExiledNumberInMenu()
 {
   let exiledNumberTag = document.querySelector('#siteMenu-totalExiledNumber');
@@ -1408,7 +1422,7 @@ function setTotalExiledNumberInMenu()
   exiledNumberTag.textContent = exiledTracks.size;
 }
 
-// Sets the "Tracks" count number in the site menu to the total number of tracks in the system
+// Sets the 'Tracks' count number in the site menu to the total number of tracks in the system
 function setTracksCountInMenu()
 {
   let tracksCountNumberTag = document.querySelector('#siteMenu-totalTracksNumber');
@@ -1440,7 +1454,7 @@ function updateChosenOddsInMenu()
 // Toggles the replay status
 function toggleRepeat()
 {
-  // console.log("AT: toggleRepeat()");
+  // console.log('AT: toggleRepeat()');
 
   repeat = !repeat;
 
@@ -1450,62 +1464,62 @@ function toggleRepeat()
 // Updates the styling of the navigation bar's buttons based on the status of the currently playing track
 function updateNavButtons()
 {
-  let chosenButton = document.querySelector("#btn_chosen");
-  let exiledButton = document.querySelector("#btn_exiled");
+  let chosenButton = document.querySelector('#btn_chosen');
+  let exiledButton = document.querySelector('#btn_exiled');
 
   if (chosenTracks.has(currentTrack.trackID)) // Track is chosen
   {
-    chosenButton.classList.add("chosenButton-broken");
-    exiledButton.classList.add("exiledButton-ban");
+    chosenButton.classList.add('chosenButton-broken');
+    exiledButton.classList.add('exiledButton-ban');
     
-    chosenButton.classList.remove("chosenButton-whole");
-    exiledButton.classList.remove("exiledButton-check");
+    chosenButton.classList.remove('chosenButton-whole');
+    exiledButton.classList.remove('exiledButton-check');
   }
   else if (exiledTracks.has(currentTrack.trackID)) // Track is exiled
   {
-    chosenButton.classList.remove("chosenButton-broken");
-    exiledButton.classList.remove("exiledButton-ban");
+    chosenButton.classList.remove('chosenButton-broken');
+    exiledButton.classList.remove('exiledButton-ban');
     
-    chosenButton.classList.add("chosenButton-whole");
-    exiledButton.classList.add("exiledButton-check");
+    chosenButton.classList.add('chosenButton-whole');
+    exiledButton.classList.add('exiledButton-check');
   }
   else // Set to default look
   {
-    chosenButton.classList.add("chosenButton-whole");
-    exiledButton.classList.add("exiledButton-ban");
+    chosenButton.classList.add('chosenButton-whole');
+    exiledButton.classList.add('exiledButton-ban');
 
-    chosenButton.classList.remove("chosenButton-broken");
-    exiledButton.classList.remove("exiledButton-check");
+    chosenButton.classList.remove('chosenButton-broken');
+    exiledButton.classList.remove('exiledButton-check');
   }
 }
 
 // Updates the style of the volume button based on the current volume level
 function updateVolumeButtonStyle()
 {
-  // console.log("AT: updateVolumeButtonStyle()");
+  // console.log('AT: updateVolumeButtonStyle()');
 
-  let volumeButton = document.querySelector("#btn_volume");
+  let volumeButton = document.querySelector('#btn_volume');
 
   if (volumeLevel == 0)
   {
-    volumeButton.classList.remove("volumeButton-down");
-    volumeButton.classList.remove("volumeButton-up");
+    volumeButton.classList.remove('volumeButton-down');
+    volumeButton.classList.remove('volumeButton-up');
   
-    volumeButton.classList.add("volumeButton-off");
+    volumeButton.classList.add('volumeButton-off');
   }
   else if (volumeLevel <= 0.5)
   {
-    volumeButton.classList.remove("volumeButton-off");
-    volumeButton.classList.remove("volumeButton-up");
+    volumeButton.classList.remove('volumeButton-off');
+    volumeButton.classList.remove('volumeButton-up');
 
-    volumeButton.classList.add("volumeButton-down");
+    volumeButton.classList.add('volumeButton-down');
   }
   else
   {
-    volumeButton.classList.remove("volumeButton-off");
-    volumeButton.classList.remove("volumeButton-down");
+    volumeButton.classList.remove('volumeButton-off');
+    volumeButton.classList.remove('volumeButton-down');
   
-    volumeButton.classList.add("volumeButton-up");
+    volumeButton.classList.add('volumeButton-up');
   }
 }
 
@@ -1516,14 +1530,14 @@ function updateVolumeButtonStyle()
 // Updates the chosen button's icon on hover
 function changeChosenButtonIconOnHover()
 {
-  let chosenButton = document.querySelector("#btn_chosen");
+  let chosenButton = document.querySelector('#btn_chosen');
 
-  if (chosenButton.classList.contains("chosenButton-whole"))
+  if (chosenButton.classList.contains('chosenButton-whole'))
   {
     chosenButton.classList.add('chosenButton-whole-blue');
     chosenButton.classList.remove('chosenButton-whole');
   }
-  else if (chosenButton.classList.contains("chosenButton-broken"))
+  else if (chosenButton.classList.contains('chosenButton-broken'))
   {
     chosenButton.classList.add('chosenButton-broken-blue');
     chosenButton.classList.remove('chosenButton-broken');
@@ -1533,14 +1547,14 @@ function changeChosenButtonIconOnHover()
 // Updates the chosen button's icon on mouseout
 function changeChosenButtonIconOnMouseOut()
 {
-  let chosenButton = document.querySelector("#btn_chosen");
+  let chosenButton = document.querySelector('#btn_chosen');
 
-  if (chosenButton.classList.contains("chosenButton-whole-blue"))
+  if (chosenButton.classList.contains('chosenButton-whole-blue'))
   {
     chosenButton.classList.add('chosenButton-whole');
     chosenButton.classList.remove('chosenButton-whole-blue');
   }
-  else if (chosenButton.classList.contains("chosenButton-broken-blue"))
+  else if (chosenButton.classList.contains('chosenButton-broken-blue'))
   {
     chosenButton.classList.remove('chosenButton-broken-blue');
     chosenButton.classList.add('chosenButton-broken');
@@ -1550,29 +1564,29 @@ function changeChosenButtonIconOnMouseOut()
 // Updates the chosen button's icon on click
 function toggleChosenButtonIconOnClick()
 {
-  // console.log("AT: toggleChosenButtonIconOnClick()");
+  // console.log('AT: toggleChosenButtonIconOnClick()');
 
   let chosenButton = document.querySelector('#btn_chosen');
 
   if (chosenButton.classList.contains('chosenButton-whole'))
   {
-    chosenButton.classList.add("chosenButton-broken");
-    chosenButton.classList.remove("chosenButton-whole");
+    chosenButton.classList.add('chosenButton-broken');
+    chosenButton.classList.remove('chosenButton-whole');
   }
   else if (chosenButton.classList.contains('chosenButton-whole-blue'))
   {
-    chosenButton.classList.add("chosenButton-broken-blue");
-    chosenButton.classList.remove("chosenButton-whole-blue");
+    chosenButton.classList.add('chosenButton-broken-blue');
+    chosenButton.classList.remove('chosenButton-whole-blue');
   }
   else if (chosenButton.classList.contains('chosenButton-broken'))
   {
-    chosenButton.classList.add("chosenButton-whole");
-    chosenButton.classList.remove("chosenButton-broken");
+    chosenButton.classList.add('chosenButton-whole');
+    chosenButton.classList.remove('chosenButton-broken');
   }
   else if (chosenButton.classList.contains('chosenButton-broken-blue'))
   {
-    chosenButton.classList.add("chosenButton-whole-blue");
-    chosenButton.classList.remove("chosenButton-broken-blue");
+    chosenButton.classList.add('chosenButton-whole-blue');
+    chosenButton.classList.remove('chosenButton-broken-blue');
   }
 }
 
@@ -1581,14 +1595,14 @@ function toggleChosenButtonIconOnClick()
 // Updates the exiled button's icon on hover
 function changeExiledButtonIconOnHover()
 {
-  let exiledButton = document.querySelector("#btn_exiled");
+  let exiledButton = document.querySelector('#btn_exiled');
 
-  if (exiledButton.classList.contains("exiledButton-ban"))
+  if (exiledButton.classList.contains('exiledButton-ban'))
   {
     exiledButton.classList.add('exiledButton-ban-blue');
     exiledButton.classList.remove('exiledButton-ban');
   }
-  else if (exiledButton.classList.contains("exiledButton-check"))
+  else if (exiledButton.classList.contains('exiledButton-check'))
   {
     exiledButton.classList.add('exiledButton-check-blue');
     exiledButton.classList.remove('exiledButton-check');
@@ -1598,14 +1612,14 @@ function changeExiledButtonIconOnHover()
 // Updates the exiled button's icon on mouseout
 function changeExiledButtonIconOnMouseOut()
 {
-  let exiledButton = document.querySelector("#btn_exiled");
+  let exiledButton = document.querySelector('#btn_exiled');
 
-  if (exiledButton.classList.contains("exiledButton-ban-blue"))
+  if (exiledButton.classList.contains('exiledButton-ban-blue'))
   {
     exiledButton.classList.add('exiledButton-ban');
     exiledButton.classList.remove('exiledButton-ban-blue');
   }
-  else if (exiledButton.classList.contains("exiledButton-check-blue"))
+  else if (exiledButton.classList.contains('exiledButton-check-blue'))
   {
     exiledButton.classList.remove('exiledButton-check-blue');
     exiledButton.classList.add('exiledButton-check');
@@ -1615,29 +1629,29 @@ function changeExiledButtonIconOnMouseOut()
 // Updates the exiled button's icon on click
 function toggleExiledButtonIconOnClick()
 {
-  // console.log("AT: toggleExiledButtonIconOnClick()");
+  // console.log('AT: toggleExiledButtonIconOnClick()');
 
   let exiledButton = document.querySelector('#btn_exiled');
 
   if (exiledButton.classList.contains('exiledButton-ban'))
   {
-    exiledButton.classList.add("exiledButton-check");
-    exiledButton.classList.remove("exiledButton-ban");
+    exiledButton.classList.add('exiledButton-check');
+    exiledButton.classList.remove('exiledButton-ban');
   }
   else if (exiledButton.classList.contains('exiledButton-ban-blue'))
   {
-    exiledButton.classList.add("exiledButton-check-blue");
-    exiledButton.classList.remove("exiledButton-ban-blue");
+    exiledButton.classList.add('exiledButton-check-blue');
+    exiledButton.classList.remove('exiledButton-ban-blue');
   }
   else if (exiledButton.classList.contains('exiledButton-check'))
   {
-    exiledButton.classList.add("exiledButton-ban");
-    exiledButton.classList.remove("exiledButton-check");
+    exiledButton.classList.add('exiledButton-ban');
+    exiledButton.classList.remove('exiledButton-check');
   }
   else if (exiledButton.classList.contains('exiledButton-check-blue'))
   {
-    exiledButton.classList.add("exiledButton-ban-blue");
-    exiledButton.classList.remove("exiledButton-check-blue");
+    exiledButton.classList.add('exiledButton-ban-blue');
+    exiledButton.classList.remove('exiledButton-check-blue');
   }
 }
 
@@ -1646,14 +1660,14 @@ function toggleExiledButtonIconOnClick()
 // Updates the volume button's icon on hover
 function changeVolumeButtonIconOnHover()
 {
-  let volumeButton = document.querySelector("#btn_volume");
+  let volumeButton = document.querySelector('#btn_volume');
 
-  if (volumeButton.classList.contains("volumeButton-up"))
+  if (volumeButton.classList.contains('volumeButton-up'))
   {
     volumeButton.classList.add('volumeButton-up-blue');
     volumeButton.classList.remove('volumeButton-up');
   }
-  else if (volumeButton.classList.contains("volumeButton-down"))
+  else if (volumeButton.classList.contains('volumeButton-down'))
   {
     volumeButton.classList.add('volumeButton-down-blue');
     volumeButton.classList.remove('volumeButton-down');
@@ -1668,14 +1682,14 @@ function changeVolumeButtonIconOnHover()
 // Updates the volume button's icon on mouseout
 function changeVolumeButtonIconOnMouseOut()
 {
-  let volumeButton = document.querySelector("#btn_volume");
+  let volumeButton = document.querySelector('#btn_volume');
 
-  if (volumeButton.classList.contains("volumeButton-up-blue"))
+  if (volumeButton.classList.contains('volumeButton-up-blue'))
   {
     volumeButton.classList.add('volumeButton-up');
     volumeButton.classList.remove('volumeButton-up-blue');
   }
-  else if (volumeButton.classList.contains("volumeButton-down-blue"))
+  else if (volumeButton.classList.contains('volumeButton-down-blue'))
   {
     volumeButton.classList.remove('volumeButton-down-blue');
     volumeButton.classList.add('volumeButton-down');
@@ -1692,14 +1706,14 @@ function changeVolumeButtonIconOnMouseOut()
 // Updates the play-pause button's icon on hover
 function changePlayPauseButtonIconOnHover()
 {
-  let playPauseButton = document.querySelector("#play-pause-btn");
+  let playPauseButton = document.querySelector('#play-pause-btn');
 
-  if (playPauseButton.classList.contains("playPauseButton-playing"))
+  if (playPauseButton.classList.contains('playPauseButton-playing'))
   {
     playPauseButton.classList.add('playPauseButton-playing-blue');
     playPauseButton.classList.remove('playPauseButton-playing');
   }
-  else if (playPauseButton.classList.contains("playPauseButton-paused"))
+  else if (playPauseButton.classList.contains('playPauseButton-paused'))
   {
     playPauseButton.classList.add('playPauseButton-paused-blue');
     playPauseButton.classList.remove('playPauseButton-paused');
@@ -1709,14 +1723,14 @@ function changePlayPauseButtonIconOnHover()
 // Updates the play-pause button's icon on mouseout
 function changePlayPauseButtonIconOnMouseOut()
 {
-  let playPauseButton = document.querySelector("#play-pause-btn");
+  let playPauseButton = document.querySelector('#play-pause-btn');
 
-  if (playPauseButton.classList.contains("playPauseButton-playing-blue"))
+  if (playPauseButton.classList.contains('playPauseButton-playing-blue'))
   {
     playPauseButton.classList.add('playPauseButton-playing');
     playPauseButton.classList.remove('playPauseButton-playing-blue');
   }
-  else if (playPauseButton.classList.contains("playPauseButton-paused-blue"))
+  else if (playPauseButton.classList.contains('playPauseButton-paused-blue'))
   {
     playPauseButton.classList.remove('playPauseButton-paused-blue');
     playPauseButton.classList.add('playPauseButton-paused');
@@ -1730,23 +1744,23 @@ function togglePlayPauseButtonIconOnClick()
 
   if (playPauseButton.classList.contains('playPauseButton-playing'))
   {
-    playPauseButton.classList.add("playPauseButton-paused");
-    playPauseButton.classList.remove("playPauseButton-playing");
+    playPauseButton.classList.add('playPauseButton-paused');
+    playPauseButton.classList.remove('playPauseButton-playing');
   }
   else if (playPauseButton.classList.contains('playPauseButton-playing-blue'))
   {
-    playPauseButton.classList.add("playPauseButton-paused-blue");
-    playPauseButton.classList.remove("playPauseButton-playing-blue");
+    playPauseButton.classList.add('playPauseButton-paused-blue');
+    playPauseButton.classList.remove('playPauseButton-playing-blue');
   }
   else if (playPauseButton.classList.contains('playPauseButton-paused'))
   {
-    playPauseButton.classList.add("playPauseButton-playing");
-    playPauseButton.classList.remove("playPauseButton-paused");
+    playPauseButton.classList.add('playPauseButton-playing');
+    playPauseButton.classList.remove('playPauseButton-paused');
   }
   else if (playPauseButton.classList.contains('playPauseButton-paused-blue'))
   {
-    playPauseButton.classList.add("playPauseButton-playing-blue");
-    playPauseButton.classList.remove("playPauseButton-paused-blue");
+    playPauseButton.classList.add('playPauseButton-playing-blue');
+    playPauseButton.classList.remove('playPauseButton-paused-blue');
   }
 }
 
@@ -1755,14 +1769,14 @@ function togglePlayPauseButtonIconOnClick()
 // Updates the repeat button's icon on hover
 function changeRepeatButtonIconOnHover()
 {
-  let repeatButton = document.querySelector("#repeatButton");
+  let repeatButton = document.querySelector('#repeatButton');
 
-  if (repeatButton.classList.contains("repeatButton-noRepeat"))
+  if (repeatButton.classList.contains('repeatButton-noRepeat'))
   {
     repeatButton.classList.add('repeatButton-noRepeat-blue');
     repeatButton.classList.remove('repeatButton-noRepeat');
   }
-  else if (repeatButton.classList.contains("repeatButton-repeat"))
+  else if (repeatButton.classList.contains('repeatButton-repeat'))
   {
     repeatButton.classList.add('repeatButton-repeat-blue');
     repeatButton.classList.remove('repeatButton-repeat');
@@ -1772,14 +1786,14 @@ function changeRepeatButtonIconOnHover()
 // Updates the repeat button's icon on mouseout
 function changeRepeatButtonIconOnMouseOut()
 {
-  let repeatButton = document.querySelector("#repeatButton");
+  let repeatButton = document.querySelector('#repeatButton');
 
-  if (repeatButton.classList.contains("repeatButton-noRepeat-blue"))
+  if (repeatButton.classList.contains('repeatButton-noRepeat-blue'))
   {
     repeatButton.classList.add('repeatButton-noRepeat');
     repeatButton.classList.remove('repeatButton-noRepeat-blue');
   }
-  else if (repeatButton.classList.contains("repeatButton-repeat-blue"))
+  else if (repeatButton.classList.contains('repeatButton-repeat-blue'))
   {
     repeatButton.classList.remove('repeatButton-repeat-blue');
     repeatButton.classList.add('repeatButton-repeat');
@@ -1793,23 +1807,23 @@ function toggleRepeatButtonIconOnClick()
 
   if (repeatButton.classList.contains('repeatButton-noRepeat'))
   {
-    repeatButton.classList.add("repeatButton-repeat");
-    repeatButton.classList.remove("repeatButton-noRepeat");
+    repeatButton.classList.add('repeatButton-repeat');
+    repeatButton.classList.remove('repeatButton-noRepeat');
   }
   else if (repeatButton.classList.contains('repeatButton-noRepeat-blue'))
   {
-    repeatButton.classList.add("repeatButton-repeat-blue");
-    repeatButton.classList.remove("repeatButton-noRepeat-blue");
+    repeatButton.classList.add('repeatButton-repeat-blue');
+    repeatButton.classList.remove('repeatButton-noRepeat-blue');
   }
   else if (repeatButton.classList.contains('repeatButton-repeat'))
   {
-    repeatButton.classList.add("repeatButton-noRepeat");
-    repeatButton.classList.remove("repeatButton-repeat");
+    repeatButton.classList.add('repeatButton-noRepeat');
+    repeatButton.classList.remove('repeatButton-repeat');
   }
   else if (repeatButton.classList.contains('repeatButton-repeat-blue'))
   {
-    repeatButton.classList.add("repeatButton-noRepeat-blue");
-    repeatButton.classList.remove("repeatButton-repeat-blue");
+    repeatButton.classList.add('repeatButton-noRepeat-blue');
+    repeatButton.classList.remove('repeatButton-repeat-blue');
   }
 }
 
@@ -1818,14 +1832,14 @@ function toggleRepeatButtonIconOnClick()
 // Updates the collapse header button's icon on hover
 function changeCollapseHeaderButtonIconOnHover()
 {
-  let headerCollapseButton = document.querySelector("#headerCollapseButton");
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
 
-  if (headerCollapseButton.classList.contains("headerCollapseButton"))
+  if (headerCollapseButton.classList.contains('headerCollapseButton'))
   {
     headerCollapseButton.classList.add('headerCollapseButton-blue');
     headerCollapseButton.classList.remove('headerCollapseButton');
   }
-  else if (headerCollapseButton.classList.contains("headerCollapseButton-blue"))
+  else if (headerCollapseButton.classList.contains('headerCollapseButton-blue'))
   {
     headerCollapseButton.classList.add('headerCollapseButton');
     headerCollapseButton.classList.remove('headerCollapseButton-blue');
@@ -1835,14 +1849,14 @@ function changeCollapseHeaderButtonIconOnHover()
 // Updates the collapse header button's icon on mouseout
 function changeCollapseHeaderButtonIconOnMouseOut()
 {
-  let headerCollapseButton = document.querySelector("#headerCollapseButton");
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
 
-  if (headerCollapseButton.classList.contains("headerCollapseButton"))
+  if (headerCollapseButton.classList.contains('headerCollapseButton'))
   {
     headerCollapseButton.classList.add('headerCollapseButton-blue');
     headerCollapseButton.classList.remove('headerCollapseButton');
   }
-  else if (headerCollapseButton.classList.contains("headerCollapseButton-blue"))
+  else if (headerCollapseButton.classList.contains('headerCollapseButton-blue'))
   {
     headerCollapseButton.classList.add('headerCollapseButton');
     headerCollapseButton.classList.remove('headerCollapseButton-blue');
@@ -1854,14 +1868,14 @@ function changeCollapseHeaderButtonIconOnMouseOut()
 // Updates the play next button's icon on hover
 function changePlayNextButtonIconOnHover()
 {
-  let playNextButton = document.querySelector("#next-track-btn");
+  let playNextButton = document.querySelector('#next-track-btn');
 
-  if (playNextButton.classList.contains("playNextButton"))
+  if (playNextButton.classList.contains('playNextButton'))
   {
     playNextButton.classList.add('playNextButton-blue');
     playNextButton.classList.remove('playNextButton');
   }
-  else if (playNextButton.classList.contains("playNextButton-blue"))
+  else if (playNextButton.classList.contains('playNextButton-blue'))
   {
     playNextButton.classList.add('playNextButton');
     playNextButton.classList.remove('playNextButton-blue');
@@ -1871,14 +1885,14 @@ function changePlayNextButtonIconOnHover()
 // Updates the play next button's icon on mouseout
 function changePlayNextButtonIconOnMouseOut()
 {
-  let playNextButton = document.querySelector("#next-track-btn");
+  let playNextButton = document.querySelector('#next-track-btn');
 
-  if (playNextButton.classList.contains("playNextButton"))
+  if (playNextButton.classList.contains('playNextButton'))
   {
     playNextButton.classList.add('playNextButton-blue');
     playNextButton.classList.remove('playNextButton');
   }
-  else if (playNextButton.classList.contains("playNextButton-blue"))
+  else if (playNextButton.classList.contains('playNextButton-blue'))
   {
     playNextButton.classList.add('playNextButton');
     playNextButton.classList.remove('playNextButton-blue');
@@ -1890,14 +1904,14 @@ function changePlayNextButtonIconOnMouseOut()
 // Updates the play previous button's icon on hover
 function changePlayPreviousButtonIconOnHover()
 {
-  let playPreviousButton = document.querySelector("#previous-track-btn");
+  let playPreviousButton = document.querySelector('#previous-track-btn');
 
-  if (playPreviousButton.classList.contains("playPreviousButton"))
+  if (playPreviousButton.classList.contains('playPreviousButton'))
   {
     playPreviousButton.classList.add('playPreviousButton-blue');
     playPreviousButton.classList.remove('playPreviousButton');
   }
-  else if (playPreviousButton.classList.contains("playPreviousButton-blue"))
+  else if (playPreviousButton.classList.contains('playPreviousButton-blue'))
   {
     playPreviousButton.classList.add('playPreviousButton');
     playPreviousButton.classList.remove('playPreviousButton-blue');
@@ -1907,14 +1921,14 @@ function changePlayPreviousButtonIconOnHover()
 // Updates the play previous button's icon on mouseout
 function changePlayPreviousButtonIconOnMouseOut()
 {
-  let playPreviousButton = document.querySelector("#previous-track-btn");
+  let playPreviousButton = document.querySelector('#previous-track-btn');
 
-  if (playPreviousButton.classList.contains("playPreviousButton"))
+  if (playPreviousButton.classList.contains('playPreviousButton'))
   {
     playPreviousButton.classList.add('playPreviousButton-blue');
     playPreviousButton.classList.remove('playPreviousButton');
   }
-  else if (playPreviousButton.classList.contains("playPreviousButton-blue"))
+  else if (playPreviousButton.classList.contains('playPreviousButton-blue'))
   {
     playPreviousButton.classList.add('playPreviousButton');
     playPreviousButton.classList.remove('playPreviousButton-blue');
@@ -1928,14 +1942,14 @@ function changePlayPreviousButtonIconOnMouseOut()
 // Updates the icon of the site menu show/hide button on hover
 function changeMenuButtonIconOnHover()
 {
-  let menuButton = document.querySelector("#siteMenu-showHideButton");
+  let menuButton = document.querySelector('#siteMenu-showHideButton');
 
-  if (menuButton.classList.contains("menuButton"))
+  if (menuButton.classList.contains('menuButton'))
   {
     menuButton.classList.add('menuButton-white');
     menuButton.classList.remove('menuButton');
   }
-  else if (menuButton.classList.contains("menuButton-white"))
+  else if (menuButton.classList.contains('menuButton-white'))
   {
     menuButton.classList.add('menuButton');
     menuButton.classList.remove('menuButton-white');
@@ -1945,14 +1959,14 @@ function changeMenuButtonIconOnHover()
 // Updates the icon of the site menu show/hide button on mouseout
 function changeMenuButtonIconOnMouseOut()
 {
-  let playPreviousButton = document.querySelector("#siteMenu-showHideButton");
+  let playPreviousButton = document.querySelector('#siteMenu-showHideButton');
 
-  if (playPreviousButton.classList.contains("menuButton"))
+  if (playPreviousButton.classList.contains('menuButton'))
   {
     playPreviousButton.classList.add('menuButton-white');
     playPreviousButton.classList.remove('menuButton');
   }
-  else if (playPreviousButton.classList.contains("menuButton-white"))
+  else if (playPreviousButton.classList.contains('menuButton-white'))
   {
     playPreviousButton.classList.add('menuButton');
     playPreviousButton.classList.remove('menuButton-white');
@@ -1964,14 +1978,14 @@ function changeMenuButtonIconOnMouseOut()
 // Updates the icon of the site menu info button on hover
 function changeInfoButtonIconOnHover()
 {
-  let infoButton = document.querySelector("#siteMenu-infoButton");
+  let infoButton = document.querySelector('#siteMenu-infoButton');
 
-  if (infoButton.classList.contains("infoButton"))
+  if (infoButton.classList.contains('infoButton'))
   {
     infoButton.classList.add('infoButton-white');
     infoButton.classList.remove('infoButton');
   }
-  else if (infoButton.classList.contains("infoButton-white"))
+  else if (infoButton.classList.contains('infoButton-white'))
   {
     infoButton.classList.add('infoButton');
     infoButton.classList.remove('infoButton-white');
@@ -1981,14 +1995,14 @@ function changeInfoButtonIconOnHover()
 // Updates the icon of the site menu info button on mouseout
 function changeInfoButtonIconOnMouseOut()
 {
-  let infoButton = document.querySelector("#siteMenu-infoButton");
+  let infoButton = document.querySelector('#siteMenu-infoButton');
 
-  if (infoButton.classList.contains("infoButton"))
+  if (infoButton.classList.contains('infoButton'))
   {
     infoButton.classList.add('infoButton-white');
     infoButton.classList.remove('infoButton');
   }
-  else if (infoButton.classList.contains("infoButton-white"))
+  else if (infoButton.classList.contains('infoButton-white'))
   {
     infoButton.classList.add('infoButton');
     infoButton.classList.remove('infoButton-white');
@@ -2000,14 +2014,14 @@ function changeInfoButtonIconOnMouseOut()
 // Updates the icon of the site menu config button on hover
 function changeConfigButtonIconOnHover()
 {
-  let configButton = document.querySelector("#siteMenu-configButton");
+  let configButton = document.querySelector('#siteMenu-configButton');
 
-  if (configButton.classList.contains("configButton"))
+  if (configButton.classList.contains('configButton'))
   {
     configButton.classList.add('configButton-white');
     configButton.classList.remove('configButton');
   }
-  else if (configButton.classList.contains("configButton-white"))
+  else if (configButton.classList.contains('configButton-white'))
   {
     configButton.classList.add('configButton');
     configButton.classList.remove('configButton-white');
@@ -2017,14 +2031,14 @@ function changeConfigButtonIconOnHover()
 // Updates the icon of the site menu config button on mouseout
 function changeConfigButtonIconOnMouseOut()
 {
-  let configButton = document.querySelector("#siteMenu-configButton");
+  let configButton = document.querySelector('#siteMenu-configButton');
 
-  if (configButton.classList.contains("configButton"))
+  if (configButton.classList.contains('configButton'))
   {
     configButton.classList.add('configButton-white');
     configButton.classList.remove('configButton');
   }
-  else if (configButton.classList.contains("configButton-white"))
+  else if (configButton.classList.contains('configButton-white'))
   {
     configButton.classList.add('configButton');
     configButton.classList.remove('configButton-white');
