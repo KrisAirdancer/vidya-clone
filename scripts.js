@@ -1,5 +1,7 @@
-let masterTracksList = {};
-let tracksMap = new Map();
+let tracksMasterListURI = 'playlists/tracks-master-list.json';
+// TODO: Why do I have the masterTracksList object and the tracksMap? They seem to be serving the same purpose. Look through the code to figure out if I need both and consolidate if possible.
+let masterTracksList = {}; // All tracks from the 'tracks-master-list.json' file into an object for easy reference/use (does not contain audio data)
+let tracksMap = new Map(); // Generates a Map of all tracks currently in the system so that they are easily accessible (does not contain audio data)
 let previousStack = [];
 let nextStack = [];
 let currentTrack = {
@@ -9,11 +11,19 @@ let currentTrack = {
 }
 let chosenTracks = new Set();
 let exiledTracks = new Set();
-let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
+let neutralTracks = new Set();
 let volumeLevel; // Denotes a percentage: 100%
 let mouseUpEnabled_trackSlider = false; // TODO: This flag is being used to prevent the scrubber's 'mouseup' event from triggering when the user clicks on things on the page that aren't the track scrubber thumb. When the 'mouseup' event triggers on the rest of the page, the currently playing track is momentarilly paused - not good. Note that the rason the  'mouseup' event is firing when the user clicks anywhere on the page is because I applied it to the entire document object to ensure that the scrubber thumb is dropped when the user lets go of it. This isn't a good solution and will need to be replaced with an alternative. Essentially, the issue is that I'm using the 'mouseup' event to respond when the user lets go of the scrubber thumb. There is likely a way to handle this event without the 'mouseup' event.
 let mouseUpEnabled_volumeBarBody = false;
 let volumeSliderVisible = false;
+let siteMenuVisible = false;
+let headerVisible = true;
+let infoPageVisible = true; // The siteMenu's info page is the default page (visible by default)
+let configPageVisible = false;
+let chosenOdds = 25;
+let repeat = false;
+
+let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
 
 // List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
 
@@ -25,11 +35,12 @@ let volumeSliderVisible = false;
 
 let reader = new FileReader();
 
-fetch('playlists/all-tracks.json') // Load and sort master tracks list
+fetch(tracksMasterListURI) // Load and sort master tracks list
     .then(response => response.json())
     .then(tracksData => {
       loadTracksMasterList(tracksData);
       populateTracksMap();
+      populateNeutralTracks();
     })
     .then(() => { // Load data from local storage
       loadChosenTracksFromLocalStorage();
@@ -45,21 +56,35 @@ fetch('playlists/all-tracks.json') // Load and sort master tracks list
       applyNextTrackEventHandler();
       applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
       applyControlsBoxDraggableEventListener();
+      applyEventListenerToRepeatButton();
+      applyEventListenerToHeaderCollapseButton();
+      applyControlBoxEventListeners();
       // Track Scrubber
       applyScrubberEventListener();
       applyRemoveScrubberEventListener();
       // Navbar Buttons
-      applyChosenButtonEventListener();
-      applyExiledButtonEventListener();
+      applyNavButtonEventListeners();
       // Volume Slider (plus volume slider setup)
+      loadVolumeFromLocalStorage();
       applyVolumeButtonEventListener();
       applyVolumeBarBodyEventListener();
       applyRemoveVolumeBarBodyEventListener();
       setVolumeBarSliderPositionOnSiteLoad();
+      updateVolumeButtonStyle();
+      // Site Menu
+      applySiteMenuEventListeners();
+      applySiteMenuButtonEventListener();
+      applyEventListenersToSiteMenuButtons();
+      applyChosenOddsInputEventListener();
+      setTotalChosenNumberInMenu();
+      setTotalExiledNumberInMenu();
+      setTracksCountInMenu();
+      loadChosenOddsFromLocalStorage();
+      updateChosenOddsInMenu();
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
-      // currentTrack.trackAudio.play(); // Need to resolve the "user didn't interact with the DOM first error before I can start playing audio right when the page loads"
+      // currentTrack.trackAudio.play(); // TODO: Need to resolve the 'user didn't interact with the DOM first error before I can start playing audio right when the page loads'
     });
 
 /************************
@@ -97,11 +122,7 @@ function applyNextTrackEventHandler()
 {
   let nextTrackBtn = document.querySelector('#next-track-btn');
   
-  nextTrackBtn.addEventListener('click', e => {
-    // console.log('AT: applyNextTrackEventHandler()');
-
-    playNextTrack();
-  });
+  nextTrackBtn.addEventListener('click', playNextTrack);
 }
 
 // Applies an event handler to the previous track button in the controls box
@@ -125,10 +146,19 @@ function applyCurrentTimeChangeEventListener()
 // Applies an event listener to the currentTrack HTMLAudioElement that triggers when a track finishes playing
 function applyEndedEventListener()
 {
-  currentTrack.trackAudio.addEventListener("ended", () => {
+  currentTrack.trackAudio.addEventListener('ended', () => {
     // console.log('AT: applyEndedEventListener()');
 
-    playNextTrack();
+    if (repeat)
+    {
+      currentTrack.trackAudio.currentTime = 0;
+      updateScrubberTimeStamps();
+      currentTrack.trackAudio.play();
+    }
+    else
+    {
+      playNextTrack();
+    }
   });
 }
 
@@ -171,17 +201,44 @@ function applyChosenButtonEventListener()
   let chosenBtn = document.querySelector('#btn_chosen');
 
   chosenBtn.addEventListener('click', e => {
-    // console.log('AT: applyChosenButtonEventListener()');
-
-    if (chosenTracks.has(currentTrack.trackID))
+    if (chosenTracks.has(currentTrack.trackID)) // If current track is in chosenTracks, remove it.
     {
       removeTrackFromChosen(currentTrack.trackID);
       saveChosenTracksToLocalStorage();
     }
-    else
+    else // If current track is not in chosenTracks, add it.
     {
       addTrackToChosen(currentTrack.trackID);
       saveChosenTracksToLocalStorage();
+    }
+
+    toggleChosenButtonIconOnClick();
+    toggleExiledButtonIconOnClick();
+  });
+}
+
+// Adds an event listener to the chosen odds input field in the site menu
+function applyChosenOddsInputEventListener()
+{
+  // console.log('AT: applyChosenOddsInputEventListener()');
+
+  let chosenOddsInput = document.querySelector('#chosenOddsInput');
+
+  chosenOddsInput.addEventListener('change', e => {
+    if (chosenOddsInput.value < 1)
+    {
+      chosenOddsInput.value = 1;
+      chosenOdds = 1;
+    }
+    else if (chosenOddsInput.value > 100)
+    {
+      chosenOddsInput.value = 100;
+      chosenOdds = 100;
+    }
+    else
+    {
+      localStorage.setItem('chosenOdds', chosenOddsInput.value);
+      chosenOdds = chosenOddsInput.value;
     }
   });
 }
@@ -194,25 +251,31 @@ function applyExiledButtonEventListener()
   exiledBtn.addEventListener('click', e => {
     // console.log('AT: applyExiledButtonEventListener()');
 
-    if (exiledTracks.has(currentTrack.trackID))
+    if (exiledTracks.has(currentTrack.trackID)) // If current track is in exiledTracks, remove it.
     {
       removeTrackFromExiled(currentTrack.trackID);
       saveExiledTracksToLocalStorage();
     }
-    else{
+    else // If current track is not in exiledTracks, add it.
+    {
       addTrackToExiled(currentTrack.trackID);
       saveExiledTracksToLocalStorage();
     }
     
+    toggleExiledButtonIconOnClick();
+    toggleChosenButtonIconOnClick();
   });
 }
 
 // Applies an event listener to the #volumeBar-body to update the position of the volume bar slider
 function applyVolumeBarBodyEventListener()
 {
+  // console.log('AT: applyVolumeBarBodyEventListener()');
+
   let volumeBarBody = document.querySelector('#volumeBar-body');
 
   volumeBarBody.addEventListener('mousedown', e => {
+    // console.log('AT: volumeBarBody Event Listener');
 
     mouseUpEnabled_volumeBarBody = true;
 
@@ -229,8 +292,8 @@ function applyRemoveVolumeBarBodyEventListener()
 
     if (mouseUpEnabled_volumeBarBody)
     {
-      document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
       updateVolumeLevel(); // TODO: May need to pass something into this function such as the current position of the slider - although, I should be able to just pull that info from the DOM in the updateVolume() function anyway.
+      document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
       mouseUpEnabled_volumeBarBody = false;
     }
   });
@@ -265,9 +328,187 @@ function applyControlsBoxDraggableEventListener()
   });
 }
 
+// Applies an event listener to the site menu button (the button that opens/closes the menu) to make it clickable
+function applySiteMenuButtonEventListener()
+{
+  // console.log('AT: applySiteMenuButtonEventListener()');
+
+  let siteMenuButton = document.querySelector('#siteMenu-showHideButton');
+  
+  siteMenuButton.addEventListener('click', showHideSiteMenu);
+}
+
+// Applies event listeners to all of the buttons within the site menu (excluding the button that opens/closes the menu)
+function applyEventListenersToSiteMenuButtons()
+{
+  // console.log('AT: applyEventListenersToSiteMenuButtons()');
+
+  // Information Button
+  let infoButton = document.querySelector('#siteMenu-infoButton');
+  infoButton.addEventListener('click', setInfoMenuPageVisible);
+  
+  // Configuration Button
+  let configButton = document.querySelector('#siteMenu-configButton');
+  configButton.addEventListener('click', setConfigMenuPageVisible);
+  
+  // Export Chosen Button
+  let exportChosenButton = document.querySelector('#siteMenu-exportChosenButton');
+  exportChosenButton.addEventListener('click', exportChosen);
+  
+  // Export Exiled Button
+  let exportExiledButton = document.querySelector('#siteMenu-exportExiledButton');
+  exportExiledButton.addEventListener('click', exportExiled);
+  
+  // Import Chosen Button
+  let importChosenButton = document.querySelector('#siteMenu-importChosenButton');
+  importChosenButton.addEventListener('click', importChosen);
+  
+  // Import Exiled Button
+  let importExiledButton = document.querySelector('#siteMenu-importExiledButton');
+  importExiledButton.addEventListener('click', importExiled);
+  
+  // Reset Chosen Button
+  let resetChosenButton = document.querySelector('#siteMenu-resetChosenButton');
+  resetChosenButton.addEventListener('click', resetChosen);
+  
+  // Reset Exiled Button
+  let resetExiledButton = document.querySelector('#siteMenu-resetExiledButton');
+  resetExiledButton.addEventListener('click', resetExiled);
+}
+
+// Adds an event listener to the repeat button in the controls box
+function applyEventListenerToRepeatButton()
+{
+  // console.log('AT: applyEventListenerToReplayButton()');
+
+  let repeatButton = document.querySelector('#repeatButton');
+
+  repeatButton.addEventListener('click', toggleRepeat);
+}
+
+function applyEventListenerToHeaderCollapseButton()
+{
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
+
+  headerCollapseButton.addEventListener('click', showHideHeader);
+}
+
+// Adds event listeners to the navigation bar buttons
+function applyNavButtonEventListeners()
+{
+  let chosenButton = document.querySelector('#btn_chosen');
+  let exiledButton = document.querySelector('#btn_exiled');
+  let volumeButton = document.querySelector('#btn_volume');
+  let navBar = document.querySelector('#navbar-group');
+
+  // TODO: Pull the logic from these functions into this function. They (and similar functions) don't need to be in separate functions. They should just be one-liner calls that can be in this function.
+  applyChosenButtonEventListener();
+  applyExiledButtonEventListener();
+
+  chosenButton.addEventListener('mouseover', changeChosenButtonIconOnHover);
+  chosenButton.addEventListener('mouseout', changeChosenButtonIconOnMouseOut);
+
+  exiledButton.addEventListener('mouseover', changeExiledButtonIconOnHover);
+  exiledButton.addEventListener('mouseout', changeExiledButtonIconOnMouseOut);
+
+  volumeButton.addEventListener('mouseover', changeVolumeButtonIconOnHover);
+  volumeButton.addEventListener('mouseout', changeVolumeButtonIconOnMouseOut);
+
+  navBar.addEventListener('mouseover', updateControlBoxMessage);
+}
+
+// Adds the needed event listeners to the elements of the control box
+function applyControlBoxEventListeners()
+{
+  // TODO: Add all addEventListener() calls for the control box elements to this function.
+
+  let playPauseButton = document.querySelector('#play-pause-btn');
+  let repeatButton = document.querySelector('#repeatButton');
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
+  let playNextButton = document.querySelector('#next-track-btn');
+  let playPreviousButton = document.querySelector('#previous-track-btn');
+
+  playPauseButton.addEventListener('mouseover', changePlayPauseButtonIconOnHover);
+  playPauseButton.addEventListener('mouseout', changePlayPauseButtonIconOnMouseOut);
+
+  repeatButton.addEventListener('mouseover', changeRepeatButtonIconOnHover);
+  repeatButton.addEventListener('mouseout', changeRepeatButtonIconOnMouseOut);
+
+  headerCollapseButton.addEventListener('mouseover', changeCollapseHeaderButtonIconOnHover);
+  headerCollapseButton.addEventListener('mouseout', changeCollapseHeaderButtonIconOnMouseOut);
+
+  playNextButton.addEventListener('mouseover', changePlayNextButtonIconOnHover);
+  playNextButton.addEventListener('mouseout', changePlayNextButtonIconOnMouseOut);
+
+  playPreviousButton.addEventListener('mouseover', changePlayPreviousButtonIconOnHover);
+  playPreviousButton.addEventListener('mouseout', changePlayPreviousButtonIconOnMouseOut);
+
+  let controlBox = document.querySelector('#control-box-flex-container');
+
+  controlBox.addEventListener('mouseover', updateControlBoxMessage);
+  controlBox.addEventListener('mouseout', clearControlBoxMessage);
+
+  let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlsBoxTopBar.addEventListener('mousedown', e => {
+    setControlsBoxDragMessage();
+    controlsBoxTopBar.addEventListener('mousemove', setControlsBoxDragMessage);
+  });
+  controlsBoxTopBar.addEventListener('mouseup', e => {
+    clearControlBoxMessage();
+    controlsBoxTopBar.removeEventListener('mousemove', setControlsBoxDragMessage);
+    controlsBoxTopBar.textContent = 'Drag me!';
+  });
+}
+
+// Adds event listeners to the site menu elements
+function applySiteMenuEventListeners()
+{
+  // TODO: Add all addEventListener() calls for the control box elements to this function.
+
+  let menuButton = document.querySelector('#siteMenu-showHideButton');
+  let infoButton = document.querySelector('#siteMenu-infoButton');
+  let configButton = document.querySelector('#siteMenu-configButton');
+
+  menuButton.addEventListener('mouseout', e => {
+    changeMenuButtonIconOnMouseOut();
+    clearControlBoxMessage(e);
+  });
+  menuButton.addEventListener('mouseover', e => {
+    updateControlBoxMessage(e);
+    changeMenuButtonIconOnHover();
+  });
+
+  infoButton.addEventListener('mouseover', e => {
+    changeInfoButtonIconOnHover();
+    updateControlBoxMessage(e);
+  });
+  infoButton.addEventListener('mouseout', e => {
+    changeInfoButtonIconOnMouseOut();
+    updateControlBoxMessage(e);
+  });
+
+  configButton.addEventListener('mouseover', e => {
+    changeConfigButtonIconOnHover();
+    updateControlBoxMessage(e);
+  });
+  configButton.addEventListener('mouseout', e => {
+    changeConfigButtonIconOnMouseOut();
+    updateControlBoxMessage(e);
+  });
+}
+
 /*************
  * Functions *
  *************/
+
+// Initializes the neutralTracks set
+function populateNeutralTracks()
+{
+  masterTracksList.forEach(track => {
+    neutralTracks.add(track.trackID);
+  });
+}
 
 // Sets and stores the tracks master list from the given data (from the fetch call above)
 function loadTracksMasterList(tracksData)
@@ -318,19 +559,19 @@ function generateTracksListHTML()
     if (chosenTracks.has(track.trackID))
     {
       tracksHTML.push(
-          `<li id="${track.trackID}" class="track-info chosenTrack">${track.trackGame} — ${track.trackName}</li>`
+          `<li id='${track.trackID}' class='track-info chosenTrack'>${track.trackGame} — ${track.trackName}</li>`
       );
     }
     else if (exiledTracks.has(track.trackID))
     {
       tracksHTML.push(
-          `<li id="${track.trackID}" class="track-info exiledTrack">${track.trackGame} — ${track.trackName}</li>`
+          `<li id='${track.trackID}' class='track-info exiledTrack'>${track.trackGame} — ${track.trackName}</li>`
       );
     }
     else
     {
       tracksHTML.push(
-          `<li id="${track.trackID}" class="track-info">${track.trackGame} — ${track.trackName}</li>`
+          `<li id='${track.trackID}' class='track-info'>${track.trackGame} — ${track.trackName}</li>`
       );
     }
 
@@ -346,7 +587,7 @@ function generateTracksListHTML()
 // Sets currentTrack to the track with ID trackURL
 function setCurrentTrack(trackID)
 {
-  console.log('AT: setCurrentTrack()');
+  // console.log('AT: setCurrentTrack()');
 
   // TODO: This whole if block might be dead code... If so, remove it.
   if (currentTrack.trackID !== undefined)
@@ -376,7 +617,9 @@ function setCurrentTrack(trackID)
   scrollCurrentTrackToTop();
   setCurrentTrackVolume();
 
-  console.log(currentTrack);
+  updateNavButtons();
+
+  // console.log(currentTrack);
 }
 
 // Toggles the state of the currently track between playing and paused
@@ -387,10 +630,14 @@ function playPauseCurrentTrack()
   if (currentTrack.trackAudio.paused)
   {
     currentTrack.trackAudio.play();
+
+    togglePlayPauseButtonIconOnClick();
   }
   else
   {
     currentTrack.trackAudio.pause();
+
+    togglePlayPauseButtonIconOnClick();
   }
 }
 
@@ -443,14 +690,20 @@ function playNextTrack()
   updateTrackInfoInHeader(currentTrack.trackID);
   
   currentTrack.trackAudio.play();
+
+  playPauseButton = document.querySelector('#play-pause-btn');
+  if (playPauseButton.classList.contains('playPauseButton-paused'))
+  {
+    playPauseButton.classList.add('playPauseButton-playing');
+    playPauseButton.classList.remove('playPauseButton-paused');
+  }
   
   scrollCurrentTrackToTop();
   highlightCurrentTrack();
 
   setCurrentTrackVolume();
-  
-  console.log(currentTrack.trackID);
-  console.log(currentTrack);
+
+  updateNavButtons();
 }
 
 // Plays the previous track
@@ -477,6 +730,13 @@ function playPreviousTrack()
     }
 
     currentTrack.trackAudio.play();
+
+    playPauseButton = document.querySelector('#play-pause-btn');
+    if (playPauseButton.classList.contains('playPauseButton-paused'))
+    {
+      playPauseButton.classList.add('playPauseButton-playing');
+      playPauseButton.classList.remove('playPauseButton-paused');
+    }
   }
   applyCurrentTimeChangeEventListener();
   applyEndedEventListener();
@@ -488,17 +748,17 @@ function playPreviousTrack()
 
   setCurrentTrackVolume();
 
+  updateNavButtons();
+
   console.log(currentTrack.trackID);
   console.log(currentTrack);
 }
 
-// TODO: This function appears to be unused! Either use it somewhere or delete it.
+// TODO: This function appears to be unused! Either use it somewhere or delete it. It looks like this function was replaced by getRandomTrackID() - instead of calling a function to play the next track, I am calling a function to generate a track ID. I think I did this because I needed to be able to play tracks under different conditions in different places. Double check this and refactor if it doesn't make sense to do that anymore (or if that isn't the case).
 // Plays a random track from the currently selected playlist
 function playRandomTrack()
 {
-  console.log('AT: playRandomTrack()');
-
-  // TODO: Add logic to select a track only from the currently selected playlist and not from the entire library
+  // console.log('AT: playRandomTrack()');
 
   removeCurrentTrackHighlighting();
 
@@ -512,6 +772,8 @@ function playRandomTrack()
   highlightCurrentTrack();
 
   setCurrentTrackVolume();
+
+  updateNavButtons();
 }
 
 // Randomly generate a track ID from the list of available tracks
@@ -519,13 +781,18 @@ function getRandomTrackID()
 {
   // console.log('AT: getRandomTrackID()');
 
-  let trackIDs = [];
+  let trackID;
 
-  tracksMap.forEach(entry => {
-    trackIDs.push(entry.trackID);
-  });
-  
-  let trackID = trackIDs[Math.round(Math.random() * (trackIDs.length - 0) - 0)]; // Math.random() * (max - min) + min
+  let randomValue = Math.floor(Math.random() * (100 - 1 + 1) + 1) // Math.floor(Math.random() * (max - min + 1) + min)
+
+  if (randomValue <= chosenOdds)
+  {
+    trackID = Array.from(chosenTracks)[Math.round(Math.random() * (chosenTracks.size - 0 + 1) - 0)];
+  }
+  else
+  {
+    trackID = Array.from(neutralTracks)[Math.round(Math.random() * (neutralTracks.size - 0 + 1) - 0)];
+  }
 
   return trackID;
 }
@@ -569,7 +836,7 @@ function setCurrentTime()
   let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
 
   // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (inderectly via newCurrentTime).
-  // Note: This is using JavaScript's "truthy" behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
+  // Note: This is using JavaScript's 'truthy' behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
   if (newCurrentTime)
   {
     currentTrack.trackAudio.currentTime = newCurrentTime;
@@ -633,22 +900,27 @@ function scrollCurrentTrackToTop()
 {
   // Scroll the current track to the top of the page
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
-  currentTrackLi.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+  currentTrackLi.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
 }
 
 // Applies the .currentTrack class to the currently playing track's li element
 function highlightCurrentTrack()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
-  currentTrackLi.classList.add('currentTrack');
-
+  
   if (chosenTracks.has(currentTrack.trackID))
   {
+    currentTrackLi.classList.add('currentTrack-green');
     currentTrackLi.classList.remove('chosenTrack');
   }
-  if (exiledTracks.has(currentTrack.trackID))
+  else if (exiledTracks.has(currentTrack.trackID))
   {
+    currentTrackLi.classList.add('currentTrack-red');
     currentTrackLi.classList.remove('exiledTrack');
+  }
+  else
+  {
+    currentTrackLi.classList.add('currentTrack');
   }
 }
 
@@ -656,26 +928,38 @@ function highlightCurrentTrack()
 function removeCurrentTrackHighlighting()
 {
   let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
-  currentTrackLi.classList.remove('currentTrack');
-
+  
   if (chosenTracks.has(currentTrack.trackID))
   {
     currentTrackLi.classList.add('chosenTrack');
+    currentTrackLi.classList.remove('currentTrack-green');
   }
-  if (exiledTracks.has(currentTrack.trackID))
+  else if (exiledTracks.has(currentTrack.trackID))
   {
     currentTrackLi.classList.add('exiledTrack');
+    currentTrackLi.classList.remove('currentTrack-red');
+  }
+  else
+  {
+    currentTrackLi.classList.remove('currentTrack');
   }
 }
 
 // Adds the currently playing track to the chosenTracks set
 function addTrackToChosen(trackID)
 {
-  if (trackID)
-  {
-    chosenTracks.add(trackID);
-    exiledTracks.delete(trackID);
-  }
+  if (!trackID) { return }
+
+  if (chosenTracks.size == tracksMap.size - 1) { return }
+
+  chosenTracks.add(trackID);
+  neutralTracks.delete(trackID);
+  exiledTracks.delete(trackID);
+
+  setTotalChosenNumberInMenu();
+  setTotalExiledNumberInMenu();
+  saveChosenTracksToLocalStorage();
+  saveExiledTracksToLocalStorage();
 }
 
 // Removes the currently playing track from the chosenTracks Set()
@@ -684,6 +968,10 @@ function removeTrackFromChosen(trackID)
   if (trackID)
   {
     chosenTracks.delete(trackID);
+    neutralTracks.add(trackID);
+
+    setTotalChosenNumberInMenu();
+    saveChosenTracksToLocalStorage();
   }
 }
 
@@ -700,28 +988,31 @@ function loadChosenTracksFromLocalStorage()
   if (localStorage.getItem('chosen'))
   {
     let chosenTracksStr = localStorage.getItem('chosen');
-    chosenTracks = new Set(chosenTracksStr.split(','));
+
+    chosenTracksStr.split(',').forEach(trackID => {
+      chosenTracks.add(trackID);
+      neutralTracks.delete(trackID);
+    });
   }
 }
 
+// TODO: This function does more than it should. It should be broken out into two functions: one to add the track to exiled and one to update the previousStack.
+  // I should also note that this function should be identical to addTrackToChosen() excepting that it should modify the exiled lists instead of the chosen lists, and it currently looks very different from addTrackToChosen(). That means we have a problem.
 // Adds the currently playing track to the exiledTracks Set
 function addTrackToExiled(trackID)
 {
-  if (trackID)
-  {
-    exiledTracks.add(trackID);
-    chosenTracks.delete(trackID);
+  if (!trackID) { return }
 
-    previousStack.forEach(track => {
-      if (track.trackID === trackID) {
-        while (previousStack.indexOf(trackID) !== -1)
-        {
-          let trackIndex = previousStack.indexOf(trackID);
-          previousStack.splice(trackIndex, 1);
-        }
-      }
-    });
-  }
+  if (exiledTracks.size == tracksMap.size - 1) { return }
+
+  exiledTracks.add(trackID);
+  chosenTracks.delete(trackID);
+  neutralTracks.delete(trackID);
+
+  setTotalExiledNumberInMenu();
+  setTotalChosenNumberInMenu();
+  saveExiledTracksToLocalStorage();
+  saveChosenTracksToLocalStorage();
 }
 
 // Removes the currently playing track from the exiledTracks set
@@ -730,6 +1021,10 @@ function removeTrackFromExiled(trackID)
   if (trackID)
   {
     exiledTracks.delete(trackID);
+    neutralTracks.add(trackID);
+
+    setTotalExiledNumberInMenu();
+    saveExiledTracksToLocalStorage();
   }
 }
 
@@ -746,7 +1041,11 @@ function loadExiledTracksFromLocalStorage()
   if (localStorage.getItem('exiled'))
   {
     let exiledTracksStr = localStorage.getItem('exiled');
-    exiledTracks = new Set(exiledTracksStr.split(','));
+
+    exiledTracksStr.split(',').forEach(trackID => {
+      exiledTracks.add(trackID);
+      neutralTracks.delete(trackID);
+    });
   }
 }
 
@@ -764,7 +1063,11 @@ function moveVolumeBarSliderOnUserInput(event)
   if (updatedPosition <= 100)
   {
     setVolumeBarSliderPosition(updatedPosition);
+
+    updateVolumeLevel();
   }
+
+  updateVolumeButtonStyle();
 }
 
 // Updates the width (position) of the volume bar slider on the UI
@@ -783,8 +1086,17 @@ function updateVolumeLevel()
   let volumeBarSliderPosition = document.querySelector('#volumeBar-slider').style.width;
   volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
 
+  if (volumeLevel <= 0.02)
+  {
+    volumeLevel = 0;
+  }
+
+  setVolumeBarSliderPosition(volumeLevel * 100)
+
   setCurrentTrackVolume();
   saveVolumeToLocalStorage();
+
+  updateVolumeButtonStyle();
 }
 
 // Sets the volume level of the currently playing track Audio object
@@ -863,4 +1175,953 @@ function repositionControlsBox(e) // e is passed in implicitly by the event hand
   {
     controlsBox.style.top = e.pageY + 'px';
   }
+}
+
+/***** Site Menu Functions */
+
+// Shows/hides the site menu and site menu buttons by adding/removing visibility classes
+function showHideSiteMenu()
+{
+  // console.log('AT: showHideSiteMenu()');
+
+  let siteMenu = document.querySelector('#siteMenu');
+  let siteMenuButtonsGroup = document.querySelector('#siteMenu-navButtons-group');
+  let siteVersionTag = document.querySelector('#versionTag');
+
+  if (!siteMenuVisible)
+  {
+    siteMenuVisible = !siteMenuVisible;
+
+    siteMenu.classList.add('siteMenu-menuVisible');
+    siteMenuButtonsGroup.classList.add('siteMenu-buttonsVisible');
+
+    siteMenu.style.borderColor = '#546a87';
+    
+    siteVersionTag.style.height = '1rem';
+    
+    siteVersionTag.classList.add('versionTag-visible');
+    siteVersionTag.classList.remove('versionTag-hidden');
+  }
+  else
+  {
+    siteMenuVisible = !siteMenuVisible;
+    
+    siteMenu.classList.remove('siteMenu-menuVisible');
+    siteMenuButtonsGroup.classList.remove('siteMenu-buttonsVisible');
+    
+    siteMenu.style.borderColor = '#ffffff00';
+    
+    siteVersionTag.style.height = '0';
+    siteVersionTag.classList.add('versionTag-hidden');
+    siteVersionTag.classList.remove('versionTag-visible');
+  }
+}
+
+// Toggles the header between visible and hidden
+function showHideHeader()
+{
+  // console.log('AT: showHideHeader()');
+  
+  let navBarGroup = document.querySelector('#navbar-group');
+  let tracksList = document.querySelector('#tracks-list');
+  
+  if (headerVisible)
+  {
+    navBarGroup.classList.add('navHidden');
+    tracksList.classList.add('tracksListHidden');
+  }
+  else
+  {
+    navBarGroup.classList.remove('navHidden');
+    tracksList.classList.remove('tracksListHidden');
+  }
+
+  headerVisible = !headerVisible;
+}
+
+// Toggles the visibility of the info page in the siteMenu
+function setInfoMenuPageVisible()
+{
+  // console.log('AT: displayInfoMenuPage()');
+
+  let configPage = document.querySelector('#siteMenu-configPage');
+  let infoPage = document.querySelector('#siteMenu-infoPage');
+  
+  if (!infoPageVisible)
+  {
+    infoPageVisible = !infoPageVisible;
+    configPageVisible = !configPageVisible;
+    
+    infoPage.classList.add('pageVisible');
+    configPage.classList.remove('pageVisible');
+
+    // Resize buttons
+    document.querySelector('#siteMenu-infoButton').setAttribute('style', 'width:4rem');
+    document.querySelector('#siteMenu-infoButton').classList.add('lightMenuButtonBackground');
+
+    document.querySelector('#siteMenu-configButton').setAttribute('style', 'width:1.75rem');
+    document.querySelector('#siteMenu-configButton').classList.remove('lightMenuButtonBackground');
+  }
+}
+
+// Toggles the visibility of the configuration page in the siteMenu
+function setConfigMenuPageVisible()
+{
+  // console.log('AT: displayConfigMenuPage()');
+
+  let configPage = document.querySelector('#siteMenu-configPage');
+  let infoPage = document.querySelector('#siteMenu-infoPage');
+
+  if (!configPageVisible)
+  {
+    infoPageVisible = !infoPageVisible;
+    configPageVisible = !configPageVisible;
+
+    configPage.classList.add('pageVisible');
+    infoPage.classList.remove('pageVisible');
+
+    // Resize buttons
+    document.querySelector('#siteMenu-configButton').setAttribute('style', 'width:4rem');
+    document.querySelector('#siteMenu-configButton').classList.add('lightMenuButtonBackground');
+
+    document.querySelector('#siteMenu-infoButton').setAttribute('style', 'width:1.75rem');
+    document.querySelector('#siteMenu-infoButton').classList.remove('lightMenuButtonBackground');
+  }
+}
+
+// Delivers the list of chosen tracks to the user via an on-screen prompt
+function exportChosen()
+{
+  // console.log('AT: exportChosen()');
+
+  prompt('Export Chosen tracks.\nCopy this:', Array.from(chosenTracks).join(','));
+}
+
+// Delivers the list of exiled tracks to the user via an on-screen prompt
+function exportExiled()
+{
+  // console.log('AT: exportExiled()');
+
+  prompt('Export Exiled tracks.\nCopy this:', Array.from(exiledTracks).join(','));
+
+}
+
+// Requests (via an on-screen prompt) the chosen track IDs from the user then stores them in the application state and local storage
+function importChosen()
+{
+  // console.log('AT: importChosen()');
+
+  let importedTracks = prompt('Import Chosen tracks.\nPaste here:');
+  if (importedTracks === null) { return; } // User canceled import or error occurred
+  if (importedTracks === '') { return; } // If no tracks imported, keep the current state
+  importedTracks = importedTracks.split(',');
+
+  chosenTracks.clear();
+
+  importedTracks.forEach(trackID => {
+    if (trackID)
+    {
+      chosenTracks.add(trackID);
+      neutralTracks.delete(trackID);
+      exiledTracks.delete(trackID);
+    }
+  });
+
+  currentTrack.trackAudio.pause(); // Have to pause the track or it will continue playing even after the currentTrack has changed
+  saveChosenTracksToLocalStorage();
+  saveExiledTracksToLocalStorage();
+  generateTracksListHTML();
+  let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+  setCurrentTrack(minTrackID);
+  scrollCurrentTrackToTop();
+  currentTrack.trackAudio.play();
+}
+
+// Requests (via an on-screen prompt) the exiled track IDs from the user then stores them in the application state and local storage
+function importExiled()
+{
+  // console.log('AT: importExiled()');
+
+  let exiledString = prompt('Import Exiled tracks.\nPaste here:');
+  if (exiledString === null) { return; } // User canceled import or error occurred
+  if (exiledString === '') { return; } // If no tracks imported, keep the current state
+  exiledString = exiledString.split(',');
+
+  exiledTracks.clear();
+
+  exiledString.forEach(trackID => {
+    if (trackID)
+    {
+      exiledTracks.add(trackID);
+      chosenTracks.delete(trackID);
+      neutralTracks.delete(trackID);
+    }
+  });
+
+  currentTrack.trackAudio.pause(); // Have to pause the track or it will continue playing even after the currentTrack has changed
+  saveExiledTracksToLocalStorage();
+  saveChosenTracksToLocalStorage();
+  generateTracksListHTML();
+  let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+  setCurrentTrack(minTrackID);
+  scrollCurrentTrackToTop();
+  currentTrack.trackAudio.play();
+}
+
+// Clears all Chosen tracks from the program state and local storage
+function resetChosen()
+{
+  // console.log('AT: resetChosen()');
+
+  if (confirm('Reset Chosen tracks.\nAre you sure about that?'))
+  {
+    chosenTracks.forEach(trackID => {
+      neutralTracks.add(trackID);
+    });
+
+    chosenTracks.clear();
+
+    saveChosenTracksToLocalStorage();
+    generateTracksListHTML();
+    let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+    setCurrentTrack(minTrackID);
+    scrollCurrentTrackToTop();
+  }
+}
+
+// Clears all Exiled tracks from the program state and local storage
+function resetExiled()
+{
+  // console.log('AT: resetExiled()');
+
+  if (confirm('Reset Exiled tracks.\nAre you sure about that?'))
+  {
+    exiledTracks.clear();
+
+    saveExiledTracksToLocalStorage();
+    generateTracksListHTML();
+    let minTrackID = Array.from(tracksMap.keys())[0]; // The output is always sorted in ascending order. So the top track (lowest trackID) will always be at the top.
+    setCurrentTrack(minTrackID);
+    scrollCurrentTrackToTop();
+  }
+}
+
+// Sets the 'Total Chosen' value in the site menu to the current chosen tracks count
+function setTotalChosenNumberInMenu()
+{
+  let chosenNumberTag = document.querySelector('#siteMenu-totalChosenNumber');
+
+  chosenNumberTag.textContent = chosenTracks.size;
+}
+
+// Sets the 'Total Exiled' value in the site menu to the current exiled tracks count
+function setTotalExiledNumberInMenu()
+{
+  let exiledNumberTag = document.querySelector('#siteMenu-totalExiledNumber');
+
+  exiledNumberTag.textContent = exiledTracks.size;
+}
+
+// Sets the 'Tracks' count number in the site menu to the total number of tracks in the system
+function setTracksCountInMenu()
+{
+  let tracksCountNumberTag = document.querySelector('#siteMenu-totalTracksNumber');
+
+  tracksCountNumberTag.textContent = tracksMap.size;
+}
+
+// Loads the chosen odds value form local storage
+function loadChosenOddsFromLocalStorage()
+{
+  let storageValue = localStorage.getItem('chosenOdds');
+
+  if (storageValue)
+  {
+    chosenOdds = storageValue;
+  }
+  else
+  {
+    chosenOdds = 25;
+  }
+}
+
+// Updates the value displayed in the chosen odds field in the site menu
+function updateChosenOddsInMenu()
+{
+  document.querySelector('#chosenOddsInput').value = chosenOdds;
+}
+
+// Toggles the replay status
+function toggleRepeat()
+{
+  // console.log('AT: toggleRepeat()');
+
+  repeat = !repeat;
+
+  toggleRepeatButtonIconOnClick();
+}
+
+// Updates the styling of the navigation bar's buttons based on the status of the currently playing track
+function updateNavButtons()
+{
+  let chosenButton = document.querySelector('#btn_chosen');
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (chosenTracks.has(currentTrack.trackID)) // Track is chosen
+  {
+    chosenButton.classList.add('chosenButton-broken');
+    exiledButton.classList.add('exiledButton-ban');
+    
+    chosenButton.classList.remove('chosenButton-whole');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+  else if (exiledTracks.has(currentTrack.trackID)) // Track is exiled
+  {
+    chosenButton.classList.remove('chosenButton-broken');
+    exiledButton.classList.remove('exiledButton-ban');
+    
+    chosenButton.classList.add('chosenButton-whole');
+    exiledButton.classList.add('exiledButton-check');
+  }
+  else // Set to default look
+  {
+    chosenButton.classList.add('chosenButton-whole');
+    exiledButton.classList.add('exiledButton-ban');
+
+    chosenButton.classList.remove('chosenButton-broken');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+}
+
+// Updates the style of the volume button based on the current volume level
+function updateVolumeButtonStyle()
+{
+  // console.log('AT: updateVolumeButtonStyle()');
+
+  let volumeButton = document.querySelector('#btn_volume');
+
+  if (volumeLevel == 0)
+  {
+    volumeButton.classList.remove('volumeButton-down');
+    volumeButton.classList.remove('volumeButton-up');
+  
+    volumeButton.classList.add('volumeButton-off');
+  }
+  else if (volumeLevel <= 0.5)
+  {
+    volumeButton.classList.remove('volumeButton-off');
+    volumeButton.classList.remove('volumeButton-up');
+
+    volumeButton.classList.add('volumeButton-down');
+  }
+  else
+  {
+    volumeButton.classList.remove('volumeButton-off');
+    volumeButton.classList.remove('volumeButton-down');
+  
+    volumeButton.classList.add('volumeButton-up');
+  }
+}
+
+/***** Button hover styling functions *****/
+
+/* Chosen button */
+
+// Updates the chosen button's icon on hover
+function changeChosenButtonIconOnHover()
+{
+  let chosenButton = document.querySelector('#btn_chosen');
+
+  if (chosenButton.classList.contains('chosenButton-whole'))
+  {
+    chosenButton.classList.add('chosenButton-whole-blue');
+    chosenButton.classList.remove('chosenButton-whole');
+  }
+  else if (chosenButton.classList.contains('chosenButton-broken'))
+  {
+    chosenButton.classList.add('chosenButton-broken-blue');
+    chosenButton.classList.remove('chosenButton-broken');
+  }
+}
+
+// Updates the chosen button's icon on mouseout
+function changeChosenButtonIconOnMouseOut()
+{
+  let chosenButton = document.querySelector('#btn_chosen');
+
+  if (chosenButton.classList.contains('chosenButton-whole-blue'))
+  {
+    chosenButton.classList.add('chosenButton-whole');
+    chosenButton.classList.remove('chosenButton-whole-blue');
+  }
+  else if (chosenButton.classList.contains('chosenButton-broken-blue'))
+  {
+    chosenButton.classList.remove('chosenButton-broken-blue');
+    chosenButton.classList.add('chosenButton-broken');
+  }
+}
+
+// Updates the chosen button's icon on click
+function toggleChosenButtonIconOnClick()
+{
+  // console.log('AT: toggleChosenButtonIconOnClick()');
+
+  let chosenButton = document.querySelector('#btn_chosen');
+
+  if (chosenButton.classList.contains('chosenButton-whole'))
+  {
+    chosenButton.classList.add('chosenButton-broken');
+    chosenButton.classList.remove('chosenButton-whole');
+  }
+  else if (chosenButton.classList.contains('chosenButton-whole-blue'))
+  {
+    chosenButton.classList.add('chosenButton-broken-blue');
+    chosenButton.classList.remove('chosenButton-whole-blue');
+  }
+  else if (chosenButton.classList.contains('chosenButton-broken'))
+  {
+    chosenButton.classList.add('chosenButton-whole');
+    chosenButton.classList.remove('chosenButton-broken');
+  }
+  else if (chosenButton.classList.contains('chosenButton-broken-blue'))
+  {
+    chosenButton.classList.add('chosenButton-whole-blue');
+    chosenButton.classList.remove('chosenButton-broken-blue');
+  }
+}
+
+/* Exiled button */
+
+// Updates the exiled button's icon on hover
+function changeExiledButtonIconOnHover()
+{
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (exiledButton.classList.contains('exiledButton-ban'))
+  {
+    exiledButton.classList.add('exiledButton-ban-blue');
+    exiledButton.classList.remove('exiledButton-ban');
+  }
+  else if (exiledButton.classList.contains('exiledButton-check'))
+  {
+    exiledButton.classList.add('exiledButton-check-blue');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+}
+
+// Updates the exiled button's icon on mouseout
+function changeExiledButtonIconOnMouseOut()
+{
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (exiledButton.classList.contains('exiledButton-ban-blue'))
+  {
+    exiledButton.classList.add('exiledButton-ban');
+    exiledButton.classList.remove('exiledButton-ban-blue');
+  }
+  else if (exiledButton.classList.contains('exiledButton-check-blue'))
+  {
+    exiledButton.classList.remove('exiledButton-check-blue');
+    exiledButton.classList.add('exiledButton-check');
+  }
+}
+
+// Updates the exiled button's icon on click
+function toggleExiledButtonIconOnClick()
+{
+  // console.log('AT: toggleExiledButtonIconOnClick()');
+
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (exiledButton.classList.contains('exiledButton-ban'))
+  {
+    exiledButton.classList.add('exiledButton-check');
+    exiledButton.classList.remove('exiledButton-ban');
+  }
+  else if (exiledButton.classList.contains('exiledButton-ban-blue'))
+  {
+    exiledButton.classList.add('exiledButton-check-blue');
+    exiledButton.classList.remove('exiledButton-ban-blue');
+  }
+  else if (exiledButton.classList.contains('exiledButton-check'))
+  {
+    exiledButton.classList.add('exiledButton-ban');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+  else if (exiledButton.classList.contains('exiledButton-check-blue'))
+  {
+    exiledButton.classList.add('exiledButton-ban-blue');
+    exiledButton.classList.remove('exiledButton-check-blue');
+  }
+}
+
+/* Volume button */
+
+// Updates the volume button's icon on hover
+function changeVolumeButtonIconOnHover()
+{
+  let volumeButton = document.querySelector('#btn_volume');
+
+  if (volumeButton.classList.contains('volumeButton-up'))
+  {
+    volumeButton.classList.add('volumeButton-up-blue');
+    volumeButton.classList.remove('volumeButton-up');
+  }
+  else if (volumeButton.classList.contains('volumeButton-down'))
+  {
+    volumeButton.classList.add('volumeButton-down-blue');
+    volumeButton.classList.remove('volumeButton-down');
+  }
+  else if (volumeButton.classList.contains('volumeButton-off'))
+  {
+    volumeButton.classList.add('volumeButton-off-blue');
+    volumeButton.classList.remove('volumeButton-off');
+  }
+}
+
+// Updates the volume button's icon on mouseout
+function changeVolumeButtonIconOnMouseOut()
+{
+  let volumeButton = document.querySelector('#btn_volume');
+
+  if (volumeButton.classList.contains('volumeButton-up-blue'))
+  {
+    volumeButton.classList.add('volumeButton-up');
+    volumeButton.classList.remove('volumeButton-up-blue');
+  }
+  else if (volumeButton.classList.contains('volumeButton-down-blue'))
+  {
+    volumeButton.classList.remove('volumeButton-down-blue');
+    volumeButton.classList.add('volumeButton-down');
+  }
+  else if (volumeButton.classList.contains('volumeButton-off-blue'))
+  {
+    volumeButton.classList.remove('volumeButton-off-blue');
+    volumeButton.classList.add('volumeButton-off');
+  }
+}
+
+/* Play-pause button */
+
+// Updates the play-pause button's icon on hover
+function changePlayPauseButtonIconOnHover()
+{
+  let playPauseButton = document.querySelector('#play-pause-btn');
+
+  if (playPauseButton.classList.contains('playPauseButton-playing'))
+  {
+    playPauseButton.classList.add('playPauseButton-playing-blue');
+    playPauseButton.classList.remove('playPauseButton-playing');
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-paused'))
+  {
+    playPauseButton.classList.add('playPauseButton-paused-blue');
+    playPauseButton.classList.remove('playPauseButton-paused');
+  }
+}
+
+// Updates the play-pause button's icon on mouseout
+function changePlayPauseButtonIconOnMouseOut()
+{
+  let playPauseButton = document.querySelector('#play-pause-btn');
+
+  if (playPauseButton.classList.contains('playPauseButton-playing-blue'))
+  {
+    playPauseButton.classList.add('playPauseButton-playing');
+    playPauseButton.classList.remove('playPauseButton-playing-blue');
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-paused-blue'))
+  {
+    playPauseButton.classList.remove('playPauseButton-paused-blue');
+    playPauseButton.classList.add('playPauseButton-paused');
+  }
+}
+
+// Updates the play-pause button's icon on click
+function togglePlayPauseButtonIconOnClick()
+{
+  let playPauseButton = document.querySelector('#play-pause-btn');
+
+  if (playPauseButton.classList.contains('playPauseButton-playing'))
+  {
+    playPauseButton.classList.add('playPauseButton-paused');
+    playPauseButton.classList.remove('playPauseButton-playing');
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-playing-blue'))
+  {
+    playPauseButton.classList.add('playPauseButton-paused-blue');
+    playPauseButton.classList.remove('playPauseButton-playing-blue');
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-paused'))
+  {
+    playPauseButton.classList.add('playPauseButton-playing');
+    playPauseButton.classList.remove('playPauseButton-paused');
+  }
+  else if (playPauseButton.classList.contains('playPauseButton-paused-blue'))
+  {
+    playPauseButton.classList.add('playPauseButton-playing-blue');
+    playPauseButton.classList.remove('playPauseButton-paused-blue');
+  }
+}
+
+/* Repeat button */
+
+// Updates the repeat button's icon on hover
+function changeRepeatButtonIconOnHover()
+{
+  let repeatButton = document.querySelector('#repeatButton');
+
+  if (repeatButton.classList.contains('repeatButton-noRepeat'))
+  {
+    repeatButton.classList.add('repeatButton-noRepeat-blue');
+    repeatButton.classList.remove('repeatButton-noRepeat');
+  }
+  else if (repeatButton.classList.contains('repeatButton-repeat'))
+  {
+    repeatButton.classList.add('repeatButton-repeat-blue');
+    repeatButton.classList.remove('repeatButton-repeat');
+  }
+}
+
+// Updates the repeat button's icon on mouseout
+function changeRepeatButtonIconOnMouseOut()
+{
+  let repeatButton = document.querySelector('#repeatButton');
+
+  if (repeatButton.classList.contains('repeatButton-noRepeat-blue'))
+  {
+    repeatButton.classList.add('repeatButton-noRepeat');
+    repeatButton.classList.remove('repeatButton-noRepeat-blue');
+  }
+  else if (repeatButton.classList.contains('repeatButton-repeat-blue'))
+  {
+    repeatButton.classList.remove('repeatButton-repeat-blue');
+    repeatButton.classList.add('repeatButton-repeat');
+  }
+}
+
+// Updates the repeat button's icon on click
+function toggleRepeatButtonIconOnClick()
+{
+  let repeatButton = document.querySelector('#repeatButton');
+
+  if (repeatButton.classList.contains('repeatButton-noRepeat'))
+  {
+    repeatButton.classList.add('repeatButton-repeat');
+    repeatButton.classList.remove('repeatButton-noRepeat');
+  }
+  else if (repeatButton.classList.contains('repeatButton-noRepeat-blue'))
+  {
+    repeatButton.classList.add('repeatButton-repeat-blue');
+    repeatButton.classList.remove('repeatButton-noRepeat-blue');
+  }
+  else if (repeatButton.classList.contains('repeatButton-repeat'))
+  {
+    repeatButton.classList.add('repeatButton-noRepeat');
+    repeatButton.classList.remove('repeatButton-repeat');
+  }
+  else if (repeatButton.classList.contains('repeatButton-repeat-blue'))
+  {
+    repeatButton.classList.add('repeatButton-noRepeat-blue');
+    repeatButton.classList.remove('repeatButton-repeat-blue');
+  }
+}
+
+/* Collapse header button */
+
+// Updates the collapse header button's icon on hover
+function changeCollapseHeaderButtonIconOnHover()
+{
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
+
+  if (headerCollapseButton.classList.contains('headerCollapseButton'))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton-blue');
+    headerCollapseButton.classList.remove('headerCollapseButton');
+  }
+  else if (headerCollapseButton.classList.contains('headerCollapseButton-blue'))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton');
+    headerCollapseButton.classList.remove('headerCollapseButton-blue');
+  }
+}
+
+// Updates the collapse header button's icon on mouseout
+function changeCollapseHeaderButtonIconOnMouseOut()
+{
+  let headerCollapseButton = document.querySelector('#headerCollapseButton');
+
+  if (headerCollapseButton.classList.contains('headerCollapseButton'))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton-blue');
+    headerCollapseButton.classList.remove('headerCollapseButton');
+  }
+  else if (headerCollapseButton.classList.contains('headerCollapseButton-blue'))
+  {
+    headerCollapseButton.classList.add('headerCollapseButton');
+    headerCollapseButton.classList.remove('headerCollapseButton-blue');
+  }
+}
+
+/* Play next track button */
+
+// Updates the play next button's icon on hover
+function changePlayNextButtonIconOnHover()
+{
+  let playNextButton = document.querySelector('#next-track-btn');
+
+  if (playNextButton.classList.contains('playNextButton'))
+  {
+    playNextButton.classList.add('playNextButton-blue');
+    playNextButton.classList.remove('playNextButton');
+  }
+  else if (playNextButton.classList.contains('playNextButton-blue'))
+  {
+    playNextButton.classList.add('playNextButton');
+    playNextButton.classList.remove('playNextButton-blue');
+  }
+}
+
+// Updates the play next button's icon on mouseout
+function changePlayNextButtonIconOnMouseOut()
+{
+  let playNextButton = document.querySelector('#next-track-btn');
+
+  if (playNextButton.classList.contains('playNextButton'))
+  {
+    playNextButton.classList.add('playNextButton-blue');
+    playNextButton.classList.remove('playNextButton');
+  }
+  else if (playNextButton.classList.contains('playNextButton-blue'))
+  {
+    playNextButton.classList.add('playNextButton');
+    playNextButton.classList.remove('playNextButton-blue');
+  }
+}
+
+/* Play previous track button */
+
+// Updates the play previous button's icon on hover
+function changePlayPreviousButtonIconOnHover()
+{
+  let playPreviousButton = document.querySelector('#previous-track-btn');
+
+  if (playPreviousButton.classList.contains('playPreviousButton'))
+  {
+    playPreviousButton.classList.add('playPreviousButton-blue');
+    playPreviousButton.classList.remove('playPreviousButton');
+  }
+  else if (playPreviousButton.classList.contains('playPreviousButton-blue'))
+  {
+    playPreviousButton.classList.add('playPreviousButton');
+    playPreviousButton.classList.remove('playPreviousButton-blue');
+  }
+}
+
+// Updates the play previous button's icon on mouseout
+function changePlayPreviousButtonIconOnMouseOut()
+{
+  let playPreviousButton = document.querySelector('#previous-track-btn');
+
+  if (playPreviousButton.classList.contains('playPreviousButton'))
+  {
+    playPreviousButton.classList.add('playPreviousButton-blue');
+    playPreviousButton.classList.remove('playPreviousButton');
+  }
+  else if (playPreviousButton.classList.contains('playPreviousButton-blue'))
+  {
+    playPreviousButton.classList.add('playPreviousButton');
+    playPreviousButton.classList.remove('playPreviousButton-blue');
+  }
+}
+
+/***** Site Menu *****/
+
+/* Menu Button */
+
+// Updates the icon of the site menu show/hide button on hover
+function changeMenuButtonIconOnHover()
+{
+  let menuButton = document.querySelector('#siteMenu-showHideButton');
+
+  if (menuButton.classList.contains('menuButton'))
+  {
+    menuButton.classList.add('menuButton-white');
+    menuButton.classList.remove('menuButton');
+  }
+  else if (menuButton.classList.contains('menuButton-white'))
+  {
+    menuButton.classList.add('menuButton');
+    menuButton.classList.remove('menuButton-white');
+  }
+}
+
+// Updates the icon of the site menu show/hide button on mouseout
+function changeMenuButtonIconOnMouseOut()
+{
+  let playPreviousButton = document.querySelector('#siteMenu-showHideButton');
+
+  if (playPreviousButton.classList.contains('menuButton'))
+  {
+    playPreviousButton.classList.add('menuButton-white');
+    playPreviousButton.classList.remove('menuButton');
+  }
+  else if (playPreviousButton.classList.contains('menuButton-white'))
+  {
+    playPreviousButton.classList.add('menuButton');
+    playPreviousButton.classList.remove('menuButton-white');
+  }
+}
+
+/* Menu Info Button */
+
+// Updates the icon of the site menu info button on hover
+function changeInfoButtonIconOnHover()
+{
+  let infoButton = document.querySelector('#siteMenu-infoButton');
+
+  if (infoButton.classList.contains('infoButton'))
+  {
+    infoButton.classList.add('infoButton-white');
+    infoButton.classList.remove('infoButton');
+  }
+  else if (infoButton.classList.contains('infoButton-white'))
+  {
+    infoButton.classList.add('infoButton');
+    infoButton.classList.remove('infoButton-white');
+  }
+}
+
+// Updates the icon of the site menu info button on mouseout
+function changeInfoButtonIconOnMouseOut()
+{
+  let infoButton = document.querySelector('#siteMenu-infoButton');
+
+  if (infoButton.classList.contains('infoButton'))
+  {
+    infoButton.classList.add('infoButton-white');
+    infoButton.classList.remove('infoButton');
+  }
+  else if (infoButton.classList.contains('infoButton-white'))
+  {
+    infoButton.classList.add('infoButton');
+    infoButton.classList.remove('infoButton-white');
+  }
+}
+
+/* Menu Config Button */
+
+// Updates the icon of the site menu config button on hover
+function changeConfigButtonIconOnHover()
+{
+  let configButton = document.querySelector('#siteMenu-configButton');
+
+  if (configButton.classList.contains('configButton'))
+  {
+    configButton.classList.add('configButton-white');
+    configButton.classList.remove('configButton');
+  }
+  else if (configButton.classList.contains('configButton-white'))
+  {
+    configButton.classList.add('configButton');
+    configButton.classList.remove('configButton-white');
+  }
+}
+
+// Updates the icon of the site menu config button on mouseout
+function changeConfigButtonIconOnMouseOut()
+{
+  let configButton = document.querySelector('#siteMenu-configButton');
+
+  if (configButton.classList.contains('configButton'))
+  {
+    configButton.classList.add('configButton-white');
+    configButton.classList.remove('configButton');
+  }
+  else if (configButton.classList.contains('configButton-white'))
+  {
+    configButton.classList.add('configButton');
+    configButton.classList.remove('configButton-white');
+  }
+}
+
+/***** Control Box *****/
+
+// Sets the message in the controls box top bar based on the element currently being hovered
+function updateControlBoxMessage(e)
+{
+  let controlBoxTopBar = document.querySelector('#controlsBox-topBar');
+  
+  if (e.target.id === 'play-pause-btn')
+  {
+    controlBoxTopBar.textContent = 'Rock it!';
+  }
+  else if (e.target.id === 'next-track-btn')
+  {
+    controlBoxTopBar.textContent = 'Play random track';
+  }
+  else if (e.target.id === 'previous-track-btn')
+  {
+    controlBoxTopBar.textContent = 'Play previous track';
+  }
+  else if (e.target.id === 'repeatButton')
+  {
+    controlBoxTopBar.textContent = 'Repeat current track';
+  }
+  else if (e.target.id === 'headerCollapseButton')
+  {
+    controlBoxTopBar.textContent = 'Toggle header';
+  }
+  else if (e.target.id === 'siteMenu-showHideButton')
+  {
+    controlBoxTopBar.textContent = 'Open Menu';
+  }
+  else if (e.target.id === 'siteMenu-configButton')
+  {
+    controlBoxTopBar.textContent = 'View configuration';
+  }
+  else if (e.target.id === 'siteMenu-infoButton')
+  {
+    controlBoxTopBar.textContent = 'View information';
+  }
+  else if (e.target.id === 'controlsBox-topBar')
+  {
+    controlBoxTopBar.textContent = 'Drag me!';
+  }
+  else if (e.target.id === 'btn_chosen')
+  {
+    controlBoxTopBar.textContent = 'Add to the Chosen :)';
+  }
+  else if (e.target.id === 'btn_exiled')
+  {
+    controlBoxTopBar.textContent = 'Block from playing :(';
+  }
+  else if (e.target.id === 'btn_volume')
+  {
+    controlBoxTopBar.textContent = 'Control volume';
+  }
+  else if (e.target.id === 'nav-playlist-selector')
+  {
+    controlBoxTopBar.textContent = 'Select playlist';
+  }
+  else
+  {
+    controlBoxTopBar.textContent = '';
+  }
+}
+
+// Clears the message in the top bar of the controls box
+function clearControlBoxMessage()
+{
+  let controlBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlBoxTopBar.textContent = '';
+}
+
+// Sets the message in the top bar of the controls box when the box is being dragged
+function setControlsBoxDragMessage()
+{
+  let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
+
+  controlsBoxTopBar.textContent = 'What a drag!'
 }

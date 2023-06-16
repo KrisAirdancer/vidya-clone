@@ -39,7 +39,7 @@ async function generateTracksJSON(tracksDir, targetDir) {
             trackID: tokens[0],
             trackGame: tokens[1],
             trackName: tokens[2].substring(0, tokens[2].indexOf('.mp3')),
-            trackURL: `https://krisairdancer.github.io/vidya-clone/tracks/${file}`
+            trackURL: `http://localhost:5500/tracks/${file}`
         };
 
         metadata.push(track);
