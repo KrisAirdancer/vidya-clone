@@ -99,6 +99,10 @@ function applyTracksListEventHandler()
     currentTrack.trackAudio.pause();
     setCurrentTrack(e.target.id);
     currentTrack.trackAudio.play();
+
+    let playPauseButton = document.querySelector('#play-pause-btn');
+    playPauseButton.classList.remove('playPauseButton-paused');
+    playPauseButton.classList.add('playPauseButton-playing');
   });
 }
 
@@ -590,6 +594,7 @@ function setCurrentTrack(trackID)
   {
     removeCurrentTrackHighlighting();
   }
+
   nextStack = [];
 
   let trackURL = tracksMap.get(trackID).trackURL;
