@@ -215,6 +215,8 @@ function applyChosenButtonEventListener()
 
     toggleChosenButtonIconOnClick();
     toggleExiledButtonIconOnClick();
+
+    toggleCurrentTrackHighlighting();
   });
 }
 
@@ -265,6 +267,8 @@ function applyExiledButtonEventListener()
     
     toggleExiledButtonIconOnClick();
     toggleChosenButtonIconOnClick();
+
+    toggleCurrentTrackHighlighting();
   });
 }
 
@@ -547,7 +551,7 @@ function generateTracksListHTML()
   // console.log('AT: generateTracksListHTML()');
 
   // TODO: Need to change the playlist file that is used based on the user's selection (per the playlist dropdown)
-      // Can likely just grab the currenly selected playlist from the <select> tag using a QuerySelector
+      // Can likely just grab the currently selected playlist from the <select> tag using a QuerySelector
       // Note: Make sure to update the underlying data structures based on the tracks in the chosen playlist so that the track selection logic continues to work - this will likely need to be updated in loadTracksMasterList()
       // Note: Don't take tracks out of the tracksMasterList. Instead, update the tracksMap to reflect the selected playlist.
 
@@ -2095,4 +2099,36 @@ function setControlsBoxDragMessage()
   let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
 
   controlsBoxTopBar.textContent = 'What a drag!'
+}
+
+function toggleCurrentTrackHighlighting()
+{
+  // console.log('AT: toggleTrackHighlighting()');
+
+  let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
+
+  if (chosenTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.add('currentTrack-green');
+    currentTrackLi.classList.remove('currentTrack-red');
+    currentTrackLi.classList.remove('currentTrack');
+    currentTrackLi.classList.remove('chosenTrack');
+    currentTrackLi.classList.remove('exiledTrack');
+  }
+  else if (exiledTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.add('currentTrack-red');
+    currentTrackLi.classList.remove('currentTrack-green');
+    currentTrackLi.classList.remove('currentTrack');
+    currentTrackLi.classList.remove('chosenTrack');
+    currentTrackLi.classList.remove('exiledTrack');
+  }
+  else
+  {
+    currentTrackLi.classList.add('currentTrack');
+    currentTrackLi.classList.remove('currentTrack-red');
+    currentTrackLi.classList.remove('currentTrack-green');
+    currentTrackLi.classList.remove('chosenTrack');
+    currentTrackLi.classList.remove('exiledTrack');
+  }
 }
