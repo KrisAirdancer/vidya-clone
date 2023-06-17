@@ -25,16 +25,14 @@ let repeat = false;
 
 let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
 
-// List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
-
 /***************
  * Run Scripts *
  ***************/
-// Note: This is not a great setup. All scripts must be run in .then() calls because the file load is async and the subsequent scripts will be run before the fetch() call completes which means they won't have access to the loaded data.
-  // TODO: Fix this^^^
 
 let reader = new FileReader();
 
+// Note: This is not a great setup. All scripts must be run in .then() calls because the file load is async and the subsequent scripts will be run before the fetch() call completes which means they won't have access to the loaded data.
+  // TODO: Fix this.
 fetch(tracksMasterListURI) // Load and sort master tracks list
     .then(response => response.json())
     .then(tracksData => {
@@ -54,7 +52,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       // Controls Box
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
-      applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
+      applyPreviousTrackEventHandler();
       applyControlsBoxDraggableEventListener();
       applyEventListenerToRepeatButton();
       applyEventListenerToHeaderCollapseButton();
@@ -84,7 +82,6 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
-      // currentTrack.trackAudio.play(); // TODO: Need to resolve the 'user didn't interact with the DOM first error before I can start playing audio right when the page loads'
     });
 
 /************************
@@ -102,6 +99,10 @@ function applyTracksListEventHandler()
     currentTrack.trackAudio.pause();
     setCurrentTrack(e.target.id);
     currentTrack.trackAudio.play();
+
+    let playPauseButton = document.querySelector('#play-pause-btn');
+    playPauseButton.classList.remove('playPauseButton-paused');
+    playPauseButton.classList.add('playPauseButton-playing');
   });
 }
 
@@ -212,8 +213,9 @@ function applyChosenButtonEventListener()
       saveChosenTracksToLocalStorage();
     }
 
-    toggleChosenButtonIconOnClick();
-    toggleExiledButtonIconOnClick();
+    setChosenExiledButtonIcons();
+
+    toggleCurrentTrackHighlighting();
   });
 }
 
@@ -262,8 +264,9 @@ function applyExiledButtonEventListener()
       saveExiledTracksToLocalStorage();
     }
     
-    toggleExiledButtonIconOnClick();
-    toggleChosenButtonIconOnClick();
+    setChosenExiledButtonIcons();
+
+    toggleCurrentTrackHighlighting();
   });
 }
 
@@ -292,7 +295,7 @@ function applyRemoveVolumeBarBodyEventListener()
 
     if (mouseUpEnabled_volumeBarBody)
     {
-      updateVolumeLevel(); // TODO: May need to pass something into this function such as the current position of the slider - although, I should be able to just pull that info from the DOM in the updateVolume() function anyway.
+      updateVolumeLevel();
       document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
       mouseUpEnabled_volumeBarBody = false;
     }
@@ -546,7 +549,7 @@ function generateTracksListHTML()
   // console.log('AT: generateTracksListHTML()');
 
   // TODO: Need to change the playlist file that is used based on the user's selection (per the playlist dropdown)
-      // Can likely just grab the currenly selected playlist from the <select> tag using a QuerySelector
+      // Can likely just grab the currently selected playlist from the <select> tag using a QuerySelector
       // Note: Make sure to update the underlying data structures based on the tracks in the chosen playlist so that the track selection logic continues to work - this will likely need to be updated in loadTracksMasterList()
       // Note: Don't take tracks out of the tracksMasterList. Instead, update the tracksMap to reflect the selected playlist.
 
@@ -589,19 +592,20 @@ function setCurrentTrack(trackID)
 {
   // console.log('AT: setCurrentTrack()');
 
-  // TODO: This whole if block might be dead code... If so, remove it.
   if (currentTrack.trackID !== undefined)
   {
     removeCurrentTrackHighlighting();
-    // TODO: I think this is dead code. If there are no bugs with it commented out, delete it.
-    // previousStack.push({
-    //   trackID: currentTrack.trackID,
-    //   trackURL: currentTrack.trackURL
-    // });
   }
+
   nextStack = [];
 
-  let trackURL = tracksMap.get(trackID).trackURL;
+  let trackURL = undefined
+  try {
+    trackURL = tracksMap.get(trackID).trackURL;
+  } catch (error) {
+    trackID = getRandomTrackID();
+    trackURL = tracksMap.get(trackID).trackURL;
+  }
 
   currentTrack = {
     trackID: trackID,
@@ -670,8 +674,6 @@ function playNextTrack()
   {
     let trackID = getRandomTrackID();
 
-    // TODO: If a user exiles all of the tracks, they will end up in a forever loop here - add logic to prevent this (maybe notify the user and prevent any tracks from playing until they un-exile at least one track?)
-    // Ensure that the current track is not replayed and that the track has not been exiled
     while (trackID === currentTrack.trackID || exiledTracks.has(trackID) || trackID === null || trackID === undefined)
     {
       trackID = getRandomTrackID();
@@ -750,30 +752,8 @@ function playPreviousTrack()
 
   updateNavButtons();
 
-  console.log(currentTrack.trackID);
-  console.log(currentTrack);
-}
-
-// TODO: This function appears to be unused! Either use it somewhere or delete it. It looks like this function was replaced by getRandomTrackID() - instead of calling a function to play the next track, I am calling a function to generate a track ID. I think I did this because I needed to be able to play tracks under different conditions in different places. Double check this and refactor if it doesn't make sense to do that anymore (or if that isn't the case).
-// Plays a random track from the currently selected playlist
-function playRandomTrack()
-{
-  // console.log('AT: playRandomTrack()');
-
-  removeCurrentTrackHighlighting();
-
-  let trackID = getRandomTrackID();
-
-  currentTrack.trackAudio.pause();
-  setCurrentTrack(trackID);
-  currentTrack.trackAudio.play();
-
-  scrollCurrentTrackToTop();
-  highlightCurrentTrack();
-
-  setCurrentTrackVolume();
-
-  updateNavButtons();
+  // console.log(currentTrack.trackID);
+  // console.log(currentTrack);
 }
 
 // Randomly generate a track ID from the list of available tracks
@@ -835,7 +815,7 @@ function setCurrentTime()
 
   let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
 
-  // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (inderectly via newCurrentTime).
+  // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (indirectly via newCurrentTime).
   // Note: This is using JavaScript's 'truthy' behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
   if (newCurrentTime)
   {
@@ -1081,7 +1061,6 @@ function setVolumeBarSliderPosition(updatedPosition)
 function updateVolumeLevel()
 {
   // console.log('AT: updateVolume()');
-  // TODO: There is a small bug somewhere that is preventing the volume from being set to zero. The lowest that it can currently go is 1.
 
   let volumeBarSliderPosition = document.querySelector('#volumeBar-slider').style.width;
   volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
@@ -1525,6 +1504,37 @@ function updateVolumeButtonStyle()
 
 /***** Button hover styling functions *****/
 
+// Sets the icons of the chosen and exiled buttons in the nav bar.
+function setChosenExiledButtonIcons()
+{
+  // console.log('AT: setChosenExiledButtonIcons()');
+
+  let chosenButton = document.querySelector('#btn_chosen');
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (chosenTracks.has(currentTrack.trackID)) // Track is chosen
+  {
+    chosenButton.classList.add('chosenButton-broken');
+    chosenButton.classList.remove('chosenButton-whole');
+  }
+  else // Track is not chosen
+  {
+    chosenButton.classList.add('chosenButton-whole');
+    chosenButton.classList.remove('chosenButton-broken');
+  }
+
+  if (exiledTracks.has(currentTrack.trackID)) // Track is exiled
+  {
+    exiledButton.classList.add('exiledButton-check');
+    exiledButton.classList.remove('exiledButton-ban');
+  }
+  else // Track is not exiled
+  {
+    exiledButton.classList.add('exiledButton-ban');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+}
+
 /* Chosen button */
 
 // Updates the chosen button's icon on hover
@@ -1561,35 +1571,6 @@ function changeChosenButtonIconOnMouseOut()
   }
 }
 
-// Updates the chosen button's icon on click
-function toggleChosenButtonIconOnClick()
-{
-  // console.log('AT: toggleChosenButtonIconOnClick()');
-
-  let chosenButton = document.querySelector('#btn_chosen');
-
-  if (chosenButton.classList.contains('chosenButton-whole'))
-  {
-    chosenButton.classList.add('chosenButton-broken');
-    chosenButton.classList.remove('chosenButton-whole');
-  }
-  else if (chosenButton.classList.contains('chosenButton-whole-blue'))
-  {
-    chosenButton.classList.add('chosenButton-broken-blue');
-    chosenButton.classList.remove('chosenButton-whole-blue');
-  }
-  else if (chosenButton.classList.contains('chosenButton-broken'))
-  {
-    chosenButton.classList.add('chosenButton-whole');
-    chosenButton.classList.remove('chosenButton-broken');
-  }
-  else if (chosenButton.classList.contains('chosenButton-broken-blue'))
-  {
-    chosenButton.classList.add('chosenButton-whole-blue');
-    chosenButton.classList.remove('chosenButton-broken-blue');
-  }
-}
-
 /* Exiled button */
 
 // Updates the exiled button's icon on hover
@@ -1623,35 +1604,6 @@ function changeExiledButtonIconOnMouseOut()
   {
     exiledButton.classList.remove('exiledButton-check-blue');
     exiledButton.classList.add('exiledButton-check');
-  }
-}
-
-// Updates the exiled button's icon on click
-function toggleExiledButtonIconOnClick()
-{
-  // console.log('AT: toggleExiledButtonIconOnClick()');
-
-  let exiledButton = document.querySelector('#btn_exiled');
-
-  if (exiledButton.classList.contains('exiledButton-ban'))
-  {
-    exiledButton.classList.add('exiledButton-check');
-    exiledButton.classList.remove('exiledButton-ban');
-  }
-  else if (exiledButton.classList.contains('exiledButton-ban-blue'))
-  {
-    exiledButton.classList.add('exiledButton-check-blue');
-    exiledButton.classList.remove('exiledButton-ban-blue');
-  }
-  else if (exiledButton.classList.contains('exiledButton-check'))
-  {
-    exiledButton.classList.add('exiledButton-ban');
-    exiledButton.classList.remove('exiledButton-check');
-  }
-  else if (exiledButton.classList.contains('exiledButton-check-blue'))
-  {
-    exiledButton.classList.add('exiledButton-ban-blue');
-    exiledButton.classList.remove('exiledButton-check-blue');
   }
 }
 
@@ -2124,4 +2076,37 @@ function setControlsBoxDragMessage()
   let controlsBoxTopBar = document.querySelector('#controlsBox-topBar');
 
   controlsBoxTopBar.textContent = 'What a drag!'
+}
+
+// Sets the highlighting on the currently playing track in the tracks list on the UI.
+function toggleCurrentTrackHighlighting()
+{
+  // console.log('AT: toggleTrackHighlighting()');
+
+  let currentTrackLi = document.getElementById(`${currentTrack.trackID}`);
+
+  if (chosenTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.add('currentTrack-green');
+    currentTrackLi.classList.remove('currentTrack-red');
+    currentTrackLi.classList.remove('currentTrack');
+    currentTrackLi.classList.remove('chosenTrack');
+    currentTrackLi.classList.remove('exiledTrack');
+  }
+  else if (exiledTracks.has(currentTrack.trackID))
+  {
+    currentTrackLi.classList.add('currentTrack-red');
+    currentTrackLi.classList.remove('currentTrack-green');
+    currentTrackLi.classList.remove('currentTrack');
+    currentTrackLi.classList.remove('chosenTrack');
+    currentTrackLi.classList.remove('exiledTrack');
+  }
+  else
+  {
+    currentTrackLi.classList.add('currentTrack');
+    currentTrackLi.classList.remove('currentTrack-red');
+    currentTrackLi.classList.remove('currentTrack-green');
+    currentTrackLi.classList.remove('chosenTrack');
+    currentTrackLi.classList.remove('exiledTrack');
+  }
 }
