@@ -1,5 +1,4 @@
 :root {
-    /* TODO: Rename these variables to give them better names - remove any that aren't used */
     --site-blue: #122D4A;
     --site-orange: #ffa366;
     --site-light-blue: #94BAFF;
@@ -109,7 +108,6 @@ nav ul {
     color: var(--site-orange);
     
     border: 1px solid var(--nav-button-border);
-    border-image: linear-gradient(#BCC8D4, #0D1015) 10%;
     border-width: 1px;
     border-style: solid;
 
@@ -291,7 +289,7 @@ nav ul {
     list-style: none;
     padding: 5px 2px 5px 10px; /* top right bottom left */
     color: var(--site-orange);
-    border: 1px solid #0a192b; /* TODO: Move this color to :root */
+    border: 1px solid #0a192b;
     font-family: var(--site-font-family);
     font-size: 0.8rem;
     cursor: pointer;
@@ -304,7 +302,7 @@ nav ul {
 
 #tracks-list {
     position: fixed;
-    top: 6.0rem; /* TODO: This is here to keep the tracks list from running over top of the navbar and scrubber. Restructure the project so that the navbar, tracks list, and scrubber are in a flex container so I don't have to do hacky things like this. */
+    top: 6.0rem; /* This is here to keep the tracks list from running over top of the navbar and scrubber. */
     bottom: 0; /* Sets the bottom bound of the container to the bottom of the screen. Otherwise, some of the screen is hidden off the bottom of the screen and cannot be scrolled to. */
     width: 100%;
     max-height: 100%;
@@ -719,7 +717,6 @@ nav ul {
     z-index: 1;
 }
 
-/* TODO: The border on the control box and its buttons will need to have the same fade effect as the original Vidya player (same as the navbar) */
 .control-box-first-row {
     flex-grow: 1;
     font-size: 14px;
@@ -764,10 +761,6 @@ nav ul {
     font-size: .75rem;
     align-items: center;
     justify-content: center;
-}
-
-#play-pause-btn {
-    /* min-width: 4rem; */
 }
 
 /* Repeat button */
@@ -896,4 +889,3 @@ nav ul {
 #nav-playlist-selector option {
     background-color: var(--site-blue);
 }
-

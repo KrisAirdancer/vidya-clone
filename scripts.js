@@ -25,16 +25,14 @@ let repeat = false;
 
 let DEFAULT_VOLUME_LEVEL = 0.5; // Denotes a percentage: 100%
 
-// List of all track IDs (1/27/2023): 0001,0002,0003,0004,0005,0006,0007,0008,0009,0010,0011,0012,0013,0014,0015,0016,0017,0018,0019,0041,0038,0034,0033,0040,0023,0039,0021,0042,0043,0031,0029,0036,0026,0020,0024,0030,0027,0025,0028,0022,0037,0035,0032
-
 /***************
  * Run Scripts *
  ***************/
-// Note: This is not a great setup. All scripts must be run in .then() calls because the file load is async and the subsequent scripts will be run before the fetch() call completes which means they won't have access to the loaded data.
-  // TODO: Fix this^^^
 
 let reader = new FileReader();
 
+// Note: This is not a great setup. All scripts must be run in .then() calls because the file load is async and the subsequent scripts will be run before the fetch() call completes which means they won't have access to the loaded data.
+  // TODO: Fix this.
 fetch(tracksMasterListURI) // Load and sort master tracks list
     .then(response => response.json())
     .then(tracksData => {
@@ -54,7 +52,7 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
       // Controls Box
       applyPlayPauseEventHandler();
       applyNextTrackEventHandler();
-      applyPreviousTrackEventHandler(); // TODO: Some of the Listeners are called Handlers and vice versa in my function names - update the function names to use consistent naming
+      applyPreviousTrackEventHandler();
       applyControlsBoxDraggableEventListener();
       applyEventListenerToRepeatButton();
       applyEventListenerToHeaderCollapseButton();
@@ -84,7 +82,6 @@ fetch(tracksMasterListURI) // Load and sort master tracks list
     })
     .then(() => { // Set and play current track
       setCurrentTrack(getRandomTrackID());
-      // currentTrack.trackAudio.play(); // TODO: Need to resolve the 'user didn't interact with the DOM first error before I can start playing audio right when the page loads'
     });
 
 /************************
@@ -292,7 +289,7 @@ function applyRemoveVolumeBarBodyEventListener()
 
     if (mouseUpEnabled_volumeBarBody)
     {
-      updateVolumeLevel(); // TODO: May need to pass something into this function such as the current position of the slider - although, I should be able to just pull that info from the DOM in the updateVolume() function anyway.
+      updateVolumeLevel();
       document.removeEventListener('mousemove', moveVolumeBarSliderOnUserInput);
       mouseUpEnabled_volumeBarBody = false;
     }
@@ -670,8 +667,6 @@ function playNextTrack()
   {
     let trackID = getRandomTrackID();
 
-    // TODO: If a user exiles all of the tracks, they will end up in a forever loop here - add logic to prevent this (maybe notify the user and prevent any tracks from playing until they un-exile at least one track?)
-    // Ensure that the current track is not replayed and that the track has not been exiled
     while (trackID === currentTrack.trackID || exiledTracks.has(trackID) || trackID === null || trackID === undefined)
     {
       trackID = getRandomTrackID();
@@ -758,7 +753,7 @@ function playPreviousTrack()
 // Plays a random track from the currently selected playlist
 function playRandomTrack()
 {
-  // console.log('AT: playRandomTrack()');
+  console.log('AT: playRandomTrack()');
 
   removeCurrentTrackHighlighting();
 
@@ -835,7 +830,7 @@ function setCurrentTime()
 
   let newCurrentTime = (parseFloat(position) / 100) * currentTrack.trackAudio.duration; // percent position of scrubberThumb * currentTrack.duration
 
-  // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (inderectly via newCurrentTime).
+  // When the player first loads, this function is run for some reason. But this causes an error. So we check that the current track has a duration (indirectly via newCurrentTime).
   // Note: This is using JavaScript's 'truthy' behavior to check that newCurrentTime contains a valid value. I tried other more explicit checks, but some NaNs were getting through. So I settled for this.
   if (newCurrentTime)
   {
@@ -1081,7 +1076,6 @@ function setVolumeBarSliderPosition(updatedPosition)
 function updateVolumeLevel()
 {
   // console.log('AT: updateVolume()');
-  // TODO: There is a small bug somewhere that is preventing the volume from being set to zero. The lowest that it can currently go is 1.
 
   let volumeBarSliderPosition = document.querySelector('#volumeBar-slider').style.width;
   volumeLevel = Math.round(parseFloat(volumeBarSliderPosition)) / 100;
