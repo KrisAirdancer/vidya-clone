@@ -586,15 +586,9 @@ function setCurrentTrack(trackID)
 {
   // console.log('AT: setCurrentTrack()');
 
-  // TODO: This whole if block might be dead code... If so, remove it.
   if (currentTrack.trackID !== undefined)
   {
     removeCurrentTrackHighlighting();
-    // TODO: I think this is dead code. If there are no bugs with it commented out, delete it.
-    // previousStack.push({
-    //   trackID: currentTrack.trackID,
-    //   trackURL: currentTrack.trackURL
-    // });
   }
   nextStack = [];
 
@@ -747,28 +741,6 @@ function playPreviousTrack()
 
   // console.log(currentTrack.trackID);
   // console.log(currentTrack);
-}
-
-// TODO: This function appears to be unused! Either use it somewhere or delete it. It looks like this function was replaced by getRandomTrackID() - instead of calling a function to play the next track, I am calling a function to generate a track ID. I think I did this because I needed to be able to play tracks under different conditions in different places. Double check this and refactor if it doesn't make sense to do that anymore (or if that isn't the case).
-// Plays a random track from the currently selected playlist
-function playRandomTrack()
-{
-  console.log('AT: playRandomTrack()');
-
-  removeCurrentTrackHighlighting();
-
-  let trackID = getRandomTrackID();
-
-  currentTrack.trackAudio.pause();
-  setCurrentTrack(trackID);
-  currentTrack.trackAudio.play();
-
-  scrollCurrentTrackToTop();
-  highlightCurrentTrack();
-
-  setCurrentTrackVolume();
-
-  updateNavButtons();
 }
 
 // Randomly generate a track ID from the list of available tracks
