@@ -599,7 +599,13 @@ function setCurrentTrack(trackID)
 
   nextStack = [];
 
-  let trackURL = tracksMap.get(trackID).trackURL;
+  let trackURL = undefined
+  try {
+    trackURL = tracksMap.get(trackID).trackURL;
+  } catch (error) {
+    trackID = getRandomTrackID();
+    trackURL = tracksMap.get(trackID).trackURL;
+  }
 
   currentTrack = {
     trackID: trackID,
