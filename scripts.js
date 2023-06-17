@@ -213,8 +213,7 @@ function applyChosenButtonEventListener()
       saveChosenTracksToLocalStorage();
     }
 
-    toggleChosenButtonIconOnClick();
-    toggleExiledButtonIconOnClick();
+    setChosenExiledButtonIcons();
 
     toggleCurrentTrackHighlighting();
   });
@@ -265,8 +264,7 @@ function applyExiledButtonEventListener()
       saveExiledTracksToLocalStorage();
     }
     
-    toggleExiledButtonIconOnClick();
-    toggleChosenButtonIconOnClick();
+    setChosenExiledButtonIcons();
 
     toggleCurrentTrackHighlighting();
   });
@@ -1500,6 +1498,37 @@ function updateVolumeButtonStyle()
 
 /***** Button hover styling functions *****/
 
+// Sets the icons of the chosen and exiled buttons in the nav bar.
+function setChosenExiledButtonIcons()
+{
+  // console.log('AT: setChosenExiledButtonIcons()');
+
+  let chosenButton = document.querySelector('#btn_chosen');
+  let exiledButton = document.querySelector('#btn_exiled');
+
+  if (chosenTracks.has(currentTrack.trackID)) // Track is chosen
+  {
+    chosenButton.classList.add('chosenButton-broken');
+    chosenButton.classList.remove('chosenButton-whole');
+  }
+  else // Track is not chosen
+  {
+    chosenButton.classList.add('chosenButton-whole');
+    chosenButton.classList.remove('chosenButton-broken');
+  }
+
+  if (exiledTracks.has(currentTrack.trackID)) // Track is exiled
+  {
+    exiledButton.classList.add('exiledButton-check');
+    exiledButton.classList.remove('exiledButton-ban');
+  }
+  else // Track is not exiled
+  {
+    exiledButton.classList.add('exiledButton-ban');
+    exiledButton.classList.remove('exiledButton-check');
+  }
+}
+
 /* Chosen button */
 
 // Updates the chosen button's icon on hover
@@ -1536,35 +1565,6 @@ function changeChosenButtonIconOnMouseOut()
   }
 }
 
-// Updates the chosen button's icon on click
-function toggleChosenButtonIconOnClick()
-{
-  // console.log('AT: toggleChosenButtonIconOnClick()');
-
-  let chosenButton = document.querySelector('#btn_chosen');
-
-  if (chosenButton.classList.contains('chosenButton-whole'))
-  {
-    chosenButton.classList.add('chosenButton-broken');
-    chosenButton.classList.remove('chosenButton-whole');
-  }
-  else if (chosenButton.classList.contains('chosenButton-whole-blue'))
-  {
-    chosenButton.classList.add('chosenButton-broken-blue');
-    chosenButton.classList.remove('chosenButton-whole-blue');
-  }
-  else if (chosenButton.classList.contains('chosenButton-broken'))
-  {
-    chosenButton.classList.add('chosenButton-whole');
-    chosenButton.classList.remove('chosenButton-broken');
-  }
-  else if (chosenButton.classList.contains('chosenButton-broken-blue'))
-  {
-    chosenButton.classList.add('chosenButton-whole-blue');
-    chosenButton.classList.remove('chosenButton-broken-blue');
-  }
-}
-
 /* Exiled button */
 
 // Updates the exiled button's icon on hover
@@ -1598,35 +1598,6 @@ function changeExiledButtonIconOnMouseOut()
   {
     exiledButton.classList.remove('exiledButton-check-blue');
     exiledButton.classList.add('exiledButton-check');
-  }
-}
-
-// Updates the exiled button's icon on click
-function toggleExiledButtonIconOnClick()
-{
-  // console.log('AT: toggleExiledButtonIconOnClick()');
-
-  let exiledButton = document.querySelector('#btn_exiled');
-
-  if (exiledButton.classList.contains('exiledButton-ban'))
-  {
-    exiledButton.classList.add('exiledButton-check');
-    exiledButton.classList.remove('exiledButton-ban');
-  }
-  else if (exiledButton.classList.contains('exiledButton-ban-blue'))
-  {
-    exiledButton.classList.add('exiledButton-check-blue');
-    exiledButton.classList.remove('exiledButton-ban-blue');
-  }
-  else if (exiledButton.classList.contains('exiledButton-check'))
-  {
-    exiledButton.classList.add('exiledButton-ban');
-    exiledButton.classList.remove('exiledButton-check');
-  }
-  else if (exiledButton.classList.contains('exiledButton-check-blue'))
-  {
-    exiledButton.classList.add('exiledButton-ban-blue');
-    exiledButton.classList.remove('exiledButton-check-blue');
   }
 }
 
@@ -2101,6 +2072,7 @@ function setControlsBoxDragMessage()
   controlsBoxTopBar.textContent = 'What a drag!'
 }
 
+// Sets the highlighting on the currently playing track in the tracks list on the UI.
 function toggleCurrentTrackHighlighting()
 {
   // console.log('AT: toggleTrackHighlighting()');
